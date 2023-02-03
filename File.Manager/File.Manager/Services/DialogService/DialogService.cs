@@ -20,12 +20,12 @@ namespace File.Manager.Services.DialogService
             if (filter != null)
                 dialog.Filter = filter;
             else
-                dialog.Filter = Strings.DefaultFilter;
+                dialog.Filter = Resources.Common.Strings.DefaultFilter;
 
             if (title != null)
                 dialog.Title = title;
             else
-                dialog.Title = Strings.DefaultDialogTitle;
+                dialog.Title = Resources.Common.Strings.DefaultDialogTitle;
 
             if (dialog.ShowDialog() == true)
                 return (true, dialog.FileName);
@@ -42,12 +42,12 @@ namespace File.Manager.Services.DialogService
             if (filter != null)
                 dialog.Filter = filter;
             else
-                dialog.Filter = Strings.DefaultFilter;
+                dialog.Filter = Resources.Common.Strings.DefaultFilter;
 
             if (title != null)
                 dialog.Title = title;
             else
-                dialog.Title = Strings.DefaultDialogTitle;
+                dialog.Title = Resources.Common.Strings.DefaultDialogTitle;
 
             if (dialog.ShowDialog() == true)
                 return (true, dialog.FileName);

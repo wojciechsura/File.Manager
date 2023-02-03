@@ -15,7 +15,7 @@ namespace File.Manager.Services.Messaging
         public bool AskYesNo(string message, string title = null)
         {
             if (title == null)
-                title = Strings.DefaultMessageboxTitle;
+                title = Resources.Common.Strings.DefaultMessageboxTitle;
 
             var result = MessageBox.Show(message, title, MessageBoxButton.YesNo, MessageBoxImage.Question);
 
@@ -30,7 +30,7 @@ namespace File.Manager.Services.Messaging
         public bool? AskYesNoCancel(string message, string title = null)
         {
             if (title == null)
-                title = Strings.DefaultMessageboxTitle;
+                title = Resources.Common.Strings.DefaultMessageboxTitle;
 
             var result = MessageBox.Show(message, title, MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
 
@@ -47,7 +47,7 @@ namespace File.Manager.Services.Messaging
         public bool WarnYesNo(string message, string title = null)
         {
             if (title == null)
-                title = Strings.DefaultMessageboxTitle;
+                title = Resources.Common.Strings.DefaultMessageboxTitle;
 
             var result = MessageBox.Show(message, title, MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
@@ -62,7 +62,7 @@ namespace File.Manager.Services.Messaging
         public void Warn(string message, string title = null)
         {
             if (title == null)
-                title = Strings.DefaultMessageboxTitle;
+                title = Resources.Common.Strings.DefaultMessageboxTitle;
 
             MessageBox.Show(message, title, MessageBoxButton.OK, MessageBoxImage.Warning);
         }
@@ -70,7 +70,7 @@ namespace File.Manager.Services.Messaging
         public void ShowError(string message, string title = null)
         {
             if (title == null)
-                title = Strings.DefaultMessageboxTitle;
+                title = Resources.Common.Strings.DefaultMessageboxTitle;
 
             MessageBox.Show(message, title, MessageBoxButton.OK, MessageBoxImage.Error);
         }
@@ -78,7 +78,7 @@ namespace File.Manager.Services.Messaging
         public void Inform(string message, string title = null)
         {
             if (title == null)
-                title = Strings.DefaultMessageboxTitle;
+                title = Resources.Common.Strings.DefaultMessageboxTitle;
 
             MessageBox.Show(message, title, MessageBoxButton.OK, MessageBoxImage.Information);
         }

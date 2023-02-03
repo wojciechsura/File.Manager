@@ -14,5 +14,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
         {
             this.handler = handler;
         }
+
+
     }
 }

@@ -13,10 +13,8 @@ namespace File.Manager.API.Filesystem.Models.Items
     /// </summary>
     public class FileItem : Item
     {
-        private protected FileItem(string name, 
-            ImageSource smallIcon, 
-            ImageSource largeIcon) 
-            : base(name, smallIcon, largeIcon)
+        private protected FileItem(string name) 
+            : base(name)
         {
 
         }
