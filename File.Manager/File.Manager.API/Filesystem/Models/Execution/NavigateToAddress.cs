@@ -12,7 +12,7 @@ namespace File.Manager.API.Filesystem.Models.Execution
     /// </summary>
     public sealed class NavigateToAddress : ExecutionOutcome
     {
-        public NavigateToAddress(string address)
+        internal NavigateToAddress(string address)
         {
             Address = address;
         }

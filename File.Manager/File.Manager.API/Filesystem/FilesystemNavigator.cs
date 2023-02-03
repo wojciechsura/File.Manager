@@ -12,15 +12,11 @@ namespace File.Manager.API.Filesystem
 {
     public abstract class FilesystemNavigator : IDisposable
     {
-        // Protected fields ---------------------------------------------------
-
-        protected readonly IModuleHost host;
-
         // Protected methods --------------------------------------------------
 
-        protected FilesystemNavigator(IModuleHost host)
+        protected FilesystemNavigator()
         {
-            this.host = host;
+
         }
 
         // Public methods -----------------------------------------------------

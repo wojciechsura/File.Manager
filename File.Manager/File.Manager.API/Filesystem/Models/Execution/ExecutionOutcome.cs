@@ -16,5 +16,12 @@ namespace File.Manager.API.Filesystem.Models.Execution
         {
 
         }
+
+        public static Error Error(string message) => new Error(message);
+        public static Handled Handled() => new Handled();
+        public static NavigateToAddress NavigateToAddress(string address) => new NavigateToAddress(address);
+        public static NeedsRefresh NeedsRefresh() => new NeedsRefresh();
+        public static ReplaceNavigator ReplaceNavigator(FilesystemNavigator newNavigator) => new ReplaceNavigator(newNavigator);
+        public static ReturnHome ReturnHome() => new ReturnHome();
     }
 }

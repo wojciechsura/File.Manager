@@ -11,9 +11,9 @@ namespace File.Manager.API.Filesystem.Models.Execution
     /// that execution failed. <see cref="Error"/> contains then
     /// error message, which may be displayed to the user.
     /// </summary>
-    public class Error : ExecutionOutcome
+    public sealed class Error : ExecutionOutcome
     {
-        public Error(string message)
+        internal Error(string message)
         {
             Message = message;
         }

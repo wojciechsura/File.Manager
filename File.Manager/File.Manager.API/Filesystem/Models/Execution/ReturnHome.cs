@@ -10,8 +10,11 @@ namespace File.Manager.API.Filesystem.Models.Execution
     /// When returned as execution outcome, informs File.Manager,
     /// that it should return to the home location (module selection).
     /// </summary>
-    public class ReturnHome : ExecutionOutcome
+    public sealed class ReturnHome : ExecutionOutcome
     {
+        internal ReturnHome()
+        {
 
+        }
     }
 }

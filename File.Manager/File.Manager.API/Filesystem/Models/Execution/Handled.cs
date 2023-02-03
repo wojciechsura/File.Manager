@@ -11,7 +11,11 @@ namespace File.Manager.API.Filesystem.Models.Execution
     /// that execution was fully handled by the <see cref="FilesystemNavigator"/>
     /// and there is no additional action needed.
     /// </summary>
-    public class Handled : ExecutionOutcome
+    public sealed class Handled : ExecutionOutcome
     {
+        internal Handled()
+        {
+
+        }
     }
 }

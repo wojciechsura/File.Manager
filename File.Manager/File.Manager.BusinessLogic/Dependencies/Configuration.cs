@@ -1,5 +1,8 @@
 ﻿using Autofac;
+using File.Manager.API;
 using File.Manager.BusinessLogic.Services.EventBus;
+using File.Manager.BusinessLogic.Services.Host;
+using File.Manager.BusinessLogic.Services.Modules;
 using File.Manager.BusinessLogic.Services.Paths;
 using File.Manager.BusinessLogic.ViewModels.Main;
 using System;
@@ -23,9 +26,8 @@ namespace File.Manager.BusinessLogic.Dependencies
             // Register services
             builder.RegisterType<EventBus>().As<IEventBus>().SingleInstance();
             builder.RegisterType<PathService>().As<IPathService>().SingleInstance();
-
-            // Register viewmodels
-            builder.RegisterType<MainWindowViewModel>().WithParameter("access", null);
+            builder.RegisterType<ModuleService>().As<IModuleService>().SingleInstance();
+            builder.RegisterType<ModuleHost>().As<IModuleHost>().SingleInstance();
         }
     }
 }

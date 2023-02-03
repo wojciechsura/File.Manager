@@ -13,7 +13,7 @@ namespace File.Manager.API.Filesystem.Models.Items
     /// </summary>
     public class FolderItem : Item
     {
-        private protected FolderItem(string name) 
+        public FolderItem(string name) 
             : base(name)
         {
 

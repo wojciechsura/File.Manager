@@ -8,14 +8,15 @@ namespace File.Manager.API.Filesystem.Models.Execution
 {
     /// <summary>
     /// When returned as execution outcome, informs File.Manager,
-    /// that execution resulted in <see cref="FilesystemNavigator"/>
-    /// contents change, so it should refresh contents of the pane.
+    /// that it should replace current navigator with given one.
     /// </summary>
-    public sealed class NeedsRefresh : ExecutionOutcome
+    public sealed class ReplaceNavigator : ExecutionOutcome
     {
-        internal NeedsRefresh()
+        internal ReplaceNavigator(FilesystemNavigator newNavigator)
         {
-
+            NewNavigator = newNavigator;
         }
+
+        public FilesystemNavigator NewNavigator { get; }
     }
 }
