@@ -1,0 +1,21 @@
+﻿<Window x:Class="File.Manager.ExceptionWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:res="clr-namespace:File.Manager.Resources;assembly=File.Manager.Resources"
+        mc:Ignorable="d"
+        Title="{x:Static res:Strings.ExceptionWindow_Title}" Width="500" Height="400" ResizeMode="CanResize">
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Command="{Binding OkCommand}" Style="{StaticResource DialogButton}" Content="{x:Static res:Strings.Ok}" />
+        </StackPanel>
+        <GroupBox Header="{x:Static res:Strings.ExceptionWindow_Header}">
+            <DockPanel>
+                <Label DockPanel.Dock="Top" Margin="4" Content="{x:Static res:Strings.ExceptionWindow_ExceptionDetails}"></Label>
+                <TextBox Margin="4" HorizontalAlignment="Stretch" Text="{Binding ExceptionText, Mode=OneWay}" IsReadOnly="True"
+                         FontFamily="Consolas" VerticalAlignment="Top"/>
+            </DockPanel>
+        </GroupBox>
+    </DockPanel>
+</Window>

@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <OutputType>Library</OutputType>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Autofac" Version="6.5.0" />
+    <PackageReference Include="Spooksoft.VisualStateManager" Version="1.1.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\File.Manager.API\File.Manager.API.csproj" />
+    <ProjectReference Include="..\File.Manager.Common\File.Manager.Common.csproj" />
+    <ProjectReference Include="..\File.Manager.Dependencies\File.Manager.Dependencies.csproj" />
+    <ProjectReference Include="..\File.Manager.Resources\File.Manager.Resources.csproj" />
+  </ItemGroup>
+</Project>
