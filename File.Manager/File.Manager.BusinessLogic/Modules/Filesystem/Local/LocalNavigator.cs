@@ -37,12 +37,12 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
 
         // Public methods -----------------------------------------------------
 
-        public LocalNavigator(IModuleHost host) : base(host)
+        public LocalNavigator()
         {
             address = @"\\Local\";
         }
 
-        public LocalNavigator(IModuleHost host, string address) : base(host)
+        public LocalNavigator(string address)
         {
 
         }

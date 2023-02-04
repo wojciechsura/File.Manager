@@ -18,6 +18,7 @@ namespace File.Manager.Dependencies
 
             var builder = new ContainerBuilder();
             buildActions(builder);
+            builder.RegisterSource(new Autofac.Features.ResolveAnything.AnyConcreteTypeNotAlreadyRegisteredSource());
             Instance = builder.Build();
         }
     }

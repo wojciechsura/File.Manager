@@ -2,6 +2,7 @@
 using File.Manager.API;
 using File.Manager.BusinessLogic.Services.EventBus;
 using File.Manager.BusinessLogic.Services.Host;
+using File.Manager.BusinessLogic.Services.Icons;
 using File.Manager.BusinessLogic.Services.Modules;
 using File.Manager.BusinessLogic.Services.Paths;
 using File.Manager.BusinessLogic.ViewModels.Main;
@@ -28,6 +29,7 @@ namespace File.Manager.BusinessLogic.Dependencies
             builder.RegisterType<PathService>().As<IPathService>().SingleInstance();
             builder.RegisterType<ModuleService>().As<IModuleService>().SingleInstance();
             builder.RegisterType<ModuleHost>().As<IModuleHost>().SingleInstance();
+            builder.RegisterType<IconService>().As<IIconService>().SingleInstance();
         }
     }
 }

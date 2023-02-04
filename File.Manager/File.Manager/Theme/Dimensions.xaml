@@ -1,0 +1,38 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <!-- General -->
+    
+    <Thickness x:Key="DialogWindowPadding">10</Thickness>
+
+    <Thickness x:Key="PopupItemsMargin">8</Thickness>
+    <Thickness x:Key="PopupItemsBottomMargin" Bottom="8" />
+    <Thickness x:Key="PopupItemsTopMargin" Top="8" />
+    <Thickness x:Key="PopupItemsLeftMargin" Left="8" />
+    <Thickness x:Key="PopupItemsRightMargin" Right="8" />
+    <Thickness x:Key="PopupItemsExceptBottomMargin" Left="8" Top="8" Right="8" Bottom="0" />
+    <Thickness x:Key="PopupItemsExceptTopMargin" Left="8" Top="0" Right="8" Bottom="8" />
+    <Thickness x:Key="PopupItemsExceptLeftMargin" Left="0" Top="8" Right="8" Bottom="8" />
+    <Thickness x:Key="PopupItemsExceptRightMargin" Left="8" Top="8" Right="0" Bottom="8" />
+    
+    <Thickness x:Key="DialogItemsBottomMargin" Bottom="4" />
+    <Thickness x:Key="DialogItemsTopMargin" Top="4" />
+    <Thickness x:Key="DialogItemsLeftMargin" Left="4" />
+    <Thickness x:Key="DialogItemsRightMargin" Right="4" />
+
+    <Thickness x:Key="DialogItemsExceptBottomMargin" Left="4" Top="4" Right="4" Bottom="0" />
+    <Thickness x:Key="DialogItemsExceptTopMargin" Left="4" Top="0" Right="4" Bottom="4" />
+    <Thickness x:Key="DialogItemsExceptLeftMargin" Left="0" Top="4" Right="4" Bottom="4" />
+    <Thickness x:Key="DialogItemsExceptRightMargin" Left="4" Top="4" Right="0" Bottom="4" />
+
+    <Thickness x:Key="DialogItemsVerticalOnlyMargin" Left="0" Top="4" Right="0" Bottom="4" />
+    <Thickness x:Key="DialogItemsHorizontalOnlyMargin" Left="4" Top="0" Right="4" Bottom="0" />
+
+    <Thickness x:Key="DialogItemsMargin" Left="4" Top="4" Right="4" Bottom="4" />
+
+    <Thickness x:Key="DefaultMargin">4</Thickness>
+
+    <Thickness x:Key="HalfMargin" Left="3" Right="3" Top="3" Bottom="3" />
+    
+</ResourceDictionary>

@@ -1,0 +1,297 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#cce8ff" />
+
+    <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightTextBrush}" Color="#000000"/>
+
+    <LinearGradientBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" EndPoint="0.5,1"
+                StartPoint="0.5,0">
+        <GradientStop Color="#FF84BCEE" Offset="0" />
+        <GradientStop Color="#FF3F93ED" Offset="1" />
+    </LinearGradientBrush>
+
+    <Style TargetType="Image">
+        <Setter Property="RenderOptions.BitmapScalingMode" Value="HighQuality" />
+    </Style>
+
+    <!-- Colors -->
+    
+    <Color x:Key="Win11.Dark.Background.Color">#FF707070</Color>
+    <Color x:Key="Win11.Background.Color">#FAFAFA</Color>
+    <Color x:Key="Win11.Foreground.Color">#FF212121</Color>
+    <Color x:Key="Win11.Window.Background.Color">#FFFFFF</Color>
+
+    <Color x:Key="Win11.Highlight.Color">#C0DDEB</Color>
+    <Color x:Key="Win11.Hot.Color">green</Color>
+    <Color x:Key="Win11.Control.Border.Color">#ACACAC</Color>
+    <Color x:Key="Win11.Control.Background.Color">#FFFFFF</Color>
+
+    <SolidColorBrush x:Key="Win11.Foreground.Brush" Color="{StaticResource Win11.Foreground.Color}"/>
+    <SolidColorBrush x:Key="Win11.MouseOver.Foreground.Brush" Color="{StaticResource Win11.Foreground.Color}"/>
+    <SolidColorBrush x:Key="Win11.Window.Background.Brush" Color="{StaticResource Win11.Window.Background.Color}"/>
+    <SolidColorBrush x:Key="Win11.Control.Border.Brush" Color="{StaticResource Win11.Control.Border.Color}" />
+    <SolidColorBrush x:Key="Win11.Control.Background.Brush" Color="{StaticResource Win11.Control.Background.Color}" />
+
+    <!--checkbox-->
+    
+    <SolidColorBrush x:Key="Win11.CheckBox.Fill.Normal.Brush" Color="#007ACC"/>
+    <SolidColorBrush x:Key="Win11.CheckBox.Stroke.Brush" Color="#2E92D4"/>
+    <SolidColorBrush x:Key="Win11.CheckBox.Glyph.Brush" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="Win11.CheckBox.Unchecked.Background.Brush" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="Win11.CheckBox.Unchecked.Border.Brush" Color="#BBBBBB"/>
+    <SolidColorBrush x:Key="Win11.CheckBox.MouseOver.Background.Brush" Color="#007ACC"/>
+    <SolidColorBrush x:Key="Win11.CheckBox.MouseOver.Border.Brush" Color="Blue"/>
+    <SolidColorBrush x:Key="Win11.CheckBox.Disabled.Background.Brush" Color="#FFE6E6E6"/>
+    <SolidColorBrush x:Key="Win11.CheckBox.Disabled.Border.Brush" Color="#FFBCBCBC"/>
+    <SolidColorBrush x:Key="Win11.CheckBox.Disabled.Glyph.Brush" Color="#FF707070"/>
+
+    <!--button-->
+    
+    <Color x:Key="Win11.Button.MouseOver.Background.Color">#d8e6f1</Color>
+    <SolidColorBrush x:Key="Win11.Button.MouseOver.Background.Brush" Color="{StaticResource Win11.Button.MouseOver.Background.Color}"/>
+    <Color x:Key="Win11.Button.MouseOver.Border.Color">#0078d4</Color>
+    <SolidColorBrush x:Key="Win11.Button.MouseOver.Border.Brush" Color="{StaticResource Win11.Button.MouseOver.Border.Color}"/>
+    <SolidColorBrush x:Key="Win11.Button.Foreground.Brush" Color="{StaticResource Win11.Foreground.Color}"/>
+    <Color x:Key="Win11.Button.Background.Color">#FFFFFF</Color>
+    <SolidColorBrush x:Key="Win11.Button.Background.Brush" Color="{StaticResource Win11.Button.Background.Color}"/>
+    <SolidColorBrush x:Key="Win11.Button.Border.Brush" Color="{StaticResource Win11.Control.Border.Color}"/>
+    <Color x:Key="Win11.Button.IsDefault.Border.Color">#3B85C9</Color>
+    <SolidColorBrush x:Key="Win11.Button.IsDefault.Border.Brush" Color="{StaticResource Win11.Button.IsDefault.Border.Color}"/>
+    <Color x:Key="Win11.Pressed.Button.Background.Color">#f3f3f3</Color>
+    <SolidColorBrush x:Key="Win11.Pressed.Button.Background.Brush" Color="{StaticResource Win11.Pressed.Button.Background.Color}"/>
+    <Color x:Key="Win11.Disabled.Button.Background.Color">#f3f3f3</Color>
+    <SolidColorBrush x:Key="Win11.Disabled.Button.Background.Brush" Color="{StaticResource Win11.Disabled.Button.Background.Color}"/>
+    <Color x:Key="Win11.Disabled.Button.Foreground.Color">#838383</Color>
+    <SolidColorBrush x:Key="Win11.Disabled.Button.Foreground.Brush" Color="{StaticResource Win11.Disabled.Button.Foreground.Color}"/>
+    <Color x:Key="Win11.Disabled.Button.Border.Color">#e2e2e2</Color>
+    <SolidColorBrush x:Key="Win11.Disabled.Button.Border.Brush" Color="{StaticResource Win11.Disabled.Button.Border.Color}"/>
+    
+    <!--scrollbars-->
+    <SolidColorBrush x:Key="Win11.Scroll.Viewer.Background.Brush" Color="Transparent" />
+    <SolidColorBrush x:Key="Win11.Vertical.ScrollBar.Background.Brush" Color="{StaticResource Win11.Background.Color}"/>
+    <SolidColorBrush x:Key="Win11.Horizontal.ScrollBar.Background.Brush" Color="{StaticResource Win11.Background.Color}" />
+    <SolidColorBrush x:Key="Win11.Vertical.ScrollBar.Thumb.Brush" Color="#D9D9D9"/>
+    
+    <SolidColorBrush x:Key="Win11.ScrollBar.Disabled.Background.Brush" Color="{StaticResource Win11.Background.Color}"/>
+    <SolidColorBrush x:Key="Win11.ScrollBar.Hot.Thumb.Brush" Color="#B6B6B6"/>
+    <SolidColorBrush x:Key="Win11.ScrollBar.Selected.Thumb.Brush" Color="#A6A6A6"/>
+
+
+    <!--TextBox-->
+    <SolidColorBrush x:Key="Win11.TextBox.Border.Brush" Color="{StaticResource Win11.Control.Border.Color}" />
+    <Color x:Key="Win11.TextBox.Background.Color">#ffffff</Color>
+    <SolidColorBrush x:Key="Win11.TextBox.Background.Brush" Color="{StaticResource Win11.TextBox.Background.Color}" />
+    <Color x:Key="Win11.TextBox.Disabled.Foreground.Color">#838383</Color>
+    <SolidColorBrush x:Key="Win11.TextBox.Disabled.Foreground.Brush" Color="{StaticResource Win11.TextBox.Disabled.Foreground.Color}" />
+    <Color x:Key="Win11.TextBox.Disabled.Background.Color">#f3f3f3</Color>
+    <SolidColorBrush x:Key="Win11.TextBox.Disabled.Background.Brush" Color="{StaticResource Win11.TextBox.Disabled.Background.Color}" />
+    <Color x:Key="Win11.TextBox.Focus.Border.Color">#0078d4</Color>
+    <SolidColorBrush x:Key="Win11.TextBox.Focus.Border.Brush" Color="{StaticResource Win11.TextBox.Focus.Border.Color}"/>
+    <Color x:Key="Win11.TextBox.MouseOver.Border.Color">#FF7EB4EA</Color>
+    <SolidColorBrush x:Key="Win11.TextBox.MouseOver.Border.Brush" Color="{StaticResource Win11.TextBox.MouseOver.Border.Color}"/>
+    <SolidColorBrush x:Key="Win11.Inactive.Selection.Highlight.Brush" Color="#335C85"/>
+
+    <!--ComboBox-->
+    <SolidColorBrush x:Key="Win11.ComboBox.Edit.Background.Brush" Color="#FFFFFFFF"/>
+    <LinearGradientBrush x:Key="Win11.ComboBox.Static.Background.Brush" EndPoint="0,1" StartPoint="0,0">
+        <GradientStop Color="#FFF0F0F0" Offset="0.0"/>
+        <GradientStop Color="#FFE5E5E5" Offset="1.0"/>
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="Win11.ComboBox.Static.Border.Brush" Color="{StaticResource Win11.Control.Border.Color}"/>
+    <SolidColorBrush x:Key="Win11.ComboBox.Static.Glyph.Brush" Color="#FF606060"/>
+    <LinearGradientBrush x:Key="Win11.ComboBox.MouseOver.Background.Brush" EndPoint="0,1" StartPoint="0,0">
+        <GradientStop Color="#FFECF4FC" Offset="0.0"/>
+        <GradientStop Color="#FFDCECFC" Offset="1.0"/>
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="Win11.ComboBox.MouseOver.Border.Brush" Color="#FF7EB4EA"/>
+    <SolidColorBrush x:Key="Win11.ComboBox.MouseOver.Glyph.Brush" Color="#FF000000"/>
+    <SolidColorBrush x:Key="Win11.ComboBox.MouseOver.Editable.Border.Brush" Color="#FF7EB4EA"/>
+    <LinearGradientBrush x:Key="Win11.ComboBox.MouseOver.Editable.Button.Background.Brush" EndPoint="0,1" StartPoint="0,0">
+        <GradientStop Color="#FFEBF4FC" Offset="0.0"/>
+        <GradientStop Color="#FFDCECFC" Offset="1.0"/>
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="Win11.ComboBox.Disabled.Background.Brush" Color="#FFF0F0F0"/>
+    <SolidColorBrush x:Key="Win11.ComboBox.Disabled.Border.Brush" Color="#FFD9D9D9"/>
+    <SolidColorBrush x:Key="Win11.ComboBox.Disabled.Glyph.Brush" Color="#FFBFBFBF"/>
+    <SolidColorBrush x:Key="Win11.ComboBox.Disabled.Editable.Background.Brush" Color="#FFFFFFFF"/>
+    <SolidColorBrush x:Key="Win11.ComboBox.Disabled.Editable.Border.Brush" Color="#FFBFBFBF"/>
+    <SolidColorBrush x:Key="Win11.ComboBox.Disabled.Editable.Button.Background.Brush" Color="Transparent"/>
+    <SolidColorBrush x:Key="Win11.ComboBox.Disabled.Editable.Button.Border.Brush" Color="Transparent"/>
+    <SolidColorBrush x:Key="Win11.ComboBox.Popup.Frame.Brush" Color="Black"/>
+    <SolidColorBrush x:Key="Win11.ComboBox.Popup.Background.Brush" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="Win11.ComboBoxItem.Itemsview.Hover.Background.Brush" Color="#1F26A0DA"/>
+    <SolidColorBrush x:Key="Win11.ComboBoxItem.Itemsview.Hover.Border.Brush" Color="#A826A0DA"/>
+    <SolidColorBrush x:Key="Win11.ComboBoxItem.Itemsview.Selected.Background.Brush" Color="#3D26A0DA"/>
+    <SolidColorBrush x:Key="Win11.ComboBoxItem.Itemsview.Selected.Border.Brush" Color="#FF26A0DA"/>
+    <SolidColorBrush x:Key="Win11.ComboBoxItem.Itemsview.Selected.Hover.Background.Brush" Color="#2E0080FF"/>
+    <SolidColorBrush x:Key="Win11.ComboBoxItem.Itemsview.Selected.Hover.Border.Brush" Color="#99006CD9"/>
+    <SolidColorBrush x:Key="Win11.ComboBoxItem.Itemsview.Selected.No.Focus.Background.Brush" Color="#3DDADADA"/>
+    <SolidColorBrush x:Key="Win11.ComboBoxItem.Itemsview.Selected.No.Focus.Border.Brush" Color="#FFDADADA"/>
+    <SolidColorBrush x:Key="Win11.ComboBoxItem.Itemsview.Focus.Border.Brush" Color="#FF26A0DA"/>
+    <SolidColorBrush x:Key="Win11.ComboBoxItem.Itemsview.Hover.Focus.Background.Brush" Color="#5426A0DA"/>
+    <SolidColorBrush x:Key="Win11.ComboBoxItem.Itemsview.Hover.Focus.Border.Brush" Color="#FF26A0DA"/>
+
+    <!--Menu-->
+    <SolidColorBrush x:Key="Win11.Disabled.Menu.Foreground.Brush" Color="#858585"/>
+    <SolidColorBrush x:Key="Win11.Menu.Background.Brush" Color="#F0F0F0"/>
+    <SolidColorBrush x:Key="Win11.MenuItem.Selection.Fill.Brush" Color="{StaticResource Win11.Highlight.Color}"/>
+    <SolidColorBrush x:Key="Win11.MenuItem.Selection.Border.Brush" Color="#FF26A0DA"/>
+    <SolidColorBrush x:Key="Win11.SubMenu.Background.Brush" Color="#F0F0F0"/>
+    <SolidColorBrush x:Key="Win11.MenuItem.Pressed.Fill.Brush" Color="{StaticResource Win11.Highlight.Color}"/>
+    <SolidColorBrush x:Key="Win11.SubMenu.Border.Brush" Color="#A5A5A5"/>
+    <SolidColorBrush x:Key="Win11.SubMenu.Repeat.Button.Brush" Color="#F0F0F0"/>
+    <SolidColorBrush x:Key="Win11.SubMenu.Hover.Repeat.Button.Brush" Color="#EEEEEE"/>
+    <SolidColorBrush x:Key="Win11.Menu.Separator.Brush" Color="#BBBBBB"/>
+
+    <!--RadioButton-->
+    <SolidColorBrush x:Key="Win11.Radio.Button.Static.Background.Brush" Color="#FFFFFFFF"/>
+    <SolidColorBrush x:Key="Win11.Radio.Button.Static.Border.Brush" Color="#FFBBBBBB"/>
+    <SolidColorBrush x:Key="Win11.Radio.Button.Static.Glyph.Brush" Color="#FFF9F9F9"/>
+    <SolidColorBrush x:Key="Win11.Radio.Button.Checked.Background.Brush" Color="#007ACC"/>
+    <SolidColorBrush x:Key="Win11.Radio.Button.Checked.Border.Brush" Color="#2E92D4"/>
+    <SolidColorBrush x:Key="Win11.Radio.Button.MouseOver.Background.Brush" Color="#FFF3F9FF"/>
+    <SolidColorBrush x:Key="Win11.Radio.Button.MouseOver.Border.Brush" Color="#FF5593FF"/>
+    <SolidColorBrush x:Key="Win11.Radio.Button.MouseOver.Glyph.Brush" Color="#FFE9E9E9"/>
+    <SolidColorBrush x:Key="Win11.Radio.Button.Pressed.Background.Brush" Color="#FFD9ECFF"/>
+    <SolidColorBrush x:Key="Win11.Radio.Button.Pressed.Border.Brush" Color="#FF3C77DD"/>
+    <SolidColorBrush x:Key="Win11.Radio.Button.Pressed.Glyph.Brush" Color="#FF212121"/>
+    <SolidColorBrush x:Key="Win11.Radio.Button.Disabled.Background.Brush" Color="#FFE6E6E6"/>
+    <SolidColorBrush x:Key="Win11.Radio.Button.Disabled.Border.Brush" Color="#FFBCBCBC"/>
+    <SolidColorBrush x:Key="Win11.Radio.Button.Disabled.Glyph.Brush" Color="#FFE6E6E6"/>
+
+    <!--ProgressBar-->
+    <SolidColorBrush x:Key="Win11.ProgressBar.Progress.Brush" Color="#FF06B025"/>
+    <SolidColorBrush x:Key="Win11.ProgressBar.Background.Brush" Color="#E6E6E6"/>
+    <SolidColorBrush x:Key="Win11.ProgressBar.Border.Brush" Color="#FFBCBCBC"/>
+
+    <!--TabControl-->
+    <SolidColorBrush x:Key="Win11.TabItem.Selected.Background.Brush" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="Win11.TabItem.Selected.Border.Brush" Color="#ACACAC"/>
+    <LinearGradientBrush x:Key="Win11.TabItem.Static.Background.Brush" EndPoint="0,1" StartPoint="0,0">
+        <GradientStop Color="#F0F0F0" Offset="0.0"/>
+        <GradientStop Color="#E5E5E5" Offset="1.0"/>
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="Win11.TabItem.Static.Border.Brush" Color="#ACACAC"/>
+    <LinearGradientBrush x:Key="Win11.TabItem.MouseOver.Background.Brush" EndPoint="0,1" StartPoint="0,0">
+        <GradientStop Color="#ECF4FC" Offset="0.0"/>
+        <GradientStop Color="#DCECFC" Offset="1.0"/>
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="Win11.TabItem.MouseOver.Border.Brush" Color="#7EB4EA"/>
+    <SolidColorBrush x:Key="Win11.TabItem.Disabled.Background.Brush" Color="#F0F0F0"/>
+    <SolidColorBrush x:Key="Win11.TabItem.Disabled.Border.Brush" Color="#D9D9D9"/>
+
+    <!--Expander-->
+    <SolidColorBrush x:Key="Win11.Expander.Static.Circle.Stroke.Brush" Color="#FF333333"/>
+    <SolidColorBrush x:Key="Win11.Expander.Static.Circle.Fill.Brush" Color="#FFFFFFFF"/>
+    <SolidColorBrush x:Key="Win11.Expander.Static.Arrow.Stroke.Brush" Color="#FF333333"/>
+    <SolidColorBrush x:Key="Win11.Expander.MouseOver.Circle.Stroke.Brush" Color="#FF5593FF"/>
+    <SolidColorBrush x:Key="Win11.Expander.MouseOver.Circle.Fill.Brush" Color="#FFF3F9FF"/>
+    <SolidColorBrush x:Key="Win11.Expander.MouseOver.Arrow.Stroke.Brush" Color="#FF000000"/>
+    <SolidColorBrush x:Key="Win11.Expander.Pressed.Circle.Stroke.Brush" Color="#FF3C77DD"/>
+    <SolidColorBrush x:Key="Win11.Expander.Pressed.Circle.Fill.Brush" Color="#FFD9ECFF"/>
+    <SolidColorBrush x:Key="Win11.Expander.Pressed.Arrow.Stroke.Brush" Color="#FF000000"/>
+    <SolidColorBrush x:Key="Win11.Expander.Disabled.Circle.Stroke.Brush" Color="#FFBCBCBC"/>
+    <SolidColorBrush x:Key="Win11.Expander.Disabled.Circle.Fill.Brush" Color="#FFE6E6E6"/>
+    <SolidColorBrush x:Key="Win11.Expander.Disabled.Arrow.Stroke.Brush" Color="#FF707070"/>
+
+    <!--ToolTip-->
+    <SolidColorBrush x:Key="Win11.ToolTip.Background.Brush" Color="#F1F2F7" />
+    <SolidColorBrush x:Key="Win11.ToolTip.Border.Brush" Color="#808080" />
+    <SolidColorBrush x:Key="Win11.ToolTip.Foreground.Brush" Color="#424242" />
+
+    <!--DatePicker / Calendar-->
+    <SolidColorBrush x:Key="Win11.DatePicker.Border.Brush" Color="{StaticResource Win11.Control.Border.Color}" />
+    <SolidColorBrush x:Key="Win11.DatePicker.Foreground.Brush" Color="{StaticResource Win11.Foreground.Color}" />
+    <SolidColorBrush x:Key="Win11.DatePicker.Calendar.Background.Brush" Color="#FFFFFF" />
+    <SolidColorBrush x:Key="Win11.DatePicker.Calendar.Foreground.Brush" Color="{StaticResource Win11.Foreground.Color}" />
+    <SolidColorBrush x:Key="Win11.DatePicker.Calendar.Header.Background.Brush" Color="#E9EDF2" />
+    <SolidColorBrush x:Key="Win11.DatePicker.Calendar.MouseOver.Foreground.Brush" Color="#FF73A9D8" />
+    <SolidColorBrush x:Key="Win11.DatePicker.Calendar.Day.Button.Foreground.Brush" Color="{StaticResource Win11.Foreground.Color}" />
+    <SolidColorBrush x:Key="Win11.DatePicker.Calendar.Day.Button.Highlight.Foreground.Brush" Color="{StaticResource Win11.Foreground.Color}" />
+    <SolidColorBrush x:Key="Win11.DatePicker.Calendar.Day.Button.Highlight.Background.Brush" Color="#FFBADDE9" />
+    <SolidColorBrush x:Key="Win11.DatePicker.Calendar.Day.Button.Selected.Foreground.Brush" Color="{StaticResource Win11.Foreground.Color}" />
+    <SolidColorBrush x:Key="Win11.DatePicker.Calendar.Day.Button.Selected.Background.Brush" Color="#FFBADDE9" />
+    <SolidColorBrush x:Key="Win11.DatePicker.Calendar.Day.Button.Today.Foreground.Brush" Color="White" />
+    <SolidColorBrush x:Key="Win11.DatePicker.Calendar.Day.Button.Today.Background.Brush" Color="#FFAAAAAA" />
+    <SolidColorBrush x:Key="Win11.DatePicker.Calendar.Day.Button.Inactive.Foreground.Color.Brush" Color="#FF777777" />
+    <SolidColorBrush x:Key="Win11.DatePicker.Calendar.Day.Button.Blackout.Brush" Color="#FF000000" />
+    <SolidColorBrush x:Key="Win11.DatePicker.Calendar.Selected.Button.Brush" Color="#FFBADDE9" />
+    <SolidColorBrush x:Key="Win11.DatePicker.Calendar.Day.Button.Focus.Border.Brush" Color="#FF45D6FA" />
+
+    <!--DataGrid-->
+    <SolidColorBrush x:Key="Win11.DataGrid.Row.Background.Brush" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="Win11.DataGrid.Focus.Border.Brush.Key" Color="#FF000000"/>
+    <SolidColorBrush x:Key="Win11.DataGrid.Border.Brush" Color="#FF688CAF"/>
+    <SolidColorBrush x:Key="Win11.DataGrid.Header.Border.Brush" Color="#E4E4E4"/>
+    <LinearGradientBrush x:Key="Win11.DataGrid.Header.Background.Brush" EndPoint="0,1" StartPoint="0,0.0">
+        <GradientStop Color="#FFFFFF" Offset="0.33"/>
+        <GradientStop Color="#F6F7F9" Offset="0.4"/>
+        <GradientStop Color="#F2F3F5" Offset="1.0"/>
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="Win11.DataGrid.Header.Hover.Border.Brush" Color="#69BBE3"/>
+    <LinearGradientBrush x:Key="Win11.DataGrid.Header.Hover.Background.Brush" EndPoint="0,1" StartPoint="0,0">
+        <GradientStop Color="#E3F7FF" Offset="0.33"/>
+        <GradientStop Color="#BDEDFF" Offset="0.4"/>
+        <GradientStop Color="#B8E8FB" Offset="1.0"/>
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="Win11.DataGrid.Header.Sorted.Border.Brush" Color="#96D9F9"/>
+    <LinearGradientBrush x:Key="Win11.DataGrid.Header.Sorted.Background.Brush" EndPoint="0,1" StartPoint="0,0">
+        <GradientStop Color="#F2F9FC" Offset="0.33"/>
+        <GradientStop Color="#E0F1F9" Offset="0.4"/>
+        <GradientStop Color="#D9ECF6" Offset="1.0"/>
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="Win11.DataGrid.Header.Sort.Glyph.Border.Brush" Color="#7295A9"/>
+    <LinearGradientBrush x:Key="Win11.DataGrid.Header.Sort.Glyph.Background.Brush" EndPoint="1,0" StartPoint="0,0">
+        <GradientStop Color="#81ABC4" Offset="0"/>
+        <GradientStop Color="#DDDDDD" Offset="1.0"/>
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="Win11.DataGrid.Header.Pressed.Border.Brush" Color="#7A9EB1"/>
+    <LinearGradientBrush x:Key="Win11.DataGrid.Header.Pressed.Background.Brush" EndPoint="0,1" StartPoint="0,0">
+        <GradientStop Color="#BCE4F9" Offset="0.33"/>
+        <GradientStop Color="#8DD6F7" Offset="0.4"/>
+        <GradientStop Color="#8BD2F5" Offset="1.0"/>
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="Win11.DataGrid.Row.Header.Background.Brush" EndPoint="1,0" StartPoint="0,0">
+        <GradientStop Color="#FFFFFF" Offset="0.33"/>
+        <GradientStop Color="#F6F7F9" Offset="0.4"/>
+        <GradientStop Color="#F2F3F5" Offset="1.0"/>
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="Win11.DataGrid.Row.Header.Hover.Background.Brush" EndPoint="1,0" StartPoint="0,0">
+        <GradientStop Color="#E3F7FF" Offset="0.33"/>
+        <GradientStop Color="#BDEDFF" Offset="0.4"/>
+        <GradientStop Color="#B8E8FB" Offset="1.0"/>
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="Win11.DataGrid.Row.Header.Selected.Background.Brush" EndPoint="1,0" StartPoint="0,0">
+        <GradientStop Color="#F2F9FC" Offset="0.33"/>
+        <GradientStop Color="#E0F1F9" Offset="0.4"/>
+        <GradientStop Color="#D9ECF6" Offset="1.0"/>
+    </LinearGradientBrush>
+
+    <!--Slider-->
+    <SolidColorBrush x:Key="Win11.Slider.Thumb.Static.Background.Brush" Color="#FFF0F0F0"/>
+    <SolidColorBrush x:Key="Win11.Slider.Thumb.Static.Border.Brush" Color="#FFACACAC"/>
+    <SolidColorBrush x:Key="Win11.Slider.Thumb.MouseOver.Background.Brush" Color="#FFDCECFC"/>
+    <SolidColorBrush x:Key="Win11.Slider.Thumb.MouseOver.Border.Brush" Color="#FF7Eb4EA"/>
+    <SolidColorBrush x:Key="Win11.Slider.Thumb.Pressed.Background.Brush" Color="#FFDAECFC"/>
+    <SolidColorBrush x:Key="Win11.Slider.Thumb.Pressed.Border.Brush" Color="#FF569DE5"/>
+    <SolidColorBrush x:Key="Win11.Slider.Thumb.Disabled.Background.Brush" Color="#FFF0F0F0"/>
+    <SolidColorBrush x:Key="Win11.Slider.Thumb.Disabled.Border.Brush" Color="#FFD9D9D9"/>
+    <SolidColorBrush x:Key="Win11.Slider.Thumb.Track.Background.Brush" Color="#FFE7EAEA"/>
+    <SolidColorBrush x:Key="Win11.Slider.Thumb.Track.Border.Brush" Color="#FFD6D6D6"/>
+
+    <!--ListBox-->
+    <SolidColorBrush x:Key="Win11.ListBox.Static.Background.Brush" Color="#FFFFFFFF"/>
+    <SolidColorBrush x:Key="Win11.ListBox.Static.Border.Brush" Color="#FFABADB3"/>
+    <SolidColorBrush x:Key="Win11.ListBox.Disabled.Background.Brush" Color="#FFFFFFFF"/>
+    <SolidColorBrush x:Key="Win11.ListBox.Disabled.Border.Brush" Color="#FFD9D9D9"/>
+    <SolidColorBrush x:Key="Win11.ListBox.Disabled.Text.Brush" Color="#FF6D6D6D"/>
+    <SolidColorBrush x:Key="Win11Item.MouseOver.Background.Brush" Color="#1F26A0DA"/>
+    <SolidColorBrush x:Key="Win11Item.MouseOver.Border.Brush" Color="#a826A0Da"/>
+    <SolidColorBrush x:Key="Win11Item.Selected.Active.Background.Brush" Color="#3D26A0DA"/>
+    <SolidColorBrush x:Key="Win11Item.Selected.Active.Border.Brush" Color="#FF26A0DA"/>
+    <SolidColorBrush x:Key="Win11Item.Selected.Inactive.Background.Brush" Color="#3DDADADA"/>
+    <SolidColorBrush x:Key="Win11Item.Selected.Inactive.Border.Brush" Color="#FFDADADA"/>
+
+</ResourceDictionary>

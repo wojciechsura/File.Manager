@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -14,6 +15,27 @@ namespace File.Manager.OsInterop
 {
     public class IconGenerator
     {
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
+        private struct SHFILEINFO
+        {
+            public IntPtr hIcon;
+            public int iIcon;
+            public uint dwAttributes;
+            public string szDisplayName;
+            public string szTypeName;
+        };
+
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+        public struct SHSTOCKICONINFO
+        {
+            public uint cbSize;
+            public IntPtr hIcon;
+            public int iSysIconIndex;
+            public int iIcon;
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 260)]
+            public string szPath;
+        }
+
         public static class KnownFolderId
         {
             public static readonly Guid AccountPictures = new(0x008CA0B1, 0x55B4, 0x4C56, 0xB8, 0xA8, 0x4D, 0xE4, 0xB2, 0x99, 0xD3, 0xBE);
@@ -172,21 +194,134 @@ namespace File.Manager.OsInterop
             KF_FLAG_ALIAS_ONLY = 214783648
         }
 
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
-        private struct SHFILEINFO
+        private enum SHSTOCKICONID : uint
         {
-            public IntPtr hIcon;
-            public int iIcon;
-            public uint dwAttributes;
-            public string szDisplayName;
-            public string szTypeName;
-        };
+            SIID_DOCNOASSOC = 0,
+            SIID_DOCASSOC = 1,
+            SIID_APPLICATION = 2,
+            SIID_FOLDER = 3,
+            SIID_FOLDEROPEN = 4,
+            SIID_DRIVE525 = 5,
+            SIID_DRIVE35 = 6,
+            SIID_DRIVEREMOVE = 7,
+            SIID_DRIVEFIXED = 8,
+            SIID_DRIVENET = 9,
+            SIID_DRIVENETDISABLED = 10,
+            SIID_DRIVECD = 11,
+            SIID_DRIVERAM = 12,
+            SIID_WORLD = 13,
+            SIID_SERVER = 15,
+            SIID_PRINTER = 16,
+            SIID_MYNETWORK = 17,
+            SIID_FIND = 22,
+            SIID_HELP = 23,
+            SIID_SHARE = 28,
+            SIID_LINK = 29,
+            SIID_SLOWFILE = 30,
+            SIID_RECYCLER = 31,
+            SIID_RECYCLERFULL = 32,
+            SIID_MEDIACDAUDIO = 40,
+            SIID_LOCK = 47,
+            SIID_AUTOLIST = 49,
+            SIID_PRINTERNET = 50,
+            SIID_SERVERSHARE = 51,
+            SIID_PRINTERFAX = 52,
+            SIID_PRINTERFAXNET = 53,
+            SIID_PRINTERFILE = 54,
+            SIID_STACK = 55,
+            SIID_MEDIASVCD = 56,
+            SIID_STUFFEDFOLDER = 57,
+            SIID_DRIVEUNKNOWN = 58,
+            SIID_DRIVEDVD = 59,
+            SIID_MEDIADVD = 60,
+            SIID_MEDIADVDRAM = 61,
+            SIID_MEDIADVDRW = 62,
+            SIID_MEDIADVDR = 63,
+            SIID_MEDIADVDROM = 64,
+            SIID_MEDIACDAUDIOPLUS = 65,
+            SIID_MEDIACDRW = 66,
+            SIID_MEDIACDR = 67,
+            SIID_MEDIACDBURN = 68,
+            SIID_MEDIABLANKCD = 69,
+            SIID_MEDIACDROM = 70,
+            SIID_AUDIOFILES = 71,
+            SIID_IMAGEFILES = 72,
+            SIID_VIDEOFILES = 73,
+            SIID_MIXEDFILES = 74,
+            SIID_FOLDERBACK = 75,
+            SIID_FOLDERFRONT = 76,
+            SIID_SHIELD = 77,
+            SIID_WARNING = 78,
+            SIID_INFO = 79,
+            SIID_ERROR = 80,
+            SIID_KEY = 81,
+            SIID_SOFTWARE = 82,
+            SIID_RENAME = 83,
+            SIID_DELETE = 84,
+            SIID_MEDIAAUDIODVD = 85,
+            SIID_MEDIAMOVIEDVD = 86,
+            SIID_MEDIAENHANCEDCD = 87,
+            SIID_MEDIAENHANCEDDVD = 88,
+            SIID_MEDIAHDDVD = 89,
+            SIID_MEDIABLURAY = 90,
+            SIID_MEDIAVCD = 91,
+            SIID_MEDIADVDPLUSR = 92,
+            SIID_MEDIADVDPLUSRW = 93,
+            SIID_DESKTOPPC = 94,
+            SIID_MOBILEPC = 95,
+            SIID_USERS = 96,
+            SIID_MEDIASMARTMEDIA = 97,
+            SIID_MEDIACOMPACTFLASH = 98,
+            SIID_DEVICECELLPHONE = 99,
+            SIID_DEVICECAMERA = 100,
+            SIID_DEVICEVIDEOCAMERA = 101,
+            SIID_DEVICEAUDIOPLAYER = 102,
+            SIID_NETWORKCONNECT = 103,
+            SIID_INTERNET = 104,
+            SIID_ZIPFILE = 105,
+            SIID_SETTINGS = 106,
+            SIID_DRIVEHDDVD = 132,
+            SIID_DRIVEBD = 133,
+            SIID_MEDIAHDDVDROM = 134,
+            SIID_MEDIAHDDVDR = 135,
+            SIID_MEDIAHDDVDRAM = 136,
+            SIID_MEDIABDROM = 137,
+            SIID_MEDIABDR = 138,
+            SIID_MEDIABDRE = 139,
+            SIID_CLUSTEREDDRIVE = 140,
+            SIID_MAX_ICONS = 181
+        }
 
-        private const uint SHGFI_LARGEICON = 0x00000000;
-        private const uint SHGFI_SMALLICON = 0x00000001;
-        private const uint SHGFI_OPENICON = 0x00000002;
-        private const uint SHGFI_ICON = 0x00000100;
-        private const uint SHGFI_PIDL = 0x00000008;
+        [Flags]
+        public enum SHGSI : uint
+        {
+            /// <summary>The szPath and iIcon members of the SHSTOCKICONINFO structure receive the path and icon index of the requested icon, in a format suitable for passing to the ExtractIcon function. The numerical value of this flag is zero, so you always get the icon location regardless of other flags.</summary>
+            SHGSI_ICONLOCATION = 0,
+            /// <summary>The hIcon member of the SHSTOCKICONINFO structure receives a handle to the specified icon.</summary>
+            SHGSI_ICON = 0x000000100,
+            /// <summary>The iSysImageImage member of the SHSTOCKICONINFO structure receives the index of the specified icon in the system imagelist.</summary>
+            SHGSI_SYSICONINDEX = 0x000004000,
+            /// <summary>Modifies the SHGSI_ICON value by causing the function to add the link overlay to the file's icon.</summary>
+            SHGSI_LINKOVERLAY = 0x000008000,
+            /// <summary>Modifies the SHGSI_ICON value by causing the function to blend the icon with the system highlight color.</summary>
+            SHGSI_SELECTED = 0x000010000,
+            /// <summary>Modifies the SHGSI_ICON value by causing the function to retrieve the large version of the icon, as specified by the SM_CXICON and SM_CYICON system metrics.</summary>
+            SHGSI_LARGEICON = 0x000000000,
+            /// <summary>Modifies the SHGSI_ICON value by causing the function to retrieve the small version of the icon, as specified by the SM_CXSMICON and SM_CYSMICON system metrics.</summary>
+            SHGSI_SMALLICON = 0x000000001,
+            /// <summary>Modifies the SHGSI_LARGEICON or SHGSI_SMALLICON values by causing the function to retrieve the Shell-sized icons rather than the sizes specified by the system metrics.</summary>
+            SHGSI_SHELLICONSIZE = 0x000000004
+        }
+
+        [Flags]
+        public enum SHGFI
+        {
+            SHGFI_LARGEICON = 0x00000000,
+            SHGFI_SMALLICON = 0x00000001,
+            SHGFI_OPENICON = 0x00000002,
+            SHGFI_ICON = 0x00000100,
+            SHGFI_PIDL = 0x00000008
+        }
 
         [DllImport("shell32.dll", CharSet = CharSet.Auto)]
         private static extern IntPtr SHGetFileInfo(string pszPath, 
@@ -211,16 +346,19 @@ namespace File.Manager.OsInterop
             IntPtr hToken, 
             out IntPtr ppidl);
 
+        [DllImport("shell32.dll")]
+        private static extern int SHGetStockIconInfo(uint siid, uint uFlags, ref SHSTOCKICONINFO psii);
+
         public static (ImageSource smallIcon, ImageSource largeIcon) GetFileIcon(string filename)
         {
             SHFILEINFO shinfo = new SHFILEINFO();
-            SHGetFileInfo(filename, 0, ref shinfo, (uint)Marshal.SizeOf(shinfo), SHGFI_ICON | SHGFI_SMALLICON);
+            SHGetFileInfo(filename, 0, ref shinfo, (uint)Marshal.SizeOf(shinfo), (uint)(SHGFI.SHGFI_ICON | SHGFI.SHGFI_SMALLICON));
             Icon icon = Icon.FromHandle(shinfo.hIcon);
             ImageSource smallIcon = Imaging.CreateBitmapSourceFromHIcon(icon.Handle, Int32Rect.Empty, BitmapSizeOptions.FromWidthAndHeight(16, 16));
             DestroyIcon(icon.Handle);
 
             shinfo = new SHFILEINFO();
-            SHGetFileInfo(filename, 0, ref shinfo, (uint)Marshal.SizeOf(shinfo), SHGFI_ICON | SHGFI_LARGEICON);
+            SHGetFileInfo(filename, 0, ref shinfo, (uint)Marshal.SizeOf(shinfo), (uint)(SHGFI.SHGFI_ICON | SHGFI.SHGFI_LARGEICON));
             icon = Icon.FromHandle(shinfo.hIcon);
             ImageSource largeIcon = Imaging.CreateBitmapSourceFromHIcon(icon.Handle, Int32Rect.Empty, BitmapSizeOptions.FromWidthAndHeight(32, 32));
             DestroyIcon(icon.Handle);
@@ -234,16 +372,34 @@ namespace File.Manager.OsInterop
             SHGetKnownFolderIDList(KnownFolderId.ComputerFolder, 0, IntPtr.Zero, out pidList);
 
             SHFILEINFO shinfo = new SHFILEINFO();
-            SHGetFileInfo(pidList, 0, ref shinfo, (uint)Marshal.SizeOf(shinfo), SHGFI_PIDL | SHGFI_ICON | SHGFI_SMALLICON);
+            SHGetFileInfo(pidList, 0, ref shinfo, (uint)Marshal.SizeOf(shinfo), (uint)(SHGFI.SHGFI_PIDL | SHGFI.SHGFI_ICON | SHGFI.SHGFI_SMALLICON));
             Icon icon = Icon.FromHandle(shinfo.hIcon);
             ImageSource smallIcon = Imaging.CreateBitmapSourceFromHIcon(icon.Handle, Int32Rect.Empty, BitmapSizeOptions.FromWidthAndHeight(16, 16));
             DestroyIcon(icon.Handle);
 
             shinfo = new SHFILEINFO();
-            SHGetFileInfo(pidList, 0, ref shinfo, (uint)Marshal.SizeOf(shinfo), SHGFI_PIDL | SHGFI_ICON | SHGFI_LARGEICON);
+            SHGetFileInfo(pidList, 0, ref shinfo, (uint)Marshal.SizeOf(shinfo), (uint)(SHGFI.SHGFI_PIDL | SHGFI.SHGFI_ICON | SHGFI.SHGFI_LARGEICON));
             icon = Icon.FromHandle(shinfo.hIcon);
             ImageSource largeIcon = Imaging.CreateBitmapSourceFromHIcon(icon.Handle, Int32Rect.Empty, BitmapSizeOptions.FromWidthAndHeight(32, 32));
             DestroyIcon(icon.Handle);
+
+            return (smallIcon, largeIcon);
+        }
+
+        public static (ImageSource smallIcon, ImageSource largeIcon) GetFolderIcon()
+        {
+            var info = new SHSTOCKICONINFO();
+            info.cbSize = (uint)Marshal.SizeOf(info);
+
+            SHGetStockIconInfo((uint)(SHSTOCKICONID.SIID_FOLDER), (uint)(SHGSI.SHGSI_ICON | SHGSI.SHGSI_SMALLICON), ref info);
+            var icon = Icon.FromHandle(info.hIcon);
+            ImageSource smallIcon = Imaging.CreateBitmapSourceFromHIcon(icon.Handle, Int32Rect.Empty, BitmapSizeOptions.FromWidthAndHeight(16, 16));
+            DestroyIcon(info.hIcon);
+
+            SHGetStockIconInfo((uint)(SHSTOCKICONID.SIID_FOLDER), (uint)(SHGSI.SHGSI_ICON | SHGSI.SHGSI_LARGEICON), ref info);
+            icon = Icon.FromHandle(info.hIcon);
+            ImageSource largeIcon = Imaging.CreateBitmapSourceFromHIcon(icon.Handle, Int32Rect.Empty, BitmapSizeOptions.FromWidthAndHeight(32, 32));
+            DestroyIcon(info.hIcon);
 
             return (smallIcon, largeIcon);
         }
