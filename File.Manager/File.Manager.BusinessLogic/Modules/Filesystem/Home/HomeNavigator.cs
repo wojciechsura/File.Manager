@@ -1,6 +1,7 @@
 ﻿using File.Manager.API.Filesystem;
 using File.Manager.API.Filesystem.Models.Execution;
 using File.Manager.API.Filesystem.Models.Items;
+using File.Manager.API.Filesystem.Models.Navigation;
 using File.Manager.BusinessLogic.Services.Modules;
 using System;
 using System.Collections.Generic;
@@ -15,10 +16,11 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Home
         private const string ROOT_ADDRESS = @"\";
 
         private readonly List<Item> items;
+        private readonly IModuleService moduleService;
 
-        private class ModuleFileItem : FileItem
+        private class ModuleFolderItem : FolderItem
         {
-            public ModuleFileItem(FilesystemModule module)
+            public ModuleFolderItem(FilesystemModule module)
                 : base(module.DisplayName)
             {                
                 SmallIcon = module.SmallIcon;
@@ -31,12 +33,8 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Home
 
         public HomeNavigator(IModuleService moduleService)
         {
+            this.moduleService = moduleService;
             items = new List<Item>();
-            foreach (var module in moduleService.FilesystemModules)
-            {
-                var file = new ModuleFileItem(module);
-                items.Add(file);
-            }
         }
 
         public override void Dispose()
@@ -46,14 +44,40 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Home
 
         public override ExecutionOutcome Execute(Item item)
         {
-            if (item is ModuleFileItem moduleFileItem)
+            if (item is ModuleFolderItem moduleFolderItem)
             {
-                return ExecutionOutcome.ReplaceNavigator(moduleFileItem.Module.OpenRoot());
+                var navigator = moduleFolderItem.Module.CreateNavigator();
+                var outcome = navigator.NavigateToRoot();
+
+                if (outcome is NavigationSuccess)
+                    return ExecutionOutcome.ReplaceNavigator(navigator);
+                else if (outcome is NavigationError error)
+                    return ExecutionOutcome.Error(error.Message);
+                else
+                    throw new InvalidOperationException("Unsupported navigation outcome!");
             }
             else
             {
                 throw new InvalidOperationException("Unsupported file!");
             }
+        }
+
+        public override NavigationOutcome NavigateToRoot()
+        {
+            items.Clear();
+
+            foreach (var module in moduleService.FilesystemModules)
+            {
+                var folder = new ModuleFolderItem(module);
+                items.Add(folder);
+            }
+
+            return NavigationOutcome.NavigationSuccess();
+        }
+
+        public override NavigationOutcome NavigateToAddress(string address)
+        {
+            throw new InvalidOperationException("HomeNavigator does not support navigating to address!");
         }
 
         public override string Address => ROOT_ADDRESS;

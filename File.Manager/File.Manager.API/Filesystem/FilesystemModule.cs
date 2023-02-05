@@ -17,8 +17,7 @@ namespace File.Manager.API.Filesystem
         }
 
         public abstract bool SupportsAddress(string address);
-        public abstract FilesystemNavigator OpenRoot();
-        public abstract FilesystemNavigator OpenAddress(string address);
+        public abstract FilesystemNavigator CreateNavigator();
 
         public abstract ImageSource SmallIcon { get; }
         public abstract ImageSource LargeIcon { get; }

@@ -1,6 +1,7 @@
 ﻿using File.Manager.API.Filesystem.Models;
 using File.Manager.API.Filesystem.Models.Execution;
 using File.Manager.API.Filesystem.Models.Items;
+using File.Manager.API.Filesystem.Models.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +21,10 @@ namespace File.Manager.API.Filesystem
         }
 
         // Public methods -----------------------------------------------------
+
+        public abstract NavigationOutcome NavigateToRoot();
+
+        public abstract NavigationOutcome NavigateToAddress(string address);
 
         public abstract ExecutionOutcome Execute(Item item);
 

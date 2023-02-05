@@ -21,22 +21,15 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
             (smallIcon, largeIcon) = IconGenerator.GetMyComputerIcon();
         }
 
-        public override FilesystemNavigator OpenAddress(string address)
-        {
-            // TODO
-            throw new NotImplementedException();
-        }
-
-        public override FilesystemNavigator OpenRoot()
-        {
-            // TODO
-            throw new NotImplementedException();
-        }
-
         public override bool SupportsAddress(string address)
         {
             // TODO
             throw new NotImplementedException();
+        }
+
+        public override FilesystemNavigator CreateNavigator()
+        {
+            return new LocalNavigator();
         }
 
         public override ImageSource SmallIcon => smallIcon;

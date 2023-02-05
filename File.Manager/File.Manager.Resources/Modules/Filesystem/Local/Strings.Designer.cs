@@ -68,5 +68,32 @@ namespace File.Manager.Resources.Modules.Filesystem.Local {
                 return ResourceManager.GetString("DisplayName", resourceCulture);
             }
         }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Failed to navigate to address {0}: {1}.
+        /// </summary>
+        public static string Error_FailedToNavigateToAddress {
+            get {
+                return ResourceManager.GetString("Error_FailedToNavigateToAddress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Failed to obtain local drive list: {0}.
+        /// </summary>
+        public static string Error_FailedToObtainDriveList {
+            get {
+                return ResourceManager.GetString("Error_FailedToObtainDriveList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Path {0} does not exist!.
+        /// </summary>
+        public static string Error_PathDoesNotExist {
+            get {
+                return ResourceManager.GetString("Error_PathDoesNotExist", resourceCulture);
+            }
+        }
     }
 }

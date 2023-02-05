@@ -52,14 +52,20 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
             }
         }
 
+        private void SetHomeNavigator()
+        {
+            navigator = new HomeNavigator(moduleService);
+            navigator.NavigateToRoot();
+        }
+
         public PaneViewModel(IPaneHandler handler, IModuleService moduleService, IIconService iconService)
         {
             this.handler = handler;
             this.moduleService = moduleService;
             this.iconService = iconService;
-            navigator = new HomeNavigator(moduleService);
             items = new List<ItemViewModel>();
-
+            
+            SetHomeNavigator();
             UpdateItems();
         }
 
