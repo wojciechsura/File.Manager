@@ -1,10 +1,15 @@
 ﻿using File.Manager.API.Filesystem;
+using File.Manager.API.Filesystem.Models.Execution;
 using File.Manager.API.Filesystem.Models.Items;
+using File.Manager.API.Filesystem.Models.Navigation;
 using File.Manager.BusinessLogic.Modules.Filesystem.Home;
 using File.Manager.BusinessLogic.Services.Icons;
+using File.Manager.BusinessLogic.Services.Messaging;
 using File.Manager.BusinessLogic.Services.Modules;
+using File.Manager.BusinessLogic.ViewModels.Base;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,13 +18,22 @@ using System.Windows.Media;
 
 namespace File.Manager.BusinessLogic.ViewModels.Pane
 {
-    public class PaneViewModel
+    public class PaneViewModel : BaseViewModel
     {
         private readonly IPaneHandler handler;
         private readonly IModuleService moduleService;
         private readonly IIconService iconService;
+        private readonly IMessagingService messagingService;
+
         private FilesystemNavigator navigator;
-        private List<ItemViewModel> items;
+        private readonly ObservableCollection<ItemViewModel> items;
+        private ItemViewModel selectedItem;
+
+        private void SelectAndFocus(ItemViewModel itemViewModel)
+        {
+            SelectedItem = itemViewModel;
+            Access?.FocusItem(itemViewModel);
+        }
 
         private void UpdateItems()
         {
@@ -50,25 +64,120 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
                 var itemViewModel = new ItemViewModel(name, smallIcon, largeIcon, item);
                 items.Add(itemViewModel);
             }
+
+            SelectAndFocus(items.FirstOrDefault());
+        }
+
+        private void ReplaceCurrentNavigator(FilesystemNavigator newNavigator)
+        {
+            if (navigator != null)
+                navigator.Dispose();
+
+            navigator = newNavigator;
+
+            UpdateItems();
         }
 
         private void SetHomeNavigator()
         {
-            navigator = new HomeNavigator(moduleService);
-            navigator.NavigateToRoot();
+            var homeNavigator = new HomeNavigator(moduleService);
+            homeNavigator.NavigateToRoot();
+
+            ReplaceCurrentNavigator(homeNavigator);
         }
 
-        public PaneViewModel(IPaneHandler handler, IModuleService moduleService, IIconService iconService)
+        public void ExecuteCurrentItem()
+        {
+            if (selectedItem != null)
+            {
+                var outcome = navigator.Execute(selectedItem.Item);
+                
+                switch (outcome)
+                {
+                    case Error error:
+                        {
+                            messagingService.ShowError(String.Format(Resources.Controls.Pane.Strings.Message_CannotExecuteItem, error.Message));
+                            break;
+                        }
+                    case Handled handled:
+                        {
+                            // Handled means, that Navigator handled the whole
+                            // execution on its own (e.g. started external process)
+                            // Nothing else needs to be done here
+                            break;
+                        }
+                    case NavigateToAddress navigateToAddress:
+                        {
+                            int i = 0;
+                            while (i < moduleService.FilesystemModules.Count && 
+                                !moduleService.FilesystemModules[i].SupportsAddress(navigateToAddress.Address))
+                                i++;
+
+                            if (i < moduleService.FilesystemModules.Count)
+                            {
+                                var module = moduleService.FilesystemModules[i];
+
+                                var newNavigator = module.CreateNavigator();
+                                var navigationOutcome = newNavigator.NavigateToAddress(navigateToAddress.Address);
+
+                                if (navigationOutcome is NavigationSuccess)
+                                {
+                                    ReplaceCurrentNavigator(newNavigator);
+                                }
+                                else
+                                {
+                                    messagingService.ShowError(String.Format(Resources.Controls.Pane.Strings.Message_AddressNavigationFailed, navigateToAddress.Address));
+                                }
+                            }
+                            else
+                            {
+                                messagingService.ShowError(String.Format(Resources.Controls.Pane.Strings.Message_AddressUnsupported, navigateToAddress.Address));
+                            }
+
+                            break;
+                        }
+                    case NeedsRefresh:
+                        {
+                            UpdateItems();
+                            break;
+                        }
+                    case ReplaceNavigator replaceNavigator:
+                        {
+                            ReplaceCurrentNavigator(replaceNavigator.NewNavigator);
+                            break;
+                        }
+                    case ReturnHome:
+                        {
+                            SetHomeNavigator();
+                            break;
+                        }
+                    default:
+                        throw new InvalidOperationException("Unsupported execution outcome!");
+                }
+            }
+        }
+
+        public PaneViewModel(IPaneHandler handler, IModuleService moduleService, IIconService iconService, IMessagingService messagingService)
         {
             this.handler = handler;
             this.moduleService = moduleService;
             this.iconService = iconService;
-            items = new List<ItemViewModel>();
+            this.messagingService = messagingService;
+
+            items = new();
             
             SetHomeNavigator();
             UpdateItems();
         }
 
-        public IReadOnlyList<ItemViewModel> Items => items;
+        public ObservableCollection<ItemViewModel> Items => items;
+
+        public IPaneAccess Access { get; set; }
+
+        public ItemViewModel SelectedItem
+        {
+            get => selectedItem;
+            set => Set(ref selectedItem, value);
+        }
     }
 }

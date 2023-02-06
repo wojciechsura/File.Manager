@@ -314,13 +314,26 @@ namespace File.Manager.OsInterop
         }
 
         [Flags]
-        public enum SHGFI
+        enum SHGFI
         {
-            SHGFI_LARGEICON = 0x00000000,
-            SHGFI_SMALLICON = 0x00000001,
-            SHGFI_OPENICON = 0x00000002,
-            SHGFI_ICON = 0x00000100,
-            SHGFI_PIDL = 0x00000008
+            SHGFI_ICON = 0x000000100,
+            SHGFI_DISPLAYNAME = 0x000000200,
+            SHGFI_TYPENAME = 0x000000400,
+            SHGFI_ATTRIBUTES = 0x000000800,
+            SHGFI_ICONLOCATION = 0x000001000,
+            SHGFI_EXETYPE = 0x000002000,
+            SHGFI_SYSICONINDEX = 0x000004000,
+            SHGFI_LINKOVERLAY = 0x000008000,
+            SHGFI_SELECTED = 0x000010000,
+            SHGFI_ATTR_SPECIFIED = 0x000020000,
+            SHGFI_LARGEICON = 0x000000000,
+            SHGFI_SMALLICON = 0x000000001,
+            SHGFI_OPENICON = 0x000000002,
+            SHGFI_SHELLICONSIZE = 0x000000004,
+            SHGFI_PIDL = 0x000000008,
+            SHGFI_USEFILEATTRIBUTES = 0x000000010,
+            SHGFI_ADDOVERLAYS = 0x000000020,
+            SHGFI_OVERLAYINDEX = 0x000000040
         }
 
         [DllImport("shell32.dll", CharSet = CharSet.Auto)]
@@ -352,13 +365,13 @@ namespace File.Manager.OsInterop
         public static (ImageSource smallIcon, ImageSource largeIcon) GetFileIcon(string filename)
         {
             SHFILEINFO shinfo = new SHFILEINFO();
-            SHGetFileInfo(filename, 0, ref shinfo, (uint)Marshal.SizeOf(shinfo), (uint)(SHGFI.SHGFI_ICON | SHGFI.SHGFI_SMALLICON));
+            SHGetFileInfo(filename, 0, ref shinfo, (uint)Marshal.SizeOf(shinfo), (uint)(SHGFI.SHGFI_ICON | SHGFI.SHGFI_SMALLICON | SHGFI.SHGFI_USEFILEATTRIBUTES));
             Icon icon = Icon.FromHandle(shinfo.hIcon);
             ImageSource smallIcon = Imaging.CreateBitmapSourceFromHIcon(icon.Handle, Int32Rect.Empty, BitmapSizeOptions.FromWidthAndHeight(16, 16));
             DestroyIcon(icon.Handle);
 
             shinfo = new SHFILEINFO();
-            SHGetFileInfo(filename, 0, ref shinfo, (uint)Marshal.SizeOf(shinfo), (uint)(SHGFI.SHGFI_ICON | SHGFI.SHGFI_LARGEICON));
+            SHGetFileInfo(filename, 0, ref shinfo, (uint)Marshal.SizeOf(shinfo), (uint)(SHGFI.SHGFI_ICON | SHGFI.SHGFI_LARGEICON | SHGFI.SHGFI_USEFILEATTRIBUTES));
             icon = Icon.FromHandle(shinfo.hIcon);
             ImageSource largeIcon = Imaging.CreateBitmapSourceFromHIcon(icon.Handle, Int32Rect.Empty, BitmapSizeOptions.FromWidthAndHeight(32, 32));
             DestroyIcon(icon.Handle);
@@ -372,13 +385,13 @@ namespace File.Manager.OsInterop
             SHGetKnownFolderIDList(KnownFolderId.ComputerFolder, 0, IntPtr.Zero, out pidList);
 
             SHFILEINFO shinfo = new SHFILEINFO();
-            SHGetFileInfo(pidList, 0, ref shinfo, (uint)Marshal.SizeOf(shinfo), (uint)(SHGFI.SHGFI_PIDL | SHGFI.SHGFI_ICON | SHGFI.SHGFI_SMALLICON));
+            SHGetFileInfo(pidList, 0, ref shinfo, (uint)Marshal.SizeOf(shinfo), (uint)(SHGFI.SHGFI_PIDL | SHGFI.SHGFI_ICON | SHGFI.SHGFI_SMALLICON | SHGFI.SHGFI_USEFILEATTRIBUTES));
             Icon icon = Icon.FromHandle(shinfo.hIcon);
             ImageSource smallIcon = Imaging.CreateBitmapSourceFromHIcon(icon.Handle, Int32Rect.Empty, BitmapSizeOptions.FromWidthAndHeight(16, 16));
             DestroyIcon(icon.Handle);
 
             shinfo = new SHFILEINFO();
-            SHGetFileInfo(pidList, 0, ref shinfo, (uint)Marshal.SizeOf(shinfo), (uint)(SHGFI.SHGFI_PIDL | SHGFI.SHGFI_ICON | SHGFI.SHGFI_LARGEICON));
+            SHGetFileInfo(pidList, 0, ref shinfo, (uint)Marshal.SizeOf(shinfo), (uint)(SHGFI.SHGFI_PIDL | SHGFI.SHGFI_ICON | SHGFI.SHGFI_LARGEICON | SHGFI.SHGFI_USEFILEATTRIBUTES));
             icon = Icon.FromHandle(shinfo.hIcon);
             ImageSource largeIcon = Imaging.CreateBitmapSourceFromHIcon(icon.Handle, Int32Rect.Empty, BitmapSizeOptions.FromWidthAndHeight(32, 32));
             DestroyIcon(icon.Handle);

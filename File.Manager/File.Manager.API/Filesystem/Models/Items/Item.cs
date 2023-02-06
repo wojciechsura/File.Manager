@@ -19,7 +19,7 @@ namespace File.Manager.API.Filesystem.Models.Items
         }
 
         public string Name { get; }
-        public ImageSource SmallIcon { get; set; }
-        public ImageSource LargeIcon { get; set; }
+        public ImageSource? SmallIcon { get; set; }
+        public ImageSource? LargeIcon { get; set; }
     }
 }

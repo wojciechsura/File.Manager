@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 
 namespace File.Manager.API.Filesystem.Models.Items
 {
@@ -15,7 +16,14 @@ namespace File.Manager.API.Filesystem.Models.Items
         public UpFolderItem() :
             base(Resources.Strings.Item_UpFolder_Name)
         {
+            
+        }
 
+        public UpFolderItem(ImageSource smallIcon, ImageSource largeIcon)
+            : this()
+        {
+            SmallIcon = smallIcon;
+            LargeIcon = largeIcon;
         }
     }
 }

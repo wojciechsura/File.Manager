@@ -18,5 +18,12 @@ namespace File.Manager.API.Filesystem.Models.Items
         {
 
         }
+
+        public FolderItem(string name, ImageSource smallIcon, ImageSource largeIcon)
+            : this(name)
+        {
+            SmallIcon = smallIcon;
+            LargeIcon = largeIcon;
+        }
     }
 }

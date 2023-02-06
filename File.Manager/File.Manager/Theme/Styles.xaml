@@ -4,4 +4,9 @@
         <ResourceDictionary Source="ColorsLight.xaml" />
         <ResourceDictionary Source="Dimensions.xaml" />
     </ResourceDictionary.MergedDictionaries>
+
+    <Style TargetType="Button" x:Key="DialogButton">
+        <Setter Property="Width" Value="150" />
+        <Setter Property="Margin" Value="{StaticResource DialogItemsExceptLeftMargin}" />
+    </Style>
 </ResourceDictionary>

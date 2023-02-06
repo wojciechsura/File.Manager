@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace File.Manager.Resources.Modules.Filesystem.Local {
+namespace File.Manager.Resources.Controls.Pane {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace File.Manager.Resources.Modules.Filesystem.Local {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("File.Manager.Resources.Modules.Filesystem.Local.Strings", typeof(Strings).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("File.Manager.Resources.Controls.Pane.Strings", typeof(Strings).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,38 +61,29 @@ namespace File.Manager.Resources.Modules.Filesystem.Local {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Computer.
+        ///   Looks up a localized string similar to Falied to navigate to address: {0}.
         /// </summary>
-        public static string DisplayName {
+        public static string Message_AddressNavigationFailed {
             get {
-                return ResourceManager.GetString("DisplayName", resourceCulture);
+                return ResourceManager.GetString("Message_AddressNavigationFailed", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Failed to navigate to address {0}: {1}.
+        ///   Looks up a localized string similar to The following address is unsupported: {0}.
         /// </summary>
-        public static string Error_FailedToNavigateToAddress {
+        public static string Message_AddressUnsupported {
             get {
-                return ResourceManager.GetString("Error_FailedToNavigateToAddress", resourceCulture);
+                return ResourceManager.GetString("Message_AddressUnsupported", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Failed to obtain local drive list: {0}.
+        ///   Looks up a localized string similar to Cannot execute action on item: {0}.
         /// </summary>
-        public static string Error_FailedToObtainDriveList {
+        public static string Message_CannotExecuteItem {
             get {
-                return ResourceManager.GetString("Error_FailedToObtainDriveList", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Path {0} does not exist!.
-        /// </summary>
-        public static string Error_PathDoesNotExist {
-            get {
-                return ResourceManager.GetString("Error_PathDoesNotExist", resourceCulture);
+                return ResourceManager.GetString("Message_CannotExecuteItem", resourceCulture);
             }
         }
     }
