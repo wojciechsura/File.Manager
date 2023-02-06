@@ -1,4 +1,4 @@
-﻿using File.Manager.API.Filesystem.Models.Selection;
+﻿using File.Manager.API.Filesystem.Models.Focus;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,13 +13,13 @@ namespace File.Manager.API.Filesystem.Models.Execution
     /// </summary>
     public sealed class ReplaceNavigator : ExecutionOutcome
     {
-        internal ReplaceNavigator(FilesystemNavigator newNavigator, SelectionMemento selection = null)
+        internal ReplaceNavigator(FilesystemNavigator newNavigator, FocusedItemData? data = null)
         {
             NewNavigator = newNavigator;
-            Selection = selection;
+            Data = data;
         }
 
         public FilesystemNavigator NewNavigator { get; }
-        public SelectionMemento Selection { get; }
+        public FocusedItemData? Data { get; }
     }
 }

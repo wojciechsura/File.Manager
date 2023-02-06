@@ -1,5 +1,5 @@
 ﻿using File.Manager.API.Filesystem;
-using File.Manager.API.Filesystem.Models.Selection;
+using File.Manager.API.Filesystem.Models.Focus;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 
 namespace File.Manager.BusinessLogic.Modules.Filesystem.Home
 {
-    public class HomeSelectionMemento : SelectionMemento
+    class HomeFocusedItemData : FocusedItemData
     {
-        public HomeSelectionMemento(FilesystemModule module)
+        public HomeFocusedItemData(string moduleUid)
         {
-            Module = module;
+            ModuleUid = moduleUid;
         }
 
-        public FilesystemModule Module { get; }
+        public string ModuleUid { get; }
     }
 }

@@ -3,6 +3,8 @@ using File.Manager.API.Filesystem;
 using File.Manager.API.Filesystem.Models.Execution;
 using File.Manager.API.Filesystem.Models.Items;
 using File.Manager.API.Filesystem.Models.Navigation;
+using File.Manager.API.Filesystem.Models.Focus;
+using File.Manager.BusinessLogic.Modules.Filesystem.Home;
 using File.Manager.BusinessLogic.Services.Icons;
 using File.Manager.OsInterop;
 using System;
@@ -27,35 +29,35 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
 
         private sealed class LocalDriveItem : FolderItem
         {
-            public LocalDriveItem(string name, string path)
+            public LocalDriveItem(string name, string filename)
                 : base(name)
             {
-                Path = path;
+                Filename = filename;
             }
 
-            public string Path { get; }
+            public string Filename { get; }
         }
 
         private sealed class LocalFolderItem : FolderItem
         {
-            public LocalFolderItem(string name, string path)
+            public LocalFolderItem(string name, string filename)
                 : base(name)
             {
-                Path = path;
+                Filename = filename;
             }
 
-            public string Path { get; }
+            public string Filename { get; }
         }
 
         private sealed class LocalFileItem : FileItem
         {
-            public LocalFileItem(string name, string path)
+            public LocalFileItem(string name, string filename)
                 : base(name)
             {
-                Path = path;
+                Filename = filename;
             }
 
-            public string Path { get; }
+            public string Filename { get; }
         }
 
         // Private fields -----------------------------------------------------
@@ -136,13 +138,13 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
             }
         }
 
-        private ExecutionOutcome TryExecuteOpeningFolder(string newAddress)
+        private ExecutionOutcome TryExecuteOpeningFolder(string newAddress, FocusedItemData data = null)
         {
             (bool result, string message) = InternalOpenAddress<ExecutionOutcome>(newAddress);
-            return result ? ExecutionOutcome.NeedsRefresh() : ExecutionOutcome.Error(message);
+            return result ? ExecutionOutcome.NeedsRefresh(data) : ExecutionOutcome.Error(message);
         }
 
-        private NavigationOutcome TryNavigateToAddress(string newAddress)
+        private NavigationOutcome TryNavigateToAddress(string newAddress = null)
         {
             (bool result, string message) = InternalOpenAddress<NavigationOutcome>(newAddress);
             return result ? NavigationOutcome.NavigationSuccess() : NavigationOutcome.NavigationError(message);
@@ -155,7 +157,6 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
             
         }
         
-
         public override void Dispose()
         {
             
@@ -165,26 +166,33 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
         {
             if (item is LocalDriveItem driveItem)
             {
-                return TryExecuteOpeningFolder(driveItem.Path);                
+                return TryExecuteOpeningFolder(driveItem.Filename);                
             }
             if (item is LocalFolderItem folderItem)
             {
-                return TryExecuteOpeningFolder(System.IO.Path.Combine(address, folderItem.Path));
+                return TryExecuteOpeningFolder(System.IO.Path.Combine(address, folderItem.Filename));
             }
             else if (item is LocalFileItem fileItem)
             {
                 throw new NotImplementedException();
             }
-            else if (item is UpFolderItem upFolderItem)
+            else if (item is UpFolderItem)
             {
                 if (address == ROOT_ADDRESS)
-                    return ExecutionOutcome.ReturnHome();
+                    return ExecutionOutcome.ReturnHome(new HomeFocusedItemData(LocalModule.ModuleUid));
                 else if (driveRootAddress.IsMatch(address))
-                    return TryExecuteOpeningFolder(ROOT_ADDRESS);
+                {
+                    var data = new LocalFocusedItemData(address);
+                    return TryExecuteOpeningFolder(ROOT_ADDRESS, data);
+                }
                 else
                 {
                     string newAddress = Path.GetFullPath(Path.Combine(address, ".."));
-                    return TryExecuteOpeningFolder(newAddress);
+
+                    string current = Path.GetFileName(Path.EndsInDirectorySeparator(address) ? address[..^1] : address);
+                    var data = new LocalFocusedItemData(current);
+
+                    return TryExecuteOpeningFolder(newAddress, data);
                 }
             }
             else
@@ -201,6 +209,26 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
         public override NavigationOutcome NavigateToAddress(string address)
         {
             return TryNavigateToAddress(address);
+        }
+
+        public override Item ResolveSelectedItem(FocusedItemData data)
+        {
+            if (data is not LocalFocusedItemData localData)
+                return null;
+
+            var filename = localData.Filename.ToLowerInvariant();
+
+            foreach (var item in items)
+            {
+                if (item is LocalFileItem fileItem && fileItem.Filename.ToLower() == filename)
+                    return item;
+                else if (item is LocalFolderItem folderItem && folderItem.Filename.ToLower() == filename)
+                    return item;
+                else if (item is LocalDriveItem driveItem && driveItem.Filename.ToLower() == filename)
+                    return item;                
+            }
+
+            return null;
         }
 
         // Public properties --------------------------------------------------

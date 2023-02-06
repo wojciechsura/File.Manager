@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace File.Manager.API.Filesystem.Models.Selection
+namespace File.Manager.API.Filesystem.Models.Focus
 {
     /// <summary>
     /// Serves as information passed to the navigator when
@@ -12,7 +12,7 @@ namespace File.Manager.API.Filesystem.Models.Selection
     /// the target navigator to properly select the item in
     /// navigated-to folder if needed.
     /// </summary>
-    public abstract class SelectionMemento
+    public abstract class FocusedItemData
     {
 
     }

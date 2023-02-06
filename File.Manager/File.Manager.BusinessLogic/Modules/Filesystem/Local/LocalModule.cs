@@ -12,6 +12,8 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
 {
     internal class LocalModule : FilesystemModule
     {
+        public static readonly string ModuleUid = "LOCAL";
+
         private readonly ImageSource smallIcon;
         private readonly ImageSource largeIcon;
 
@@ -35,6 +37,6 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
         public override ImageSource SmallIcon => smallIcon;
         public override ImageSource LargeIcon => largeIcon;
         public override string DisplayName => Resources.Modules.Filesystem.Local.Strings.DisplayName;
-        public override string Uid => "LOCAL";
+        public override string Uid => ModuleUid;
     }
 }

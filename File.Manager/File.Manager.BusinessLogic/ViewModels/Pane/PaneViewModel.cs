@@ -2,7 +2,7 @@
 using File.Manager.API.Filesystem.Models.Execution;
 using File.Manager.API.Filesystem.Models.Items;
 using File.Manager.API.Filesystem.Models.Navigation;
-using File.Manager.API.Filesystem.Models.Selection;
+using File.Manager.API.Filesystem.Models.Focus;
 using File.Manager.BusinessLogic.Modules.Filesystem.Home;
 using File.Manager.BusinessLogic.Services.Icons;
 using File.Manager.BusinessLogic.Services.Messaging;
@@ -36,11 +36,11 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
             Access?.FocusItem(itemViewModel);
         }
 
-        private void UpdateItems(SelectionMemento selection)
+        private void UpdateItems(FocusedItemData data)
         {
             items.Clear();
 
-            Item newSelectedItem = navigator.ResolveSelectedItem(selection);
+            Item newSelectedItem = navigator.ResolveSelectedItem(data);
             ItemViewModel newSelectedItemViewModel = null;
 
             for (int i = 0; i < navigator.Items.Count; i++)
@@ -78,22 +78,22 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
                 SelectAndFocus(items.FirstOrDefault());
         }
 
-        private void ReplaceCurrentNavigator(FilesystemNavigator newNavigator, SelectionMemento selection)
+        private void ReplaceCurrentNavigator(FilesystemNavigator newNavigator, FocusedItemData data)
         {
             if (navigator != null)
                 navigator.Dispose();
 
             navigator = newNavigator;
 
-            UpdateItems(selection);
+            UpdateItems(data);
         }
 
-        private void SetHomeNavigator()
+        private void SetHomeNavigator(FocusedItemData data)
         {
             var homeNavigator = new HomeNavigator(moduleService);
             homeNavigator.NavigateToRoot();
 
-            ReplaceCurrentNavigator(homeNavigator);
+            ReplaceCurrentNavigator(homeNavigator, data);
         }
 
         public void ExecuteCurrentItem()
@@ -132,7 +132,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
 
                                 if (navigationOutcome is NavigationSuccess)
                                 {
-                                    ReplaceCurrentNavigator(newNavigator);
+                                    ReplaceCurrentNavigator(newNavigator, null);
                                 }
                                 else
                                 {
@@ -148,17 +148,17 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
                         }
                     case NeedsRefresh needsRefresh:
                         {
-                            UpdateItems(needsRefresh.Selection);
+                            UpdateItems(needsRefresh.Data);
                             break;
                         }
                     case ReplaceNavigator replaceNavigator:
                         {
-                            ReplaceCurrentNavigator(replaceNavigator.NewNavigator, replaceNavigator.Selection);
+                            ReplaceCurrentNavigator(replaceNavigator.NewNavigator, replaceNavigator.Data);
                             break;
                         }
-                    case ReturnHome:
+                    case ReturnHome returnHome:
                         {
-                            SetHomeNavigator();
+                            SetHomeNavigator(returnHome.Data);
                             break;
                         }
                     default:
@@ -176,8 +176,8 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
 
             items = new();
             
-            SetHomeNavigator();
-            UpdateItems();
+            SetHomeNavigator(null);
+            UpdateItems(null);
         }
 
         public ObservableCollection<ItemViewModel> Items => items;

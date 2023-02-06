@@ -1,4 +1,4 @@
-﻿using File.Manager.API.Filesystem.Models.Selection;
+﻿using File.Manager.API.Filesystem.Models.Focus;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,11 +14,11 @@ namespace File.Manager.API.Filesystem.Models.Execution
     /// </summary>
     public sealed class NeedsRefresh : ExecutionOutcome
     {
-        internal NeedsRefresh(SelectionMemento selection = null)
+        internal NeedsRefresh(FocusedItemData? data = null)
         {
-            Selection = selection;
+            Data = data;
         }
 
-        public SelectionMemento Selection { get; }
+        public FocusedItemData? Data { get; }
     }
 }

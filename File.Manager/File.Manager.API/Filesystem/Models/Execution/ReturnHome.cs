@@ -1,4 +1,5 @@
-﻿using System;
+﻿using File.Manager.API.Filesystem.Models.Focus;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,9 +13,11 @@ namespace File.Manager.API.Filesystem.Models.Execution
     /// </summary>
     public sealed class ReturnHome : ExecutionOutcome
     {
-        internal ReturnHome()
+        internal ReturnHome(FocusedItemData? data = null)
         {
-
+            Data = data;
         }
+
+        public FocusedItemData? Data { get; }
     }
 }

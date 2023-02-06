@@ -2,7 +2,7 @@
 using File.Manager.API.Filesystem.Models.Execution;
 using File.Manager.API.Filesystem.Models.Items;
 using File.Manager.API.Filesystem.Models.Navigation;
-using File.Manager.API.Filesystem.Models.Selection;
+using File.Manager.API.Filesystem.Models.Focus;
 using File.Manager.BusinessLogic.Services.Modules;
 using System;
 using System.Collections.Generic;
@@ -81,11 +81,11 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Home
             throw new InvalidOperationException("HomeNavigator does not support navigating to address!");
         }
 
-        public override Item ResolveSelectedItem(SelectionMemento selection)
+        public override Item ResolveSelectedItem(FocusedItemData data)
         {
-            var homeSelection = selection as HomeSelectionMemento;
-            if (homeSelection != null)
-                return items.FirstOrDefault(i => i.Module == homeSelection.Module);
+            var homeData = data as HomeFocusedItemData;
+            if (homeData != null)
+                return items.FirstOrDefault(i => i.Module.Uid == homeData.ModuleUid);
 
             return null;
         }

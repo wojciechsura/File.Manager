@@ -1,4 +1,5 @@
-﻿using System;
+﻿using File.Manager.API.Filesystem.Models.Focus;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,11 +18,11 @@ namespace File.Manager.API.Filesystem.Models.Execution
 
         }
 
-        public static Error Error(string message) => new Error(message);
-        public static Handled Handled() => new Handled();
-        public static NavigateToAddress NavigateToAddress(string address) => new NavigateToAddress(address);
-        public static NeedsRefresh NeedsRefresh() => new NeedsRefresh();
-        public static ReplaceNavigator ReplaceNavigator(FilesystemNavigator newNavigator) => new ReplaceNavigator(newNavigator);
-        public static ReturnHome ReturnHome() => new ReturnHome();
+        public static Error Error(string message) => new(message);
+        public static Handled Handled() => new();
+        public static NavigateToAddress NavigateToAddress(string address) => new(address);
+        public static NeedsRefresh NeedsRefresh(FocusedItemData? data = null) => new(data);
+        public static ReplaceNavigator ReplaceNavigator(FilesystemNavigator newNavigator, FocusedItemData? data = null) => new(newNavigator, data);
+        public static ReturnHome ReturnHome(FocusedItemData? data = null) => new(data);
     }
 }
