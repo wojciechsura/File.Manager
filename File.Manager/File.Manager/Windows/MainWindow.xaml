@@ -1,21 +1,35 @@
-﻿<Window x:Class="File.Manager.Windows.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:File.Manager" 
-        xmlns:c="clr-namespace:File.Manager.Controls" xmlns:main="clr-namespace:File.Manager.BusinessLogic.ViewModels.Main;assembly=File.Manager.BusinessLogic" d:DataContext="{d:DesignInstance Type=main:MainWindowViewModel}"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1*" />
-            <ColumnDefinition Width="6" />
-            <ColumnDefinition Width="1*" />
-        </Grid.ColumnDefinitions>
+﻿<f:RibbonWindow x:Class="File.Manager.Windows.MainWindow"
+                xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                xmlns:local="clr-namespace:File.Manager" 
+                xmlns:f="urn:fluent-ribbon"
+                xmlns:c="clr-namespace:File.Manager.Controls" xmlns:main="clr-namespace:File.Manager.BusinessLogic.ViewModels.Main;assembly=File.Manager.BusinessLogic" d:DataContext="{d:DesignInstance Type=main:MainWindowViewModel}"
+                mc:Ignorable="d"
+                Title="MainWindow" Height="450" Width="800">
 
-        <c:Pane Grid.Column="0" DataContext="{Binding LeftPane}" />
-        <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-        <c:Pane Grid.Column="2" DataContext="{Binding RightPane}" />
-    </Grid>
-</Window>
+    <f:RibbonWindow.InputBindings>
+        <KeyBinding Key="U" Modifiers="Ctrl" Command="{Binding SwitchPanesCommand}" />
+    </f:RibbonWindow.InputBindings>
+
+    <DockPanel>
+
+        <f:Ribbon DockPanel.Dock="Top">
+
+        </f:Ribbon>
+        
+        <Grid Focusable="False">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="6" />
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
+
+            <c:Pane Grid.Column="0" DataContext="{Binding LeftPane}" Focusable="False"/>
+            <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Focusable="False" />
+            <c:Pane Grid.Column="2" DataContext="{Binding RightPane}" Focusable="False"/>
+        </Grid>
+
+    </DockPanel>
+</f:RibbonWindow>

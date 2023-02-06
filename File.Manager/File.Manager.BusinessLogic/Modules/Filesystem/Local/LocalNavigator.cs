@@ -15,6 +15,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using System.Diagnostics;
 
 namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
 {
@@ -174,7 +175,21 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
             }
             else if (item is LocalFileItem fileItem)
             {
-                throw new NotImplementedException();
+                // Try to execute item with explorer
+                var path = System.IO.Path.Combine(address, fileItem.Filename);
+
+                try
+                {
+                    ProcessStartInfo psi = new ProcessStartInfo(path);
+                    psi.UseShellExecute = true;
+                    Process.Start(psi);
+
+                    return ExecutionOutcome.Handled();
+                }
+                catch (Exception e)
+                {
+                    return ExecutionOutcome.Error(String.Format(Resources.Modules.Filesystem.Local.Strings.Error_CannotOpenFile, path, e.Message));
+                }
             }
             else if (item is UpFolderItem)
             {
@@ -211,7 +226,7 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
             return TryNavigateToAddress(address);
         }
 
-        public override Item ResolveSelectedItem(FocusedItemData data)
+        public override Item ResolveFocusedItem(FocusedItemData data)
         {
             if (data is not LocalFocusedItemData localData)
                 return null;

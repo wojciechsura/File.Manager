@@ -81,7 +81,7 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Home
             throw new InvalidOperationException("HomeNavigator does not support navigating to address!");
         }
 
-        public override Item ResolveSelectedItem(FocusedItemData data)
+        public override Item ResolveFocusedItem(FocusedItemData data)
         {
             var homeData = data as HomeFocusedItemData;
             if (homeData != null)

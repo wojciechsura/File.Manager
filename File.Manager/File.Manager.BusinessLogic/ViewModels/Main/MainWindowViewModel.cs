@@ -3,11 +3,13 @@ using File.Manager.BusinessLogic.Services.Messaging;
 using File.Manager.BusinessLogic.Services.Modules;
 using File.Manager.BusinessLogic.ViewModels.Base;
 using File.Manager.BusinessLogic.ViewModels.Pane;
+using Spooksoft.VisualStateManager.Commands;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace File.Manager.BusinessLogic.ViewModels.Main
 {
@@ -16,6 +18,18 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
         // Private fields -----------------------------------------------------
 
         private readonly IMainWindowAccess access;
+
+        private PaneViewModel leftPane;
+        private PaneViewModel rightPane;
+
+        // Private methods ----------------------------------------------------
+
+        private void DoSwitchPanes()
+        {
+            var tmp = LeftPane;
+            LeftPane = RightPane;
+            RightPane = tmp;
+        }
 
         // Public methods -----------------------------------------------------
 
@@ -26,13 +40,26 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
         {
             this.access = access;
 
-            LeftPane = new PaneViewModel(this, moduleService, iconService, messagingService);
-            RightPane = new PaneViewModel(this, moduleService, iconService, messagingService);
+            leftPane = new PaneViewModel(this, moduleService, iconService, messagingService);
+            rightPane = new PaneViewModel(this, moduleService, iconService, messagingService);
+
+            SwitchPanesCommand = new AppCommand(obj => DoSwitchPanes());
         }
 
         // Public properties --------------------------------------------------
 
-        public PaneViewModel LeftPane { get; }
-        public PaneViewModel RightPane { get; }
+        public PaneViewModel LeftPane
+        {
+            get => leftPane;
+            set => Set(ref leftPane, value);
+        }
+
+        public PaneViewModel RightPane
+        {
+            get => rightPane;
+            set => Set(ref rightPane, value);
+        }
+
+        public ICommand SwitchPanesCommand { get; }        
     }
 }

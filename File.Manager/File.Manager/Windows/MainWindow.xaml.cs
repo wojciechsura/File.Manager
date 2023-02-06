@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using Autofac.Core;
 using File.Manager.BusinessLogic.ViewModels.Main;
+using Fluent;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +22,7 @@ namespace File.Manager.Windows
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window, IMainWindowAccess
+    public partial class MainWindow : RibbonWindow, IMainWindowAccess
     {
         private MainWindowViewModel viewModel;
 

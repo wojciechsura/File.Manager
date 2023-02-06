@@ -40,7 +40,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
         {
             items.Clear();
 
-            Item newSelectedItem = navigator.ResolveSelectedItem(data);
+            Item newSelectedItem = navigator.ResolveFocusedItem(data);
             ItemViewModel newSelectedItemViewModel = null;
 
             for (int i = 0; i < navigator.Items.Count; i++)

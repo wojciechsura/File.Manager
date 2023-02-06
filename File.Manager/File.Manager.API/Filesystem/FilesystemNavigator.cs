@@ -29,7 +29,7 @@ namespace File.Manager.API.Filesystem
 
         public abstract ExecutionOutcome Execute(Item item);
 
-        public abstract Item ResolveSelectedItem(FocusedItemData data);
+        public abstract Item ResolveFocusedItem(FocusedItemData data);
 
         public abstract void Dispose();
 
