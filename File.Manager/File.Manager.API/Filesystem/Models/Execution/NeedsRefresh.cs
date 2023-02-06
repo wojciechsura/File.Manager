@@ -1,4 +1,5 @@
-﻿using System;
+﻿using File.Manager.API.Filesystem.Models.Selection;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,9 +14,11 @@ namespace File.Manager.API.Filesystem.Models.Execution
     /// </summary>
     public sealed class NeedsRefresh : ExecutionOutcome
     {
-        internal NeedsRefresh()
+        internal NeedsRefresh(SelectionMemento selection = null)
         {
-
+            Selection = selection;
         }
+
+        public SelectionMemento Selection { get; }
     }
 }

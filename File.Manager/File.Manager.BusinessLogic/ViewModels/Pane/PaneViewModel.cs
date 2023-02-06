@@ -2,6 +2,7 @@
 using File.Manager.API.Filesystem.Models.Execution;
 using File.Manager.API.Filesystem.Models.Items;
 using File.Manager.API.Filesystem.Models.Navigation;
+using File.Manager.API.Filesystem.Models.Selection;
 using File.Manager.BusinessLogic.Modules.Filesystem.Home;
 using File.Manager.BusinessLogic.Services.Icons;
 using File.Manager.BusinessLogic.Services.Messaging;
@@ -35,9 +36,12 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
             Access?.FocusItem(itemViewModel);
         }
 
-        private void UpdateItems()
+        private void UpdateItems(SelectionMemento selection)
         {
             items.Clear();
+
+            Item newSelectedItem = navigator.ResolveSelectedItem(selection);
+            ItemViewModel newSelectedItemViewModel = null;
 
             for (int i = 0; i < navigator.Items.Count; i++)
             {
@@ -63,19 +67,25 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
 
                 var itemViewModel = new ItemViewModel(name, smallIcon, largeIcon, item);
                 items.Add(itemViewModel);
+
+                if (item != null && item == newSelectedItem)
+                    newSelectedItemViewModel = itemViewModel;
             }
 
-            SelectAndFocus(items.FirstOrDefault());
+            if (newSelectedItemViewModel != null)
+                SelectAndFocus(newSelectedItemViewModel);
+            else
+                SelectAndFocus(items.FirstOrDefault());
         }
 
-        private void ReplaceCurrentNavigator(FilesystemNavigator newNavigator)
+        private void ReplaceCurrentNavigator(FilesystemNavigator newNavigator, SelectionMemento selection)
         {
             if (navigator != null)
                 navigator.Dispose();
 
             navigator = newNavigator;
 
-            UpdateItems();
+            UpdateItems(selection);
         }
 
         private void SetHomeNavigator()
@@ -136,14 +146,14 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
 
                             break;
                         }
-                    case NeedsRefresh:
+                    case NeedsRefresh needsRefresh:
                         {
-                            UpdateItems();
+                            UpdateItems(needsRefresh.Selection);
                             break;
                         }
                     case ReplaceNavigator replaceNavigator:
                         {
-                            ReplaceCurrentNavigator(replaceNavigator.NewNavigator);
+                            ReplaceCurrentNavigator(replaceNavigator.NewNavigator, replaceNavigator.Selection);
                             break;
                         }
                     case ReturnHome:

@@ -2,6 +2,7 @@
 using File.Manager.API.Filesystem.Models.Execution;
 using File.Manager.API.Filesystem.Models.Items;
 using File.Manager.API.Filesystem.Models.Navigation;
+using File.Manager.API.Filesystem.Models.Selection;
 using File.Manager.BusinessLogic.Services.Modules;
 using System;
 using System.Collections.Generic;
@@ -15,7 +16,7 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Home
     {
         private const string ROOT_ADDRESS = @"\";
 
-        private readonly List<Item> items;
+        private readonly List<ModuleFolderItem> items;
         private readonly IModuleService moduleService;
 
         private class ModuleFolderItem : FolderItem
@@ -34,7 +35,7 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Home
         public HomeNavigator(IModuleService moduleService)
         {
             this.moduleService = moduleService;
-            items = new List<Item>();
+            items = new();
         }
 
         public override void Dispose()
@@ -78,6 +79,15 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Home
         public override NavigationOutcome NavigateToAddress(string address)
         {
             throw new InvalidOperationException("HomeNavigator does not support navigating to address!");
+        }
+
+        public override Item ResolveSelectedItem(SelectionMemento selection)
+        {
+            var homeSelection = selection as HomeSelectionMemento;
+            if (homeSelection != null)
+                return items.FirstOrDefault(i => i.Module == homeSelection.Module);
+
+            return null;
         }
 
         public override string Address => ROOT_ADDRESS;

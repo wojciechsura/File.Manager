@@ -2,6 +2,7 @@
 using File.Manager.API.Filesystem.Models.Execution;
 using File.Manager.API.Filesystem.Models.Items;
 using File.Manager.API.Filesystem.Models.Navigation;
+using File.Manager.API.Filesystem.Models.Selection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,6 +28,8 @@ namespace File.Manager.API.Filesystem
         public abstract NavigationOutcome NavigateToAddress(string address);
 
         public abstract ExecutionOutcome Execute(Item item);
+
+        public abstract Item ResolveSelectedItem(SelectionMemento selection);
 
         public abstract void Dispose();
 
