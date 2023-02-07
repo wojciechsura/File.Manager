@@ -22,7 +22,7 @@ namespace File.Manager.Controls
     /// </summary>
     public partial class Pane : UserControl, IPaneAccess
     {
-        private PaneViewModel paneViewModel;
+        private PaneViewModel viewModel;
 
         public Pane()
         {
@@ -43,13 +43,13 @@ namespace File.Manager.Controls
 
         private void HandleDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            if (paneViewModel != null)
-                paneViewModel.Access = null;
+            if (viewModel != null)
+                viewModel.RemoveAccess(this);
 
-            paneViewModel = e.NewValue as PaneViewModel;
+            viewModel = e.NewValue as PaneViewModel;
 
-            if (paneViewModel != null)
-                paneViewModel.Access = this;
+            if (viewModel != null)
+                viewModel.AddAccess(this);
         }
 
         private void ItemDisplayPreviewKeyDown(object sender, KeyEventArgs e)

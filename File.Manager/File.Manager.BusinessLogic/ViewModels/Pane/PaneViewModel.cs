@@ -28,12 +28,13 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
 
         private FilesystemNavigator navigator;
         private readonly ObservableCollection<ItemViewModel> items;
+        private readonly List<IPaneAccess> accesses;
         private ItemViewModel selectedItem;
 
         private void SelectAndFocus(ItemViewModel itemViewModel)
         {
             SelectedItem = itemViewModel;
-            Access?.FocusItem(itemViewModel);
+            accesses.ForEach(access => access.FocusItem(itemViewModel));
         }
 
         private void UpdateItems(FocusedItemData data)
@@ -96,12 +97,26 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
             ReplaceCurrentNavigator(homeNavigator, data);
         }
 
+        public PaneViewModel(IPaneHandler handler, IModuleService moduleService, IIconService iconService, IMessagingService messagingService)
+        {
+            this.handler = handler;
+            this.moduleService = moduleService;
+            this.iconService = iconService;
+            this.messagingService = messagingService;
+            this.accesses = new();
+
+            items = new();
+            
+            SetHomeNavigator(null);
+            UpdateItems(null);
+        }
+
         public void ExecuteCurrentItem()
         {
             if (selectedItem != null)
             {
                 var outcome = navigator.Execute(selectedItem.Item);
-                
+
                 switch (outcome)
                 {
                     case Error error:
@@ -119,7 +134,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
                     case NavigateToAddress navigateToAddress:
                         {
                             int i = 0;
-                            while (i < moduleService.FilesystemModules.Count && 
+                            while (i < moduleService.FilesystemModules.Count &&
                                 !moduleService.FilesystemModules[i].SupportsAddress(navigateToAddress.Address))
                                 i++;
 
@@ -167,22 +182,23 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
             }
         }
 
-        public PaneViewModel(IPaneHandler handler, IModuleService moduleService, IIconService iconService, IMessagingService messagingService)
+        public void AddAccess(IPaneAccess access)
         {
-            this.handler = handler;
-            this.moduleService = moduleService;
-            this.iconService = iconService;
-            this.messagingService = messagingService;
+            if (access == null)
+                throw new ArgumentNullException(nameof(access));
 
-            items = new();
-            
-            SetHomeNavigator(null);
-            UpdateItems(null);
+            accesses.Add(access);
+        }
+
+        public void RemoveAccess(IPaneAccess access)
+        {
+            if (access == null)
+                throw new ArgumentNullException(nameof(access));
+
+            accesses.Remove(access);
         }
 
         public ObservableCollection<ItemViewModel> Items => items;
-
-        public IPaneAccess Access { get; set; }
 
         public ItemViewModel SelectedItem
         {
