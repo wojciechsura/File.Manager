@@ -62,11 +62,11 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
                     else
                         throw new InvalidOperationException("Unsupported filesystem item!");
 
-                    smallIcon ??= icons.smallIcon;
-                    largeIcon ??= icons.largeIcon;
+                    item.SmallIcon ??= icons.smallIcon;
+                    item.LargeIcon ??= icons.largeIcon;
                 }
 
-                var itemViewModel = new ItemViewModel(name, smallIcon, largeIcon, item);
+                var itemViewModel = new ItemViewModel(item);
                 items.Add(itemViewModel);
 
                 if (item != null && item == newSelectedItem)

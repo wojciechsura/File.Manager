@@ -13,23 +13,30 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
     {
         private bool isSelected;
 
-        public ItemViewModel(string name, ImageSource smallIcon, ImageSource largeIcon, Item item)
+        public ItemViewModel(Item item)
         {
-            Name = name;
-            SmallIcon = smallIcon;
-            LargeIcon = largeIcon;
             Item = item;
             isSelected = false;
         }
 
-        public string Name { get; }
-        public ImageSource SmallIcon { get; }
-        public ImageSource LargeIcon { get; }
+        public string Name => Item.Name;
+        public ImageSource SmallIcon => Item.SmallIcon;
+        public ImageSource LargeIcon => Item.LargeIcon;
+        public long? Size => Item.Size;
+        public string SizeDisplay => Item.SizeDisplay;
+        public DateTime? Created => Item.Created;
+        public DateTime? Modified => Item.Modified;
+        public string Attributes => Item.Attributes;
+
         public Item Item { get; }
+
         public bool IsSelected
         {
             get => isSelected;
             set => Set(ref isSelected, value);
         }
+
+        [System.Runtime.CompilerServices.IndexerName("ItemItems")]
+        public object this[string key] => Item[key];
     }
 }

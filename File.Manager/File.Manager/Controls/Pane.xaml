@@ -4,23 +4,30 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:vm="clr-namespace:File.Manager.BusinessLogic.ViewModels.Pane;assembly=File.Manager.BusinessLogic"
-             xmlns:local="clr-namespace:File.Manager.Controls" d:DataContext="{d:DesignInstance Type=vm:PaneViewModel}"
+             xmlns:local="clr-namespace:File.Manager.Controls" 
+             xmlns:res="clr-namespace:File.Manager.Resources.Controls.Pane;assembly=File.Manager.Resources"
+             d:DataContext="{d:DesignInstance Type=vm:PaneViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <ListBox x:Name="lbItems" ItemsSource="{Binding Items}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" SelectionMode="Extended"
+    <UserControl.Resources>
+        <DataTemplate x:Key="NameColumnTemplate" DataType="{x:Type vm:ItemViewModel}">
+            <DockPanel>
+                <Image DockPanel.Dock="Left" Margin="{StaticResource DialogItemsMargin}" Width="16" Height="16" Source="{Binding SmallIcon}" />
+                <TextBlock Margin="{StaticResource DialogItemsExceptLeftMargin}" Text="{Binding Name, Mode=OneWay}" />
+            </DockPanel>
+        </DataTemplate>
+    </UserControl.Resources>
+    <DockPanel>
+        <ListView x:Name="lbItems" ItemsSource="{Binding Items}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" SelectionMode="Extended"
              SelectedItem="{Binding SelectedItem}" PreviewKeyDown="ItemDisplayPreviewKeyDown">
-        <ListBox.ItemContainerStyle>
-            <Style TargetType="ListBoxItem">
-                <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
-            </Style>
-        </ListBox.ItemContainerStyle>
-        <ListBox.ItemTemplate>
-            <DataTemplate DataType="{x:Type vm:ItemViewModel}">
-                <DockPanel>
-                    <Image DockPanel.Dock="Left" Margin="{StaticResource DialogItemsMargin}" Width="16" Height="16" Source="{Binding SmallIcon}" />
-                    <TextBlock Margin="{StaticResource DialogItemsExceptLeftMargin}" Text="{Binding Name, Mode=OneWay}" />
-                </DockPanel>
-            </DataTemplate>
-        </ListBox.ItemTemplate>
-    </ListBox>
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.View>
+                <GridView />
+            </ListView.View>
+        </ListView>
+    </DockPanel>
 </UserControl>

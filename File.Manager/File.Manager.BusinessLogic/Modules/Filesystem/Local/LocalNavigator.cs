@@ -73,6 +73,9 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
             var newItems = new List<Item>
             {
                 new UpFolderItem()
+                {
+                    SizeDisplay = Resources.Modules.Filesystem.Local.Strings.SizeDisplay_UpDirectory
+                }
             };
 
             if (address == ROOT_ADDRESS)
@@ -87,7 +90,8 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
                     var driveItem = new LocalDriveItem(driveAddress, driveAddress)
                     {
                         SmallIcon = smallIcon,
-                        LargeIcon = largeIcon
+                        LargeIcon = largeIcon,
+                        SizeDisplay = Resources.Modules.Filesystem.Local.Strings.SizeDisplay_Drive
                     };
 
                     newItems.Add(driveItem);
@@ -97,25 +101,32 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
             {
                 // Files
 
-                var folders = Directory.EnumerateDirectories(address)
-                    .OrderBy(d => d)
-                    .ToList();
+                var directoryInfo = new DirectoryInfo(address);
 
-                foreach (var folder in folders)
+                foreach (var folder in directoryInfo.GetDirectories())
                 {
-                    var folderItem = new LocalFolderItem(Path.GetFileName(folder), Path.GetFileName(folder));
+                    var folderItem = new LocalFolderItem(folder.Name, folder.Name)
+                    {
+                        SizeDisplay = Resources.Modules.Filesystem.Local.Strings.SizeDisplay_Directory,
+                        Created = folder.CreationTime,
+                        Modified = folder.LastWriteTime,
+                        Attributes = folder.Attributes.ToString()
+                    };
                     newItems.Add(folderItem);
                 }
 
-                var files = Directory.EnumerateFiles(address)
-                    .OrderBy(d => d)
-                    .ToList();
-
-                foreach (var file in files)
+                foreach (var file in directoryInfo.GetFiles())
                 {
-                    var fileItem = new LocalFileItem(Path.GetFileName(file), Path.GetFileName(file));
+                    var fileItem = new LocalFileItem(file.Name, file.Name)
+                    {
+                        SizeDisplay = file.Length.ToString(),
+                        Size = file.Length,
+                        Created = file.CreationTime,
+                        Modified = file.LastWriteTime,
+                        Attributes = file.Attributes.ToString()
+                    };
                     newItems.Add(fileItem);
-                }
+                }                
             }
 
             return newItems;

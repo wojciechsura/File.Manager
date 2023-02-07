@@ -1,4 +1,5 @@
-﻿using File.Manager.BusinessLogic.ViewModels.Pane;
+﻿using File.Manager.API.Filesystem.Models.Items;
+using File.Manager.BusinessLogic.ViewModels.Pane;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,23 +25,6 @@ namespace File.Manager.Controls
     {
         private PaneViewModel viewModel;
 
-        public Pane()
-        {
-            InitializeComponent();
-            DataContextChanged += HandleDataContextChanged;
-        }
-
-        public void FocusItem(ItemViewModel selectedItem)
-        {
-            Dispatcher.BeginInvoke(() =>
-            {
-                var listBoxItem = (ListBoxItem)lbItems.ItemContainerGenerator.ContainerFromItem(selectedItem);
-                listBoxItem?.Focus();
-                lbItems.UpdateLayout();
-                lbItems.ScrollIntoView(listBoxItem);
-            }, DispatcherPriority.Render);
-        }
-
         private void HandleDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             if (viewModel != null)
@@ -58,6 +42,63 @@ namespace File.Manager.Controls
             {
                 (DataContext as PaneViewModel)?.ExecuteCurrentItem();
             }
+        }
+
+        public Pane()
+        {
+            InitializeComponent();
+
+            DataContextChanged += HandleDataContextChanged;
+
+            SetDefaultColumns(lbItems);
+        }
+
+        public void FocusItem(ItemViewModel selectedItem)
+        {
+            Dispatcher.BeginInvoke(() =>
+            {
+                var listViewItem = (ListViewItem)lbItems.ItemContainerGenerator.ContainerFromItem(selectedItem);
+                listViewItem?.Focus();
+                lbItems.UpdateLayout();
+                lbItems.ScrollIntoView(listViewItem);
+            }, DispatcherPriority.Render);
+        }
+
+        public void SetDefaultColumns(ListView listView)
+        {
+            var gridView = listView.View as GridView;
+            if (gridView == null)
+                return;
+
+            gridView.Columns.Clear();
+
+            // Add name column
+            var nameColumn = new GridViewColumn();
+            nameColumn.Header = File.Manager.Resources.Controls.Pane.Strings.Column_Header_Name;
+            nameColumn.Width = 300;
+            nameColumn.CellTemplate = (DataTemplate)FindResource("NameColumnTemplate");
+            gridView.Columns.Add(nameColumn);
+
+            // Add size column
+            var sizeColumn = new GridViewColumn();
+            sizeColumn.Header = File.Manager.Resources.Controls.Pane.Strings.Column_Header_Size;
+            sizeColumn.Width = 100;
+            sizeColumn.DisplayMemberBinding = new Binding() { Path = new PropertyPath(nameof(Item.SizeDisplay)) };
+            gridView.Columns.Add(sizeColumn);
+
+            // Add modified column
+            var modifiedColumn = new GridViewColumn();
+            modifiedColumn.Header = File.Manager.Resources.Controls.Pane.Strings.Column_Header_Modified;
+            modifiedColumn.Width = 150;
+            modifiedColumn.DisplayMemberBinding = new Binding() { Path = new PropertyPath(nameof(Item.Modified)) };
+            gridView.Columns.Add(modifiedColumn);
+
+            // Add attributes column
+            var attributesColumn = new GridViewColumn();
+            attributesColumn.Header = File.Manager.Resources.Controls.Pane.Strings.Column_Header_Attributes;
+            attributesColumn.Width = 100;
+            attributesColumn.DisplayMemberBinding = new Binding() { Path = new PropertyPath(nameof(Item.Attributes)) };
+            gridView.Columns.Add(attributesColumn);
         }
     }
 }

@@ -4,10 +4,11 @@
                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                 xmlns:local="clr-namespace:File.Manager" 
+                xmlns:res="clr-namespace:File.Manager.Resources.Windows.MainWindow;assembly=File.Manager.Resources"
                 xmlns:f="urn:fluent-ribbon"
                 xmlns:c="clr-namespace:File.Manager.Controls" xmlns:main="clr-namespace:File.Manager.BusinessLogic.ViewModels.Main;assembly=File.Manager.BusinessLogic" d:DataContext="{d:DesignInstance Type=main:MainWindowViewModel}"
                 mc:Ignorable="d"
-                Title="MainWindow" Height="450" Width="800">
+                Title="{x:Static res:Strings.Window_Title}" Height="450" Width="800">
 
     <f:RibbonWindow.InputBindings>
         <KeyBinding Key="U" Modifiers="Ctrl" Command="{Binding SwitchPanesCommand}" />

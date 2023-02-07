@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace File.Manager.Resources.Controls.Pane {
+namespace File.Manager.Resources.Windows.MainWindow {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace File.Manager.Resources.Controls.Pane {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("File.Manager.Resources.Controls.Pane.Strings", typeof(Strings).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("File.Manager.Resources.Windows.MainWindow.Strings", typeof(Strings).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,65 +61,11 @@ namespace File.Manager.Resources.Controls.Pane {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Attributes.
+        ///   Looks up a localized string similar to File.Manager.
         /// </summary>
-        public static string Column_Header_Attributes {
+        public static string Window_Title {
             get {
-                return ResourceManager.GetString("Column_Header_Attributes", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Modified date.
-        /// </summary>
-        public static string Column_Header_Modified {
-            get {
-                return ResourceManager.GetString("Column_Header_Modified", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Filename.
-        /// </summary>
-        public static string Column_Header_Name {
-            get {
-                return ResourceManager.GetString("Column_Header_Name", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Size.
-        /// </summary>
-        public static string Column_Header_Size {
-            get {
-                return ResourceManager.GetString("Column_Header_Size", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Falied to navigate to address: {0}.
-        /// </summary>
-        public static string Message_AddressNavigationFailed {
-            get {
-                return ResourceManager.GetString("Message_AddressNavigationFailed", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The following address is unsupported: {0}.
-        /// </summary>
-        public static string Message_AddressUnsupported {
-            get {
-                return ResourceManager.GetString("Message_AddressUnsupported", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Cannot execute action on item: {0}.
-        /// </summary>
-        public static string Message_CannotExecuteItem {
-            get {
-                return ResourceManager.GetString("Message_CannotExecuteItem", resourceCulture);
+                return ResourceManager.GetString("Window_Title", resourceCulture);
             }
         }
     }
