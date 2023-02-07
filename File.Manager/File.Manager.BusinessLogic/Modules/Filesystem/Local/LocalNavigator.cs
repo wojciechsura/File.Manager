@@ -16,6 +16,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Diagnostics;
+using File.Manager.API.Tools;
 
 namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
 {
@@ -119,7 +120,7 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
                 {
                     var fileItem = new LocalFileItem(file.Name, file.Name)
                     {
-                        SizeDisplay = file.Length.ToString(),
+                        SizeDisplay = SizeTools.BytesToHumanReadable(file.Length),
                         Size = file.Length,
                         Created = file.CreationTime,
                         Modified = file.LastWriteTime,
@@ -262,5 +263,9 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
         public override IReadOnlyList<Item> Items => items;
 
         public override string Address => address;
+
+        public override bool SupportsBufferedCopy => true;
+
+        public override bool SupportsInModuleCopy => false;
     }
 }

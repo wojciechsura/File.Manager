@@ -8,7 +8,7 @@
              xmlns:res="clr-namespace:File.Manager.Resources.Controls.Pane;assembly=File.Manager.Resources"
              d:DataContext="{d:DesignInstance Type=vm:PaneViewModel}"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800" GotFocus="HandlePaneGotFocus" LostFocus="HandlePaneLostFocus">
     <UserControl.Resources>
         <DataTemplate x:Key="NameColumnTemplate" DataType="{x:Type vm:ItemViewModel}">
             <DockPanel>
@@ -19,7 +19,7 @@
     </UserControl.Resources>
     <DockPanel>
         <ListView x:Name="lbItems" ItemsSource="{Binding Items}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" SelectionMode="Extended"
-             SelectedItem="{Binding SelectedItem}" PreviewKeyDown="ItemDisplayPreviewKeyDown">
+             SelectedItem="{Binding SelectedItem}" PreviewKeyDown="ItemDisplayPreviewKeyDown" MouseDoubleClick="HandleListViewMouseDoubleClick">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListBoxItem">
                     <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />

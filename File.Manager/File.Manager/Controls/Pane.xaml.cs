@@ -1,5 +1,6 @@
 ﻿using File.Manager.API.Filesystem.Models.Items;
 using File.Manager.BusinessLogic.ViewModels.Pane;
+using File.Manager.Tools;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -60,7 +61,7 @@ namespace File.Manager.Controls
                 var listViewItem = (ListViewItem)lbItems.ItemContainerGenerator.ContainerFromItem(selectedItem);
                 listViewItem?.Focus();
                 lbItems.UpdateLayout();
-                lbItems.ScrollIntoView(listViewItem);
+                lbItems.ScrollIntoView(selectedItem);
             }, DispatcherPriority.Render);
         }
 
@@ -99,6 +100,26 @@ namespace File.Manager.Controls
             attributesColumn.Width = 100;
             attributesColumn.DisplayMemberBinding = new Binding() { Path = new PropertyPath(nameof(Item.Attributes)) };
             gridView.Columns.Add(attributesColumn);
+        }
+
+        private void HandleListViewMouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            ListViewItem listViewItem = VisualTreeTools.VisualUpwardSearch<ListViewItem>(e.OriginalSource as DependencyObject);
+
+            if (listViewItem != null)
+            {
+                viewModel.ExecuteCurrentItem();
+            }
+        }
+
+        private void HandlePaneGotFocus(object sender, RoutedEventArgs e)
+        {
+            viewModel.NotifyGotFocus();
+        }
+
+        private void HandlePaneLostFocus(object sender, RoutedEventArgs e)
+        {
+            viewModel.NotifyLostFocus();
         }
     }
 }

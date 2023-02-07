@@ -21,6 +21,8 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
 {
     public class PaneViewModel : BaseViewModel
     {
+        // Private fields -----------------------------------------------------
+
         private readonly IPaneHandler handler;
         private readonly IModuleService moduleService;
         private readonly IIconService iconService;
@@ -30,6 +32,8 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
         private readonly ObservableCollection<ItemViewModel> items;
         private readonly List<IPaneAccess> accesses;
         private ItemViewModel selectedItem;
+
+        // Private methods ----------------------------------------------------
 
         private void SelectAndFocus(ItemViewModel itemViewModel)
         {
@@ -85,8 +89,9 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
                 navigator.Dispose();
 
             navigator = newNavigator;
-
             UpdateItems(data);
+
+            OnPropertyChanged(nameof(NavigatorCapabilities));
         }
 
         private void SetHomeNavigator(FocusedItemData data)
@@ -96,6 +101,8 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
 
             ReplaceCurrentNavigator(homeNavigator, data);
         }
+
+        // Public methods -----------------------------------------------------
 
         public PaneViewModel(IPaneHandler handler, IModuleService moduleService, IIconService iconService, IMessagingService messagingService)
         {
@@ -198,6 +205,18 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
             accesses.Remove(access);
         }
 
+        public void NotifyGotFocus()
+        {
+            handler.NotifyPaneFocused(this);
+        }
+
+        public void NotifyLostFocus()
+        {
+            handler.NotifyPaneUnfocused(this);
+        }
+
+        // Public properties --------------------------------------------------
+
         public ObservableCollection<ItemViewModel> Items => items;
 
         public ItemViewModel SelectedItem
@@ -205,5 +224,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
             get => selectedItem;
             set => Set(ref selectedItem, value);
         }
+
+        public IFilesystemNavigatorCapabilities NavigatorCapabilities => navigator;
     }
 }

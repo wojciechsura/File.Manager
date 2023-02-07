@@ -12,7 +12,7 @@ using System.Windows.Media;
 
 namespace File.Manager.API.Filesystem
 {
-    public abstract class FilesystemNavigator : IDisposable
+    public abstract class FilesystemNavigator : IDisposable, IFilesystemNavigatorCapabilities
     {
         // Protected methods --------------------------------------------------
 
@@ -38,5 +38,11 @@ namespace File.Manager.API.Filesystem
         public abstract string Address { get; }
         
         public abstract IReadOnlyList<Item> Items { get; }
+
+        // Capabilities
+
+        public abstract bool SupportsBufferedCopy { get; }
+
+        public abstract bool SupportsInModuleCopy { get; }
     }
 }

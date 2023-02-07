@@ -93,5 +93,9 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Home
         public override string Address => ROOT_ADDRESS;
 
         public override IReadOnlyList<Item> Items => items;
+
+        public override bool SupportsBufferedCopy => false;
+
+        public override bool SupportsInModuleCopy => false;
     }
 }
