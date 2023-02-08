@@ -1,5 +1,4 @@
 ﻿using File.Manager.API.Filesystem.Models;
-using File.Manager.API.Filesystem.Models.Execution;
 using File.Manager.API.Filesystem.Models.Items;
 using File.Manager.API.Filesystem.Models.Navigation;
 using File.Manager.API.Filesystem.Models.Focus;
@@ -12,37 +11,50 @@ using System.Windows.Media;
 
 namespace File.Manager.API.Filesystem
 {
-    public abstract class FilesystemNavigator : IDisposable, IFilesystemNavigatorCapabilities
+    public abstract class FilesystemNavigator : IDisposable
     {
+        // Private fields -----------------------------------------------------
+
+        private IFilesystemNavigatorHandler handler;
+
+        // Protected fields ---------------------------------------------------
+
+        protected IFilesystemNavigatorHandler Handler => handler;
+
         // Protected methods --------------------------------------------------
 
         protected FilesystemNavigator()
         {
-
+            
         }
 
         // Public methods -----------------------------------------------------
 
-        public abstract NavigationOutcome NavigateToRoot();
+        public abstract void NavigateToRoot();
 
-        public abstract NavigationOutcome NavigateToAddress(string address);
+        public abstract void NavigateToAddress(string address);
 
-        public abstract ExecutionOutcome Execute(Item item);
+        public abstract void Execute(Item item);
 
         public abstract Item ResolveFocusedItem(FocusedItemData data);
 
         public abstract void Dispose();
+
+        public void SetHandler(IFilesystemNavigatorHandler handler) 
+        {
+            if (handler == null)
+                throw new ArgumentNullException("value");
+
+            if (this.handler != null)
+                throw new InvalidOperationException("Handler for navigator may be set only once!");
+
+            this.handler = handler;
+        }
 
         // Public properties --------------------------------------------------
 
         public abstract string Address { get; }
         
         public abstract IReadOnlyList<Item> Items { get; }
-
-        // Capabilities
-
-        public abstract bool SupportsBufferedCopy { get; }
-
-        public abstract bool SupportsInModuleCopy { get; }
     }
 }

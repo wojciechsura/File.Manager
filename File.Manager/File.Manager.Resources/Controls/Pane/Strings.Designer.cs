@@ -97,7 +97,7 @@ namespace File.Manager.Resources.Controls.Pane {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Falied to navigate to address: {0}.
+        ///   Looks up a localized string similar to Falied to navigate to address {0}: {1}.
         /// </summary>
         public static string Message_AddressNavigationFailed {
             get {
@@ -115,7 +115,7 @@ namespace File.Manager.Resources.Controls.Pane {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Cannot execute action on item: {0}.
+        ///   Looks up a localized string similar to Cannot execute action on item {0}: {1}.
         /// </summary>
         public static string Message_CannotExecuteItem {
             get {

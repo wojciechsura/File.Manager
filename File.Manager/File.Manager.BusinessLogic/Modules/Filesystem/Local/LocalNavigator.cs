@@ -1,6 +1,5 @@
 ﻿using File.Manager.API;
 using File.Manager.API.Filesystem;
-using File.Manager.API.Filesystem.Models.Execution;
 using File.Manager.API.Filesystem.Models.Items;
 using File.Manager.API.Filesystem.Models.Navigation;
 using File.Manager.API.Filesystem.Models.Focus;
@@ -17,6 +16,7 @@ using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Diagnostics;
 using File.Manager.API.Tools;
+using File.Manager.API.Exceptions.Filesystem;
 
 namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
 {
@@ -133,7 +133,7 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
             return newItems;
         }
 
-        private (bool result, string message) InternalOpenAddress<T>(string newAddress)
+        private (bool result, string message) InternalOpenAddress(string newAddress)
         {
             if (newAddress != ROOT_ADDRESS && !Directory.Exists(newAddress))
                 return (false, String.Format(Resources.Modules.Filesystem.Local.Strings.Error_PathDoesNotExist, newAddress));
@@ -151,16 +151,24 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
             }
         }
 
-        private ExecutionOutcome TryExecuteOpeningFolder(string newAddress, FocusedItemData data = null)
+        private void TryExecuteOpeningFolder(string newAddress, FocusedItemData data = null)
         {
-            (bool result, string message) = InternalOpenAddress<ExecutionOutcome>(newAddress);
-            return result ? ExecutionOutcome.NeedsRefresh(data) : ExecutionOutcome.Error(message);
+            (bool result, string message) = InternalOpenAddress(newAddress);
+
+            if (result)
+                Handler?.NotifyChanged(data);
+            else
+                throw new ItemExecutionException(message);
         }
 
-        private NavigationOutcome TryNavigateToAddress(string newAddress = null)
+        private void TryNavigateToAddress(string newAddress = null)
         {
-            (bool result, string message) = InternalOpenAddress<NavigationOutcome>(newAddress);
-            return result ? NavigationOutcome.NavigationSuccess() : NavigationOutcome.NavigationError(message);
+            (bool result, string message) = InternalOpenAddress(newAddress);
+
+            if (result)
+                Handler?.NotifyChanged(null);
+            else
+                throw new NavigationException(message);
         }
 
         // Public methods -----------------------------------------------------
@@ -175,15 +183,15 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
             
         }
 
-        public override ExecutionOutcome Execute(Item item)
+        public override void Execute(Item item)
         {
             if (item is LocalDriveItem driveItem)
             {
-                return TryExecuteOpeningFolder(driveItem.Filename);                
+                TryExecuteOpeningFolder(driveItem.Filename);                
             }
-            if (item is LocalFolderItem folderItem)
+            else if (item is LocalFolderItem folderItem)
             {
-                return TryExecuteOpeningFolder(System.IO.Path.Combine(address, folderItem.Filename));
+                TryExecuteOpeningFolder(System.IO.Path.Combine(address, folderItem.Filename));
             }
             else if (item is LocalFileItem fileItem)
             {
@@ -194,23 +202,21 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
                 {
                     ProcessStartInfo psi = new ProcessStartInfo(path);
                     psi.UseShellExecute = true;
-                    Process.Start(psi);
-
-                    return ExecutionOutcome.Handled();
+                    Process.Start(psi);                    
                 }
                 catch (Exception e)
                 {
-                    return ExecutionOutcome.Error(String.Format(Resources.Modules.Filesystem.Local.Strings.Error_CannotOpenFile, path, e.Message));
+                    throw new ItemExecutionException(String.Format(Resources.Modules.Filesystem.Local.Strings.Error_CannotOpenFile, path, e.Message));
                 }
             }
             else if (item is UpFolderItem)
             {
                 if (address == ROOT_ADDRESS)
-                    return ExecutionOutcome.ReturnHome(new HomeFocusedItemData(LocalModule.ModuleUid));
+                    Handler?.RequestReturnHome(new HomeFocusedItemData(LocalModule.ModuleUid));
                 else if (driveRootAddress.IsMatch(address))
                 {
                     var data = new LocalFocusedItemData(address);
-                    return TryExecuteOpeningFolder(ROOT_ADDRESS, data);
+                    TryExecuteOpeningFolder(ROOT_ADDRESS, data);
                 }
                 else
                 {
@@ -219,7 +225,7 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
                     string current = Path.GetFileName(Path.EndsInDirectorySeparator(address) ? address[..^1] : address);
                     var data = new LocalFocusedItemData(current);
 
-                    return TryExecuteOpeningFolder(newAddress, data);
+                    TryExecuteOpeningFolder(newAddress, data);
                 }
             }
             else
@@ -228,14 +234,14 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
             }
         }
 
-        public override NavigationOutcome NavigateToRoot()
+        public override void NavigateToRoot()
         {
-            return TryNavigateToAddress(ROOT_ADDRESS);
+            TryNavigateToAddress(ROOT_ADDRESS);
         }
 
-        public override NavigationOutcome NavigateToAddress(string address)
+        public override void NavigateToAddress(string address)
         {
-            return TryNavigateToAddress(address);
+            TryNavigateToAddress(address);
         }
 
         public override Item ResolveFocusedItem(FocusedItemData data)
@@ -263,9 +269,5 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
         public override IReadOnlyList<Item> Items => items;
 
         public override string Address => address;
-
-        public override bool SupportsBufferedCopy => true;
-
-        public override bool SupportsInModuleCopy => false;
     }
 }

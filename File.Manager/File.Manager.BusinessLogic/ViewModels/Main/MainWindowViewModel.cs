@@ -56,8 +56,8 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
                 OnPropertyChanged(nameof(ActivePane));
                 OnPropertyChanged(nameof(InactivePane));
             }
-            else
-                throw new InvalidOperationException("Unknown pane!");
+            else if (paneViewModel != leftPane && paneViewModel != rightPane)
+                throw new InvalidOperationException("Invalid pane!");
         }
 
         // IPaneHandler implementation ----------------------------------------

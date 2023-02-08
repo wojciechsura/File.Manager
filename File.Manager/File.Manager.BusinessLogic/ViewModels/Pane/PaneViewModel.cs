@@ -1,5 +1,4 @@
 ﻿using File.Manager.API.Filesystem;
-using File.Manager.API.Filesystem.Models.Execution;
 using File.Manager.API.Filesystem.Models.Items;
 using File.Manager.API.Filesystem.Models.Navigation;
 using File.Manager.API.Filesystem.Models.Focus;
@@ -16,10 +15,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Media;
+using File.Manager.API.Exceptions.Filesystem;
 
 namespace File.Manager.BusinessLogic.ViewModels.Pane
 {
-    public class PaneViewModel : BaseViewModel
+    public class PaneViewModel : BaseViewModel, IFilesystemNavigatorHandler
     {
         // Private fields -----------------------------------------------------
 
@@ -85,21 +85,69 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
 
         private void ReplaceCurrentNavigator(FilesystemNavigator newNavigator, FocusedItemData data)
         {
-            if (navigator != null)
-                navigator.Dispose();
+            navigator?.Dispose();
 
             navigator = newNavigator;
+
+            navigator?.SetHandler(this);
+
             UpdateItems(data);
 
-            OnPropertyChanged(nameof(NavigatorCapabilities));
+            OnPropertyChanged(nameof(Navigator));
         }
 
         private void SetHomeNavigator(FocusedItemData data)
         {
-            var homeNavigator = new HomeNavigator(moduleService);
+            var homeNavigator = new HomeNavigator(moduleService);            
             homeNavigator.NavigateToRoot();
 
             ReplaceCurrentNavigator(homeNavigator, data);
+        }
+
+        // IFilesystemNavigatorHandler implementation -------------------------
+
+        void IFilesystemNavigatorHandler.NotifyChanged(FocusedItemData focusedItem)
+        {
+            UpdateItems(focusedItem);
+        }
+
+        void IFilesystemNavigatorHandler.RequestNavigateToAddress(string address)
+        {
+            int i = 0;
+            while (i < moduleService.FilesystemModules.Count &&
+                !moduleService.FilesystemModules[i].SupportsAddress(address))
+                i++;
+
+            if (i < moduleService.FilesystemModules.Count)
+            {
+                var module = moduleService.FilesystemModules[i];
+
+                var newNavigator = module.CreateNavigator();
+
+                try
+                {
+                    newNavigator.NavigateToAddress(address);
+                    ReplaceCurrentNavigator(newNavigator, null);
+                }
+                catch (NavigationException e)
+                {
+                    messagingService.ShowError(String.Format(Resources.Controls.Pane.Strings.Message_AddressNavigationFailed, address, e));
+                }
+            }
+            else
+            {
+                messagingService.ShowError(String.Format(Resources.Controls.Pane.Strings.Message_AddressUnsupported, address));
+            }
+        }
+
+        void IFilesystemNavigatorHandler.RequestReplaceNavigator(FilesystemNavigator newNavigator, FocusedItemData focusedItem)
+        {
+            ReplaceCurrentNavigator(newNavigator, focusedItem);
+        }
+
+        void IFilesystemNavigatorHandler.RequestReturnHome(FocusedItemData focusedItem)
+        {
+            SetHomeNavigator(focusedItem);
         }
 
         // Public methods -----------------------------------------------------
@@ -122,69 +170,13 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
         {
             if (selectedItem != null)
             {
-                var outcome = navigator.Execute(selectedItem.Item);
-
-                switch (outcome)
+                try
                 {
-                    case Error error:
-                        {
-                            messagingService.ShowError(String.Format(Resources.Controls.Pane.Strings.Message_CannotExecuteItem, error.Message));
-                            break;
-                        }
-                    case Handled handled:
-                        {
-                            // Handled means, that Navigator handled the whole
-                            // execution on its own (e.g. started external process)
-                            // Nothing else needs to be done here
-                            break;
-                        }
-                    case NavigateToAddress navigateToAddress:
-                        {
-                            int i = 0;
-                            while (i < moduleService.FilesystemModules.Count &&
-                                !moduleService.FilesystemModules[i].SupportsAddress(navigateToAddress.Address))
-                                i++;
-
-                            if (i < moduleService.FilesystemModules.Count)
-                            {
-                                var module = moduleService.FilesystemModules[i];
-
-                                var newNavigator = module.CreateNavigator();
-                                var navigationOutcome = newNavigator.NavigateToAddress(navigateToAddress.Address);
-
-                                if (navigationOutcome is NavigationSuccess)
-                                {
-                                    ReplaceCurrentNavigator(newNavigator, null);
-                                }
-                                else
-                                {
-                                    messagingService.ShowError(String.Format(Resources.Controls.Pane.Strings.Message_AddressNavigationFailed, navigateToAddress.Address));
-                                }
-                            }
-                            else
-                            {
-                                messagingService.ShowError(String.Format(Resources.Controls.Pane.Strings.Message_AddressUnsupported, navigateToAddress.Address));
-                            }
-
-                            break;
-                        }
-                    case NeedsRefresh needsRefresh:
-                        {
-                            UpdateItems(needsRefresh.Data);
-                            break;
-                        }
-                    case ReplaceNavigator replaceNavigator:
-                        {
-                            ReplaceCurrentNavigator(replaceNavigator.NewNavigator, replaceNavigator.Data);
-                            break;
-                        }
-                    case ReturnHome returnHome:
-                        {
-                            SetHomeNavigator(returnHome.Data);
-                            break;
-                        }
-                    default:
-                        throw new InvalidOperationException("Unsupported execution outcome!");
+                    navigator.Execute(selectedItem.Item);
+                }
+                catch (ItemExecutionException e)
+                {
+                    messagingService.ShowError(String.Format(Resources.Controls.Pane.Strings.Message_CannotExecuteItem, e.Message));
                 }
             }
         }
@@ -225,6 +217,6 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
             set => Set(ref selectedItem, value);
         }
 
-        public IFilesystemNavigatorCapabilities NavigatorCapabilities => navigator;
+        public FilesystemNavigator Navigator => navigator;
     }
 }

@@ -1,5 +1,4 @@
 ﻿using File.Manager.API.Filesystem;
-using File.Manager.API.Filesystem.Models.Execution;
 using File.Manager.API.Filesystem.Models.Items;
 using File.Manager.API.Filesystem.Models.Navigation;
 using File.Manager.API.Filesystem.Models.Focus;
@@ -9,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using File.Manager.API.Exceptions.Filesystem;
 
 namespace File.Manager.BusinessLogic.Modules.Filesystem.Home
 {
@@ -32,7 +32,7 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Home
             public FilesystemModule Module { get; }
         }
 
-        public HomeNavigator(IModuleService moduleService)
+        public HomeNavigator(IModuleService moduleService)            
         {
             this.moduleService = moduleService;
             items = new();
@@ -43,19 +43,22 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Home
             
         }
 
-        public override ExecutionOutcome Execute(Item item)
+        public override void Execute(Item item)
         {
             if (item is ModuleFolderItem moduleFolderItem)
             {
-                var navigator = moduleFolderItem.Module.CreateNavigator();
-                var outcome = navigator.NavigateToRoot();
-
-                if (outcome is NavigationSuccess)
-                    return ExecutionOutcome.ReplaceNavigator(navigator);
-                else if (outcome is NavigationError error)
-                    return ExecutionOutcome.Error(error.Message);
-                else
-                    throw new InvalidOperationException("Unsupported navigation outcome!");
+                FilesystemNavigator navigator = null;
+                try
+                {
+                    navigator = moduleFolderItem.Module.CreateNavigator();
+                    navigator.NavigateToRoot();
+                    Handler?.RequestReplaceNavigator(navigator, null);
+                }
+                catch
+                {
+                    navigator?.Dispose();
+                    throw;
+                }
             }
             else
             {
@@ -63,7 +66,7 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Home
             }
         }
 
-        public override NavigationOutcome NavigateToRoot()
+        public override void NavigateToRoot()
         {
             items.Clear();
 
@@ -71,12 +74,10 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Home
             {
                 var folder = new ModuleFolderItem(module);
                 items.Add(folder);
-            }
-
-            return NavigationOutcome.NavigationSuccess();
+            }            
         }
 
-        public override NavigationOutcome NavigateToAddress(string address)
+        public override void NavigateToAddress(string address)
         {
             throw new InvalidOperationException("HomeNavigator does not support navigating to address!");
         }
@@ -93,9 +94,5 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Home
         public override string Address => ROOT_ADDRESS;
 
         public override IReadOnlyList<Item> Items => items;
-
-        public override bool SupportsBufferedCopy => false;
-
-        public override bool SupportsInModuleCopy => false;
     }
 }

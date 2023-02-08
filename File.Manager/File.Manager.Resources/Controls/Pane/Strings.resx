@@ -130,12 +130,12 @@
     <value>Size</value>
   </data>
   <data name="Message_AddressNavigationFailed" xml:space="preserve">
-    <value>Falied to navigate to address: {0}</value>
+    <value>Falied to navigate to address {0}: {1}</value>
   </data>
   <data name="Message_AddressUnsupported" xml:space="preserve">
     <value>The following address is unsupported: {0}</value>
   </data>
   <data name="Message_CannotExecuteItem" xml:space="preserve">
-    <value>Cannot execute action on item: {0}</value>
+    <value>Cannot execute action on item {0}: {1}</value>
   </data>
 </root>
