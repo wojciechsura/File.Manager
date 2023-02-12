@@ -15,13 +15,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
 {
     public class MainWindowViewModel : BaseViewModel, IPaneHandler
     {
-        // Private types ------------------------------------------------------
 
-        private enum PaneKind
-        {
-            Left = 1,
-            Right = 2
-        }
 
         // Private fields -----------------------------------------------------
 
@@ -29,6 +23,8 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
 
         private PaneViewModel leftPane;
         private PaneViewModel rightPane;
+        
+        private PaneViewModel activePane;
 
         private bool leftPaneFocused = false;
         private bool rightPaneFocused = false;
@@ -37,27 +33,27 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
 
         private void DoSwitchPanes()
         {
-            var tmp = LeftPane;
-            LeftPane = RightPane;
-            RightPane = tmp;
+            var left = LeftPane;
+            var right = RightPane;
+
+            LeftPane = null;
+            RightPane = left;
+            LeftPane = right;
         }
 
         private void NotifyPaneFocusChange(PaneViewModel paneViewModel, bool newFocus)
         {
-            if (paneViewModel == leftPane && leftPaneFocused != newFocus)
+            if (newFocus)
             {
-                leftPaneFocused = newFocus;
-                OnPropertyChanged(nameof(ActivePane));
-                OnPropertyChanged(nameof(InactivePane));
-            }
-            else if (paneViewModel == rightPane && rightPaneFocused != newFocus)
-            {
-                rightPaneFocused = true;
-                OnPropertyChanged(nameof(ActivePane));
-                OnPropertyChanged(nameof(InactivePane));
-            }
-            else if (paneViewModel != leftPane && paneViewModel != rightPane)
-                throw new InvalidOperationException("Invalid pane!");
+                if (paneViewModel == leftPane)
+                {
+                    ActivePane = leftPane;
+                }
+                else if (paneViewModel == rightPane)
+                {
+                    ActivePane = rightPane;
+                }
+            }            
         }
 
         // IPaneHandler implementation ----------------------------------------
@@ -72,6 +68,18 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
             NotifyPaneFocusChange(paneViewModel, false);
         }
 
+        void IPaneHandler.RequestSwithPane()
+        {
+            if (ActivePane == LeftPane)
+            {
+                ActivePane = RightPane;
+            }
+            else
+            {
+                ActivePane = LeftPane;
+            }
+        }
+
         // Public methods -----------------------------------------------------
 
         public MainWindowViewModel(IMainWindowAccess access, 
@@ -83,6 +91,8 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
 
             leftPane = new PaneViewModel(this, moduleService, iconService, messagingService);
             rightPane = new PaneViewModel(this, moduleService, iconService, messagingService);
+
+            activePane = leftPane;
 
             SwitchPanesCommand = new AppCommand(obj => DoSwitchPanes());
         }
@@ -103,24 +113,17 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
 
         public PaneViewModel ActivePane
         {
-            get
-            {
-                if (leftPaneFocused && !rightPaneFocused)
-                    return leftPane;
-                else if (!leftPaneFocused && rightPaneFocused)
-                    return rightPane;
-                else
-                    return null;
-            }
+            get => activePane;
+            set => Set(ref activePane, value);
         }
 
         public PaneViewModel InactivePane
         {
             get
             {
-                if (leftPaneFocused && !rightPaneFocused)
+                if (activePane == leftPane)
                     return rightPane;
-                else if (!leftPaneFocused && rightPaneFocused)
+                else if (activePane == rightPane)
                     return leftPane;
                 else
                     return null;

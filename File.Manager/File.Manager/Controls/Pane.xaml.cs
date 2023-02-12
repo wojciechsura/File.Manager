@@ -24,17 +24,86 @@ namespace File.Manager.Controls
     /// </summary>
     public partial class Pane : UserControl, IPaneAccess
     {
+        // Private fields -----------------------------------------------------
+
+        private readonly CollectionViewSource collectionViewSource;
         private PaneViewModel viewModel;
+
+        // Private methods ----------------------------------------------------
+
+        private void FocusSelectedItem(ListView listView)
+        {
+            if (listView.SelectedItem != null)
+            {
+                var listViewItem = (ListViewItem)lbItems.ItemContainerGenerator.ContainerFromItem(listView.SelectedItem);
+
+                if (listViewItem != null && !listViewItem.IsFocused)
+                {
+                    listViewItem.Focus();
+                    listView.UpdateLayout();
+                    listView.ScrollIntoView(listView.SelectedItem);
+                }
+            }
+        }
 
         private void HandleDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             if (viewModel != null)
-                viewModel.RemoveAccess(this);
+                viewModel.Access = null;
 
             viewModel = e.NewValue as PaneViewModel;
 
             if (viewModel != null)
-                viewModel.AddAccess(this);
+                viewModel.Access = this;
+        }
+
+        private void HandleListViewGotFocus(object sender, RoutedEventArgs e)
+        {
+            FocusSelectedItem(sender as ListView);
+        }
+
+        private void HandleListViewItemSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            FocusSelectedItem(sender as ListView);
+        }
+
+        private void HandleListViewMouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            ListViewItem listViewItem = VisualTreeTools.VisualUpwardSearch<ListViewItem>(e.OriginalSource as DependencyObject);
+
+            if (listViewItem != null)
+            {
+                viewModel.ExecuteCurrentItem();
+            }
+        }
+
+        private void HandlePaneGotFocus(object sender, RoutedEventArgs e)
+        {
+            viewModel.NotifyGotFocus();
+        }
+
+        private void HandlePaneLostFocus(object sender, RoutedEventArgs e)
+        {
+            viewModel.NotifyLostFocus();
+        }
+
+        private void HandlePanePreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Space)
+            {
+                viewModel.NotifySpacePressed();
+                e.Handled = true;
+            }
+            else if (e.Key == Key.Insert)
+            {
+                viewModel.NotifyInsertPressed();
+                e.Handled = true;
+            }
+            else if (e.Key == Key.Tab)
+            {
+                viewModel.NotifyTabPressed();
+                e.Handled = true;
+            }
         }
 
         private void ItemDisplayPreviewKeyDown(object sender, KeyEventArgs e)
@@ -45,24 +114,29 @@ namespace File.Manager.Controls
             }
         }
 
+        // IPaneAccess implementation -----------------------------------------
+
+        void IPaneAccess.SetNextItem()
+        {
+            collectionViewSource.View.MoveCurrentToNext();
+        }
+
+        // Public methods -----------------------------------------------------
+
         public Pane()
         {
             InitializeComponent();
+
+            collectionViewSource = (CollectionViewSource)FindResource("cvsItems");
 
             DataContextChanged += HandleDataContextChanged;
 
             SetDefaultColumns(lbItems);
         }
 
-        public void FocusItem(ItemViewModel selectedItem)
+        public void FocusList()
         {
-            Dispatcher.BeginInvoke(() =>
-            {
-                var listViewItem = (ListViewItem)lbItems.ItemContainerGenerator.ContainerFromItem(selectedItem);
-                listViewItem?.Focus();
-                lbItems.UpdateLayout();
-                lbItems.ScrollIntoView(selectedItem);
-            }, DispatcherPriority.Render);
+            lbItems.Focus();
         }
 
         public void SetDefaultColumns(ListView listView)
@@ -100,26 +174,6 @@ namespace File.Manager.Controls
             attributesColumn.Width = 100;
             attributesColumn.DisplayMemberBinding = new Binding() { Path = new PropertyPath(nameof(Item.Attributes)) };
             gridView.Columns.Add(attributesColumn);
-        }
-
-        private void HandleListViewMouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            ListViewItem listViewItem = VisualTreeTools.VisualUpwardSearch<ListViewItem>(e.OriginalSource as DependencyObject);
-
-            if (listViewItem != null)
-            {
-                viewModel.ExecuteCurrentItem();
-            }
-        }
-
-        private void HandlePaneGotFocus(object sender, RoutedEventArgs e)
-        {
-            viewModel.NotifyGotFocus();
-        }
-
-        private void HandlePaneLostFocus(object sender, RoutedEventArgs e)
-        {
-            viewModel.NotifyLostFocus();
         }
     }
 }

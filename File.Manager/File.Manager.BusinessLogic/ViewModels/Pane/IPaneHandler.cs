@@ -10,5 +10,6 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
     {
         void NotifyPaneFocused(PaneViewModel paneViewModel);
         void NotifyPaneUnfocused(PaneViewModel paneViewModel);
+        void RequestSwithPane();
     }
 }

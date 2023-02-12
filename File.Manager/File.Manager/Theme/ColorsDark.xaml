@@ -4,5 +4,6 @@
     <!-- General -->
 
     <SolidColorBrush x:Key="LinkBrush">#1080e0</SolidColorBrush>
+    <SolidColorBrush x:Key="SelectedItemForegroundBrush">#e02020</SolidColorBrush>
 
 </ResourceDictionary>

@@ -4,6 +4,7 @@ using File.Manager.BusinessLogic.ViewModels.Main;
 using Fluent;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,6 +17,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace File.Manager.Windows
 {
@@ -26,12 +28,35 @@ namespace File.Manager.Windows
     {
         private MainWindowViewModel viewModel;
 
+        private void UpdateActivePane()
+        {
+            Dispatcher.BeginInvoke(() =>
+            {
+                if (viewModel.ActivePane == viewModel.LeftPane)
+                    pLeft.FocusList();
+                else if (viewModel.ActivePane == viewModel.RightPane)
+                    pRight.FocusList();
+            }, DispatcherPriority.Render);
+        }
+
+        private void HandleViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(MainWindowViewModel.ActivePane))
+            {
+                UpdateActivePane();
+            }
+        }
+
         public MainWindow()
         {
             InitializeComponent();
 
             viewModel = Dependencies.Container.Instance.Resolve<MainWindowViewModel>(new NamedParameter("access", this));
             DataContext = viewModel;
+
+            viewModel.PropertyChanged += HandleViewModelPropertyChanged;
+
+            UpdateActivePane();
         }
     }
 }

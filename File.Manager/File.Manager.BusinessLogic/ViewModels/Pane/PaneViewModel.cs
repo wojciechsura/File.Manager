@@ -30,16 +30,10 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
 
         private FilesystemNavigator navigator;
         private readonly ObservableCollection<ItemViewModel> items;
-        private readonly List<IPaneAccess> accesses;
+        private IPaneAccess access;
         private ItemViewModel selectedItem;
 
         // Private methods ----------------------------------------------------
-
-        private void SelectAndFocus(ItemViewModel itemViewModel)
-        {
-            SelectedItem = itemViewModel;
-            accesses.ForEach(access => access.FocusItem(itemViewModel));
-        }
 
         private void UpdateItems(FocusedItemData data)
         {
@@ -78,9 +72,9 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
             }
 
             if (newSelectedItemViewModel != null)
-                SelectAndFocus(newSelectedItemViewModel);
+                SelectedItem = newSelectedItemViewModel;
             else
-                SelectAndFocus(items.FirstOrDefault());
+                SelectedItem = items.FirstOrDefault();
         }
 
         private void ReplaceCurrentNavigator(FilesystemNavigator newNavigator, FocusedItemData data)
@@ -158,7 +152,6 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
             this.moduleService = moduleService;
             this.iconService = iconService;
             this.messagingService = messagingService;
-            this.accesses = new();
 
             items = new();
             
@@ -181,22 +174,6 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
             }
         }
 
-        public void AddAccess(IPaneAccess access)
-        {
-            if (access == null)
-                throw new ArgumentNullException(nameof(access));
-
-            accesses.Add(access);
-        }
-
-        public void RemoveAccess(IPaneAccess access)
-        {
-            if (access == null)
-                throw new ArgumentNullException(nameof(access));
-
-            accesses.Remove(access);
-        }
-
         public void NotifyGotFocus()
         {
             handler.NotifyPaneFocused(this);
@@ -205,6 +182,22 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
         public void NotifyLostFocus()
         {
             handler.NotifyPaneUnfocused(this);
+        }
+
+        public void NotifySpacePressed()
+        {
+            SelectedItem.IsSelected = !SelectedItem.IsSelected;
+        }
+
+        public void NotifyInsertPressed()
+        {
+            SelectedItem.IsSelected = !SelectedItem.IsSelected;
+            access?.SetNextItem();
+        }
+
+        public void NotifyTabPressed()
+        {
+            handler.RequestSwithPane();
         }
 
         // Public properties --------------------------------------------------
@@ -218,5 +211,17 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
         }
 
         public FilesystemNavigator Navigator => navigator;
+
+        public IPaneAccess Access
+        {
+            get => access;
+            set
+            {
+                if (access != null && value != null)
+                    throw new InvalidOperationException("Only one access can be set at a time!");
+
+                access = value;
+            }            
+        }
     }
 }
