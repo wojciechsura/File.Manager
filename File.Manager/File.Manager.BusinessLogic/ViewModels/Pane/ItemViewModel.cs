@@ -1,4 +1,5 @@
 ﻿using File.Manager.API.Filesystem.Models.Items;
+using File.Manager.BusinessLogic.Models.Files;
 using File.Manager.BusinessLogic.ViewModels.Base;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.Windows.Media;
 
 namespace File.Manager.BusinessLogic.ViewModels.Pane
 {
-    public class ItemViewModel : BaseViewModel
+    public class ItemViewModel : BaseViewModel, IFileListItem
     {
         private bool isSelected;
 

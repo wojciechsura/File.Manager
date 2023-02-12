@@ -6,7 +6,9 @@
                 xmlns:local="clr-namespace:File.Manager" 
                 xmlns:res="clr-namespace:File.Manager.Resources.Windows.MainWindow;assembly=File.Manager.Resources"
                 xmlns:f="urn:fluent-ribbon"
-                xmlns:c="clr-namespace:File.Manager.Controls" xmlns:main="clr-namespace:File.Manager.BusinessLogic.ViewModels.Main;assembly=File.Manager.BusinessLogic" d:DataContext="{d:DesignInstance Type=main:MainWindowViewModel}"
+                xmlns:c="clr-namespace:File.Manager.Controls.Files" 
+                xmlns:main="clr-namespace:File.Manager.BusinessLogic.ViewModels.Main;assembly=File.Manager.BusinessLogic" xmlns:c1="clr-namespace:File.Manager.Controls.Files" 
+                d:DataContext="{d:DesignInstance Type=main:MainWindowViewModel}"
                 mc:Ignorable="d"
                 Title="{x:Static res:Strings.Window_Title}" Height="450" Width="800" x:Name="root">
 
@@ -38,6 +40,13 @@
             <Button Grid.Column="5" Margin="{StaticResource DialogItemsExceptLeftMargin}">F8 Delete</Button>
         </Grid>
 
+        <Border UseLayoutRounding="True">
+        <c:FileList Margin="{StaticResource DefaultMargin}" 
+                    SnapsToDevicePixels="True" />
+        </Border>
+
+        <!--
+        
         <Grid Focusable="False">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*" />
@@ -49,6 +58,8 @@
             <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Focusable="False" />
             <c:Pane x:Name="pRight" Grid.Column="2" DataContext="{Binding RightPane}" Focusable="False"/>
         </Grid>
+        
+        -->
         
     </DockPanel>
 </f:RibbonWindow>

@@ -31,11 +31,7 @@ namespace File.Manager.Windows
 
         private void DoSwitchPanes()
         {
-            var leftCol = (int)pLeft.GetValue(Grid.ColumnProperty);
-            var rightCol = (int)pRight.GetValue(Grid.ColumnProperty);
-
-            pLeft.SetValue(Grid.ColumnProperty, leftCol == 0 ? 2 : 0);
-            pRight.SetValue(Grid.ColumnProperty, rightCol == 0 ? 2 : 0);
+            throw new NotImplementedException();
         }
 
         public MainWindow()
@@ -46,8 +42,6 @@ namespace File.Manager.Windows
 
             viewModel = Dependencies.Container.Instance.Resolve<MainWindowViewModel>(new NamedParameter("access", this));
             DataContext = viewModel;
-
-            pLeft.Focus();
         }
 
         public ICommand SwitchPanesCommand { get; }
