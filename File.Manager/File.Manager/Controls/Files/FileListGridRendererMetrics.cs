@@ -1,7 +1,6 @@
 ﻿using File.Manager.BusinessLogic.Types;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -21,14 +20,14 @@ namespace File.Manager.Controls.Files
 
         public class ColumnMetric
         {
-            public ColumnMetric(PointF headerTitle, Rectangle headerBounds)
+            public ColumnMetric(Point headerTitle, Rect headerBounds)
             {
                 HeaderTitle = headerTitle;
                 HeaderBounds = headerBounds;
             }
 
-            public PointF HeaderTitle { get; }
-            public Rectangle HeaderBounds { get; }
+            public Point HeaderTitle { get; }
+            public Rect HeaderBounds { get; }
         }
 
         public class ColumnMetrics
@@ -141,9 +140,9 @@ namespace File.Manager.Controls.Files
             FormattedText text = new FormattedText("W",
                 CultureInfo.InvariantCulture,
                 System.Windows.FlowDirection.LeftToRight,
-                Typeface,
+                new Typeface(FontFamily),
                 FontSize,
-                Brushes.Black,
+                System.Windows.Media.Brushes.Black,
                 PixelsPerDip);
 
             characterMetrics = new CharacterMetrics((int)Math.Ceiling(text.Width), (int)Math.Ceiling(text.Height));            

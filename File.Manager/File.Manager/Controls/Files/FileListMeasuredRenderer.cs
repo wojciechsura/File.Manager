@@ -52,6 +52,13 @@ namespace File.Manager.Controls.Files
             host.RequestInvalidateVisual();
         }
 
+        protected override void OnFontChanged(string fontFamily, double fontSize)
+        {
+            metrics.FontFamily = fontFamily;
+            metrics.FontSize = fontSize;
+        }
+
+
         // Public methods -----------------------------------------------------
 
         public override void Render(DrawingContext drawingContext)
