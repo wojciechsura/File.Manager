@@ -2,6 +2,7 @@
 using Autofac.Core;
 using File.Manager.BusinessLogic.ViewModels.Main;
 using Fluent;
+using Spooksoft.VisualStateManager.Commands;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -28,35 +29,27 @@ namespace File.Manager.Windows
     {
         private MainWindowViewModel viewModel;
 
-        private void UpdateActivePane()
+        private void DoSwitchPanes()
         {
-            Dispatcher.BeginInvoke(() =>
-            {
-                if (viewModel.ActivePane == viewModel.LeftPane)
-                    pLeft.FocusList();
-                else if (viewModel.ActivePane == viewModel.RightPane)
-                    pRight.FocusList();
-            }, DispatcherPriority.Render);
-        }
+            var leftCol = (int)pLeft.GetValue(Grid.ColumnProperty);
+            var rightCol = (int)pRight.GetValue(Grid.ColumnProperty);
 
-        private void HandleViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == nameof(MainWindowViewModel.ActivePane))
-            {
-                UpdateActivePane();
-            }
+            pLeft.SetValue(Grid.ColumnProperty, leftCol == 0 ? 2 : 0);
+            pRight.SetValue(Grid.ColumnProperty, rightCol == 0 ? 2 : 0);
         }
 
         public MainWindow()
         {
+            SwitchPanesCommand = new AppCommand(obj => DoSwitchPanes());
+
             InitializeComponent();
 
             viewModel = Dependencies.Container.Instance.Resolve<MainWindowViewModel>(new NamedParameter("access", this));
             DataContext = viewModel;
 
-            viewModel.PropertyChanged += HandleViewModelPropertyChanged;
-
-            UpdateActivePane();
+            pLeft.Focus();
         }
+
+        public ICommand SwitchPanesCommand { get; }
     }
 }

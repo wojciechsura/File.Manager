@@ -8,10 +8,10 @@
                 xmlns:f="urn:fluent-ribbon"
                 xmlns:c="clr-namespace:File.Manager.Controls" xmlns:main="clr-namespace:File.Manager.BusinessLogic.ViewModels.Main;assembly=File.Manager.BusinessLogic" d:DataContext="{d:DesignInstance Type=main:MainWindowViewModel}"
                 mc:Ignorable="d"
-                Title="{x:Static res:Strings.Window_Title}" Height="450" Width="800">
+                Title="{x:Static res:Strings.Window_Title}" Height="450" Width="800" x:Name="root">
 
     <f:RibbonWindow.InputBindings>
-        <KeyBinding Key="U" Modifiers="Ctrl" Command="{Binding SwitchPanesCommand}" />
+        <KeyBinding Key="U" Modifiers="Ctrl" Command="{Binding ElementName=root, Path=SwitchPanesCommand}" />
     </f:RibbonWindow.InputBindings>
 
     <DockPanel>

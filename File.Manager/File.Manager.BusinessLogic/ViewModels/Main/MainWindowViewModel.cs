@@ -31,16 +31,6 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
 
         // Private methods ----------------------------------------------------
 
-        private void DoSwitchPanes()
-        {
-            var left = LeftPane;
-            var right = RightPane;
-
-            LeftPane = null;
-            RightPane = left;
-            LeftPane = right;
-        }
-
         private void NotifyPaneFocusChange(PaneViewModel paneViewModel, bool newFocus)
         {
             if (newFocus)
@@ -93,8 +83,6 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
             rightPane = new PaneViewModel(this, moduleService, iconService, messagingService);
 
             activePane = leftPane;
-
-            SwitchPanesCommand = new AppCommand(obj => DoSwitchPanes());
         }
 
         // Public properties --------------------------------------------------
@@ -129,7 +117,5 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
                     return null;
             }
         }
-
-        public ICommand SwitchPanesCommand { get; }        
     }
 }

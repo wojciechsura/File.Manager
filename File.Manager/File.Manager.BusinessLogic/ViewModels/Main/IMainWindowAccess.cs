@@ -8,5 +8,6 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
 {
     public interface IMainWindowAccess
     {
+        
     }
 }

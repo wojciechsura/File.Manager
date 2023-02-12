@@ -33,17 +33,19 @@ namespace File.Manager.Controls
 
         private void FocusSelectedItem(ListView listView)
         {
-            if (listView.SelectedItem != null)
+            Dispatcher.BeginInvoke(() =>
             {
-                var listViewItem = (ListViewItem)lbItems.ItemContainerGenerator.ContainerFromItem(listView.SelectedItem);
-
-                if (listViewItem != null && !listViewItem.IsFocused)
+                if (listView.SelectedItem != null)
                 {
-                    listViewItem.Focus();
-                    listView.UpdateLayout();
-                    listView.ScrollIntoView(listView.SelectedItem);
+                    var listViewItem = (ListViewItem)listView.ItemContainerGenerator.ContainerFromItem(listView.SelectedItem);
+
+                    if (listViewItem != null && !listViewItem.IsFocused)
+                    {
+                        listViewItem.Focus();
+                        listView.UpdateLayout();
+                    }
                 }
-            }
+            }, DispatcherPriority.Render);
         }
 
         private void HandleDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -59,12 +61,16 @@ namespace File.Manager.Controls
 
         private void HandleListViewGotFocus(object sender, RoutedEventArgs e)
         {
-            FocusSelectedItem(sender as ListView);
+            if (e.OriginalSource is not ListViewItem)
+                FocusSelectedItem(sender as ListView);
         }
 
         private void HandleListViewItemSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            FocusSelectedItem(sender as ListView);
+            var listView = sender as ListView;
+
+            FocusSelectedItem(listView);
+            listView.ScrollIntoView(listView.SelectedItem);
         }
 
         private void HandleListViewMouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -79,7 +85,7 @@ namespace File.Manager.Controls
 
         private void HandlePaneGotFocus(object sender, RoutedEventArgs e)
         {
-            viewModel.NotifyGotFocus();
+            viewModel?.NotifyGotFocus();
         }
 
         private void HandlePaneLostFocus(object sender, RoutedEventArgs e)
