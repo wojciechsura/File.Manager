@@ -12,7 +12,7 @@ namespace File.Manager.Controls.Files
 {
     public partial class FileList
     {
-        private class Metrics
+        private sealed class Metrics
         {
             // Private constants ----------------------------------------------
 
@@ -68,6 +68,7 @@ namespace File.Manager.Controls.Files
             private double width;
             private double height;
             private Thickness padding;
+            private double pixelsPerDip;
 
             // Private methods ------------------------------------------------
 
@@ -97,6 +98,15 @@ namespace File.Manager.Controls.Files
                     Invalidate();
                 }
 			}
+
+            private void SetPixelsPerDip(double value)
+            {
+                if (pixelsPerDip != value)
+                {
+                    pixelsPerDip = value;
+                    Invalidate();
+                }
+            }
 
             private void InvalidateGeneralMetrics()
             {
@@ -211,6 +221,12 @@ namespace File.Manager.Controls.Files
             {
                 get => padding;
                 set => SetPadding(value);
+            }
+
+            public double PixelsPerDip
+            {
+                get => pixelsPerDip;
+                set => SetPixelsPerDip(value);
             }
         }
     }

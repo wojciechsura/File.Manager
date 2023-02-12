@@ -1,5 +1,7 @@
 ﻿using Autofac;
 using Autofac.Core;
+using File.Manager.API.Filesystem.Models.Items;
+using File.Manager.BusinessLogic.Models.Files;
 using File.Manager.BusinessLogic.ViewModels.Main;
 using Fluent;
 using Spooksoft.VisualStateManager.Commands;
@@ -34,6 +36,19 @@ namespace File.Manager.Windows
             throw new NotImplementedException();
         }
 
+        private void SetupDefaultColumns()
+        {
+            var columns = new FileListColumnCollection
+            {
+                new FileListFilenameColumn() { Width = 300 },
+                new FileListKeyColumn(Item.SizeDisplayKey) { Width = 100 },
+                new FileListKeyColumn(Item.ModifiedKey) { Width = 150 },
+                new FileListKeyColumn(Item.AttributesKey) { Width = 100 }
+            };
+
+            flList.Columns = columns;
+        }
+
         public MainWindow()
         {
             SwitchPanesCommand = new AppCommand(obj => DoSwitchPanes());
@@ -42,6 +57,8 @@ namespace File.Manager.Windows
 
             viewModel = Dependencies.Container.Instance.Resolve<MainWindowViewModel>(new NamedParameter("access", this));
             DataContext = viewModel;
+
+            SetupDefaultColumns();
         }
 
         public ICommand SwitchPanesCommand { get; }

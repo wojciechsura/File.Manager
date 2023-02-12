@@ -41,7 +41,7 @@
         </Grid>
 
         <Border UseLayoutRounding="True">
-        <c:FileList Margin="{StaticResource DefaultMargin}" 
+        <c:FileList x:Name="flList" Margin="{StaticResource DefaultMargin}" 
                     SnapsToDevicePixels="True" />
         </Border>
 
