@@ -36,32 +36,32 @@ for (int i = 0; i < types.Count(); i++) {
     {
         // Protected methods ------------------------------------------------------
 
-        protected abstract TConcreteRectangle CreateRectangle(<#=t#> left, <#=t#> top, <#=t#> right, <#=t#> bottom);
+        protected abstract TConcreteRectangle CreateRectangle(<#=t#> left, <#=t#> top, <#=t#> width, <#=t#> height);
         protected abstract TConcretePoint CreatePoint(<#=t#> x, <#=t#> y);
 
         // Public methods ---------------------------------------------------------
 
-        public Base<#=n#>Rectangle(<#=t#> left, <#=t#> top, <#=t#> right, <#=t#> bottom)
+        public Base<#=n#>Rectangle(<#=t#> left, <#=t#> top, <#=t#> width, <#=t#> height)
         {
 <# if (isFloat) { #>
             if (<#=t#>.IsNaN(left))
 			    throw new ArgumentException(nameof(left));
-            if (<#=t#>.IsNaN(right))
-			    throw new ArgumentException(nameof(right));
             if (<#=t#>.IsNaN(top))
 			    throw new ArgumentException(nameof(top));
-            if (<#=t#>.IsNaN(bottom))
-			    throw new ArgumentException(nameof(bottom));
+            if (<#=t#>.IsNaN(width))
+			    throw new ArgumentException(nameof(width));
+            if (<#=t#>.IsNaN(height))
+			    throw new ArgumentException(nameof(height));
 <# } #>
-            if (right < left)
-                throw new ArgumentOutOfRangeException(nameof(right));
-            if (bottom < top)
-                throw new ArgumentOutOfRangeException(nameof(bottom));
+            if (width < 0)
+                throw new ArgumentOutOfRangeException(nameof(width));
+            if (height < 0)
+                throw new ArgumentOutOfRangeException(nameof(height));
 
 	        Left = left;
             Top = top;
-            Right = right;
-            Bottom = bottom;
+            Width = width;
+            Height = height;
         }
 
 		public bool Contains(TConcretePoint point)
@@ -71,17 +71,32 @@ for (int i = 0; i < types.Count(); i++) {
 
 		public TConcreteRectangle ExtendBy(TConcretePoint point)
 		{
-			return CreateRectangle(Math.Min(Left, point.X), Math.Min(Top, point.Y), Math.Max(Right, point.X), Math.Max(Bottom, point.Y));
+            <#=t#> newLeft = Math.Min(Left, point.X);
+            <#=t#> newTop = Math.Min(Top, point.Y);
+            <#=t#> newRight = Math.Max(Right, point.X);
+            <#=t#> newBottom = Math.Max(Bottom, point.Y);
+
+<# if (isFloat) { #>
+            return CreateRectangle(newLeft, newTop, newRight - newLeft, newBottom - newTop);
+<# } else { #>
+            return CreateRectangle(newLeft, newTop, newRight - newLeft + 1, newBottom - newTop + 1);
+<# } #>
 		}
 
-        public TConcreteRectangle Inflate(<#=t#> dLeft, <#=t#> dTop, <#=t#> dRight, <#=t#> dBottom) 
+        public TConcreteRectangle Offset(<#=t#> dLeft, <#=t#> dTop) 
         {
             <#=t#> newLeft = Left + dLeft;
             <#=t#> newTop = Top + dTop;
-            <#=t#> newRight = Math.Max(newLeft, Right + dRight);
-            <#=t#> newBottom = Math.Max(newTop, Bottom + dBottom);
 
-            return CreateRectangle(newLeft, newTop, newRight, newBottom);
+            return CreateRectangle(newLeft, newTop, Width, Height);
+        }
+
+        public TConcreteRectangle OffsetSize(<#=t#> dWidth, <#=t#> dHeight)
+        {
+            <#=t#> newWidth = Math.Max(0, Width + dWidth);
+            <#=t#> newHeight = Math.Max(0, Height + dHeight);
+
+            return CreateRectangle(Left, Top, newWidth, newHeight);
         }
 
 		public bool IntersectsWith(TConcreteRectangle rect) 
@@ -96,12 +111,17 @@ for (int i = 0; i < types.Count(); i++) {
 
         public <#=t#> Left { get; }    
         public <#=t#> Top { get; }
-        public <#=t#> Right { get; }
-        public <#=t#> Bottom { get; }
-        public virtual <#=t#> Width => Right - Left;
-        public virtual <#=t#> Height => Bottom - Top;
+<# if (isFloat) { #>
+        public <#=t#> Right => Left + Width;
+        public <#=t#> Bottom => Top + Height;
+<# } else { #>
+        public <#=t#> Right => Left + Width - 1;
+        public <#=t#> Bottom => Top + Height - 1;
+<# } #>
+        public <#=t#> Width { get; }
+        public <#=t#> Height { get; }
 
-        public TConcretePoint Center => CreatePoint((Left + Right) / <#=two#>, (Top + Bottom) / <#=two#>);
+        public TConcretePoint Center => CreatePoint(Left + Width / <#=two#>, Top + Height / <#=two#>);
     }
 
 <#

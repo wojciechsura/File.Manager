@@ -127,8 +127,8 @@ namespace File.Manager.Controls.Files
 
                     PixelRectangle headerBounds = new PixelRectangle(runningX,
                         headerMetrics.HeaderBounds.Top,
-                        runningX + columnWidth - 1,
-                        headerMetrics.HeaderBounds.Bottom);
+                        columnWidth,
+                        headerMetrics.HeaderBounds.Height);
 
                     PixelPoint headerTitlePosition = new PixelPoint((int)(headerBounds.Left + characterMetrics.CharWidth * COLUMN_HORIZONTAL_MARGIN_EM),
                         (headerBounds.Top + (headerBounds.Height - characterMetrics.CharHeight) / 2));
@@ -167,10 +167,10 @@ namespace File.Manager.Controls.Files
 
             int headerTop = host.Bounds.Top;
             int headerLeft = host.Bounds.Left;
-            int headerRight = host.Bounds.Right;
+            int headerWidth = host.Bounds.Width;
             int headerHeight = (int)(characterMetrics.CharHeight * COLUMN_HEADER_HEIGHT_EM);
 
-            var headerArea = new PixelRectangle(headerLeft, headerTop, headerRight, headerTop + headerHeight - 1);
+            var headerArea = new PixelRectangle(headerLeft, headerTop, headerWidth, headerHeight);
 
             headerMetrics = new HeaderMetrics(headerArea);
         }

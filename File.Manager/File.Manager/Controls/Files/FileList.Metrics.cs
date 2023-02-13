@@ -128,7 +128,7 @@ namespace File.Manager.Controls.Files
                 if (generalMetrics != null)
                     return;
 
-                PixelRectangle controlArea = new PixelRectangle(0, 0, Math.Max(0, (int)Width - 1), Math.Max(0, (int)Height - 1));
+                PixelRectangle controlArea = new PixelRectangle(0, 0, (int)Width, (int)Height);
 
                 generalMetrics = new GeneralMetrics(controlArea);
             }
@@ -149,7 +149,7 @@ namespace File.Manager.Controls.Files
                 }
                 else
                 {
-                    int PaneWidth = (int)((Width - Padding.Left - Padding.Right - SPACE_BETWEEN_PANES_DIP) / 2);
+                    int PaneWidth = (int)((Width - Padding.Left - Padding.Right - PxToDip(SPACE_BETWEEN_PANES_DIP)) / 2);
                     int PaneHeight = (int)(Height - Padding.Top - Padding.Bottom);
 
                     int leftRectLeft = (int)Padding.Left;
@@ -157,20 +157,20 @@ namespace File.Manager.Controls.Files
 
                     leftRectangle = new PixelRectangle(leftRectLeft,
                         leftRectTop,
-                        leftRectLeft + PaneWidth - 1,
-                        leftRectTop + PaneHeight - 1);
+                        PaneWidth,
+                        PaneHeight);
 
                     int rightRectLeft = (int)Width - 1 - (int)Padding.Right - PaneWidth;
                     int rightRectTop = (int)Padding.Top;
 
                     rightRectangle = new PixelRectangle(rightRectLeft,
                         rightRectTop,
-                        rightRectLeft + PaneWidth - 1,
-                        rightRectTop + PaneHeight - 1);
+                        PaneWidth,
+                        PaneHeight);
                 }
 
-                var leftPaneArea = leftRectangle.Offset(1, 1, -1, -1);
-				var rightPaneArea = rightRectangle.Offset(1, 1, -1, -1);
+                var leftPaneArea = leftRectangle.Offset(1, 1).OffsetSize(-2, -2);
+				var rightPaneArea = rightRectangle.Offset(1, 1).OffsetSize(-2, -2);
 
 				paneMetrics = new PaneMetrics(leftRectangle, 
                     rightRectangle,

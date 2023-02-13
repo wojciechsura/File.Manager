@@ -31,14 +31,14 @@ namespace File.Manager.Controls.Files
 
             var typeface = new Typeface(host.FontFamily.Source);
 
-            drawingContext.DrawRectangle(host.Appearance.HeaderBrush, null, metrics.Header.HeaderBounds.ToRect(Types.RectConversionPurpose.Brush));
+            drawingContext.DrawRectangle(host.Appearance.HeaderBrush, null, metrics.Header.HeaderBounds.ToBrushRect());
 
             if (Columns == null || Columns.Count == 0)
                 return;
             
             for (int i = 0; i < Columns.Count; i++)
             {
-                drawingContext.PushClip(new RectangleGeometry(metrics.Column.Columns[i].HeaderBounds.ToRect(Types.RectConversionPurpose.None)));
+                drawingContext.PushClip(new RectangleGeometry(metrics.Column.Columns[i].HeaderBounds.ToBrushRect()));
                 try
                 {
                     var text = new FormattedText(Columns[i].Header,

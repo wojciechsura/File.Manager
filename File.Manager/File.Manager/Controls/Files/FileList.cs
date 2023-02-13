@@ -98,16 +98,16 @@ namespace File.Manager.Controls.Files
                 var appearance = Appearance ?? DefaultAppearance;
 
                 // Background
-                drawingContext.DrawRectangle(appearance.Background, null, metrics.General.ControlArea.ToRect(RectConversionPurpose.Brush));
+                drawingContext.DrawRectangle(appearance.Background, null, metrics.General.ControlArea.ToBrushRect());
 
                 var panePen = new System.Windows.Media.Pen(appearance.PaneBorderBrush, metrics.PixelsPerDip * 1.0);
 
                 // Left pane
                 drawingContext.DrawRectangle(appearance.PaneBackgroundBrush,
                     panePen,
-                    metrics.Pane.LeftPaneBounds.ToRect(RectConversionPurpose.Pen));
+                    metrics.Pane.LeftPaneBounds.ToPenRect(panePen.Thickness));
 
-                drawingContext.PushClip(new RectangleGeometry(metrics.Pane.LeftPaneArea.ToRect(RectConversionPurpose.None)));
+                //drawingContext.PushClip(new RectangleGeometry(metrics.Pane.LeftPaneArea.ToRect(RectConversionPurpose.None)));
                 try
                 {
                     if (panesSwitched)
@@ -117,15 +117,15 @@ namespace File.Manager.Controls.Files
                 }
                 finally
                 {
-                    drawingContext.Pop();
+                    //drawingContext.Pop();
                 }
 
                 // Right pane
                 drawingContext.DrawRectangle(appearance.PaneBackgroundBrush,
                     panePen,
-                    metrics.Pane.RightPaneBounds.ToRect(RectConversionPurpose.Pen));
+                    metrics.Pane.RightPaneBounds.ToPenRect(panePen.Thickness));
 
-                drawingContext.PushClip(new RectangleGeometry(metrics.Pane.RightPaneArea.ToRect(RectConversionPurpose.None)));
+                drawingContext.PushClip(new RectangleGeometry(metrics.Pane.RightPaneArea.ToRegionRect()));
                 try
                 {
                     if (panesSwitched)
@@ -171,8 +171,8 @@ namespace File.Manager.Controls.Files
 
             panesSwitched = false;
 
-            firstHost = new FileListRendererHost(this, () => panesSwitched ? metrics.Pane.RightPaneBounds : metrics.Pane.LeftPaneBounds);
-            secondHost = new FileListRendererHost(this, () => panesSwitched ? metrics.Pane.LeftPaneBounds : metrics.Pane.RightPaneBounds);
+            firstHost = new FileListRendererHost(this, () => panesSwitched ? metrics.Pane.RightPaneArea : metrics.Pane.LeftPaneArea);
+            secondHost = new FileListRendererHost(this, () => panesSwitched ? metrics.Pane.LeftPaneArea : metrics.Pane.RightPaneArea);
 
             firstRenderer = new FileListGridRenderer(firstHost);
             secondRenderer = new FileListGridRenderer(secondHost);
