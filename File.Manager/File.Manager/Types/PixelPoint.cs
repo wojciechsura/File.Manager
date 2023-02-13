@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace File.Manager.Types
 {
@@ -14,5 +15,7 @@ namespace File.Manager.Types
         {
 
         }
+
+        public Point ToPoint() => new Point(X, Y);
     }
 }

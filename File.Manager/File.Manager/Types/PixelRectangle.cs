@@ -16,7 +16,12 @@ namespace File.Manager.Types
 
         }
 
-        public Rect ToRect() => new Rect(Left, Top, Width, Height);
+        public Rect ToRect(RectConversionPurpose purpose) => purpose switch
+        {
+            RectConversionPurpose.Pen => new Rect(Left + 0.5, Top + 0.5, Width, Height),
+            RectConversionPurpose.None or RectConversionPurpose.Brush => new Rect(Left, Top, Width, Height),
+            _ => throw new InvalidOperationException("Unsupported RectConversionPurpose")
+        };
 
         protected override PixelPoint CreatePoint(int x, int y)
             => new PixelPoint(x, y);

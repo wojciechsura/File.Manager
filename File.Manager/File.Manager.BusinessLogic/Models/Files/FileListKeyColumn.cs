@@ -8,7 +8,8 @@ namespace File.Manager.BusinessLogic.Models.Files
 {
     public class FileListKeyColumn : FileListColumn
     {
-        public FileListKeyColumn(string key)
+        public FileListKeyColumn(string header, string key)
+            : base(header)
         {
             Key = key;
         }

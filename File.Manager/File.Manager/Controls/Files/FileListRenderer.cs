@@ -70,10 +70,10 @@ namespace File.Manager.Controls.Files
 
         // Public properties --------------------------------------------------
 
-        public IReadOnlyList<FileListColumn> Columns
+        public FileListColumnCollection Columns
         {
             get => columns;
-            set => SetColumns(columns);
+            set => SetColumns(value);
         }
     }
 }

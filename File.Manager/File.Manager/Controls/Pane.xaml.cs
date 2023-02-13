@@ -154,6 +154,7 @@ namespace File.Manager.Controls
             gridView.Columns.Clear();
 
             // Add name column
+            /*
             var nameColumn = new GridViewColumn();
             nameColumn.Header = File.Manager.Resources.Controls.Pane.Strings.Column_Header_Name;
             nameColumn.Width = 300;
@@ -180,6 +181,7 @@ namespace File.Manager.Controls
             attributesColumn.Width = 100;
             attributesColumn.DisplayMemberBinding = new Binding() { Path = new PropertyPath(nameof(Item.Attributes)) };
             gridView.Columns.Add(attributesColumn);
+            */
         }
     }
 }

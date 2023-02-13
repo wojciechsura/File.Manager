@@ -40,10 +40,10 @@ namespace File.Manager.Windows
         {
             var columns = new FileListColumnCollection
             {
-                new FileListFilenameColumn() { Width = 300 },
-                new FileListKeyColumn(Item.SizeDisplayKey) { Width = 100 },
-                new FileListKeyColumn(Item.ModifiedKey) { Width = 150 },
-                new FileListKeyColumn(Item.AttributesKey) { Width = 100 }
+                new FileListFilenameColumn(File.Manager.Resources.Modules.Filesystem.Common.Strings.Header_Filename) { Width = 300 },
+                new FileListKeyColumn(File.Manager.Resources.Modules.Filesystem.Common.Strings.Header_Size, Item.SizeDisplayKey) { Width = 100 },
+                new FileListKeyColumn(File.Manager.Resources.Modules.Filesystem.Common.Strings.Header_Modified, Item.ModifiedKey) { Width = 150 },
+                new FileListKeyColumn(File.Manager.Resources.Modules.Filesystem.Common.Strings.Header_Attributes, Item.AttributesKey) { Width = 100 }
             };
 
             flList.Columns = columns;

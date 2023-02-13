@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace File.Manager.Resources.Controls.Pane {
+namespace File.Manager.Resources.Modules.Filesystem.Common {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace File.Manager.Resources.Controls.Pane {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("File.Manager.Resources.Controls.Pane.Strings", typeof(Strings).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("File.Manager.Resources.Modules.Filesystem.Common.Strings", typeof(Strings).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,29 +61,38 @@ namespace File.Manager.Resources.Controls.Pane {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Falied to navigate to address {0}: {1}.
+        ///   Looks up a localized string similar to Attributes.
         /// </summary>
-        public static string Message_AddressNavigationFailed {
+        public static string Header_Attributes {
             get {
-                return ResourceManager.GetString("Message_AddressNavigationFailed", resourceCulture);
+                return ResourceManager.GetString("Header_Attributes", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The following address is unsupported: {0}.
+        ///   Looks up a localized string similar to Filename.
         /// </summary>
-        public static string Message_AddressUnsupported {
+        public static string Header_Filename {
             get {
-                return ResourceManager.GetString("Message_AddressUnsupported", resourceCulture);
+                return ResourceManager.GetString("Header_Filename", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Cannot execute action on item {0}: {1}.
+        ///   Looks up a localized string similar to Date modified.
         /// </summary>
-        public static string Message_CannotExecuteItem {
+        public static string Header_Modified {
             get {
-                return ResourceManager.GetString("Message_CannotExecuteItem", resourceCulture);
+                return ResourceManager.GetString("Header_Modified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Size.
+        /// </summary>
+        public static string Header_Size {
+            get {
+                return ResourceManager.GetString("Header_Size", resourceCulture);
             }
         }
     }

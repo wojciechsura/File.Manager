@@ -2,11 +2,11 @@
 using File.Manager.Types;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media;
 
 namespace File.Manager.Controls.Files
 {
@@ -18,7 +18,7 @@ namespace File.Manager.Controls.Files
 
         FileListAppearance Appearance { get; }
 
-        string FontFamily { get; }
+        FontFamily FontFamily { get; }
 
         double FontSize { get; }
 

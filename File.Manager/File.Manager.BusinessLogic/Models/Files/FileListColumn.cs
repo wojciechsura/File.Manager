@@ -37,10 +37,11 @@ namespace File.Manager.BusinessLogic.Models.Files
             WidthChanged?.Invoke(this, EventArgs.Empty);    
         }
 
-        protected FileListColumn()
+        protected FileListColumn(string header)
         {
             width = 100;
             widthKind = FileListColumnWidthKind.Dip;
+            Header = header;
         }
 
         public int Width
@@ -54,6 +55,7 @@ namespace File.Manager.BusinessLogic.Models.Files
             get => widthKind;
             set => SetWidthKind(value);
         }
+        public string Header { get; }
 
         public event EventHandler WidthChanged;
     }

@@ -8,7 +8,8 @@ namespace File.Manager.BusinessLogic.Models.Files
 {
     public class FileListFilenameColumn : FileListColumn
     {
-        public FileListFilenameColumn() 
+        public FileListFilenameColumn(string header) 
+            : base(header)
         {
             // By default, name column is resized with window
             Width = 1;

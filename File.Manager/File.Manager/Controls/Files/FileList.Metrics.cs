@@ -128,7 +128,7 @@ namespace File.Manager.Controls.Files
                 if (generalMetrics != null)
                     return;
 
-                PixelRectangle controlArea = new PixelRectangle(0, 0, (int)Width - 1, (int)Height - 1);
+                PixelRectangle controlArea = new PixelRectangle(0, 0, Math.Max(0, (int)Width - 1), Math.Max(0, (int)Height - 1));
 
                 generalMetrics = new GeneralMetrics(controlArea);
             }
@@ -169,8 +169,8 @@ namespace File.Manager.Controls.Files
                         rightRectTop + PaneHeight - 1);
                 }
 
-                var leftPaneArea = leftRectangle.Inflate(-1, -1, -1, -1);
-				var rightPaneArea = rightRectangle.Inflate(-1, -1, -1, -1);
+                var leftPaneArea = leftRectangle.Offset(1, 1, -1, -1);
+				var rightPaneArea = rightRectangle.Offset(1, 1, -1, -1);
 
 				paneMetrics = new PaneMetrics(leftRectangle, 
                     rightRectangle,

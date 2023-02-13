@@ -10,17 +10,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Documents;
 using System.Windows.Media;
 
 namespace File.Manager.Controls.Files
 {
-
-    // TODO:
-    // 1. Unify Rectangles to RectanglesF
-    // 2. Remove parameters in Notify* passed to renderers
-    // 3. Finish FileListGridRendererMetrics.Validate*
-    // 4. Render header
-
     public partial class FileList : FrameworkElement
     {
         // Private constants --------------------------------------------------
@@ -29,7 +23,7 @@ namespace File.Manager.Controls.Files
 
         // Private types ------------------------------------------------------
 
-        private class FileListRendererHost : IFileListRendererHost
+        private sealed class FileListRendererHost : IFileListRendererHost
         {
             private readonly FileList fileList;
             private readonly Func<PixelRectangle> getBounds;
@@ -52,7 +46,7 @@ namespace File.Manager.Controls.Files
 
             public IReadOnlyList<FileListColumn> Columns => fileList.Columns;
 
-            public string FontFamily => fileList.FontFamily;
+            public System.Windows.Media.FontFamily FontFamily => fileList.FontFamily;
 
             public double FontSize => fileList.FontSize;
 
@@ -104,19 +98,22 @@ namespace File.Manager.Controls.Files
                 var appearance = Appearance ?? DefaultAppearance;
 
                 // Background
-                drawingContext.DrawRectangle(appearance.Background, null, metrics.General.ControlArea.ToRect());
+                drawingContext.DrawRectangle(appearance.Background, null, metrics.General.ControlArea.ToRect(RectConversionPurpose.Brush));
 
                 var panePen = new System.Windows.Media.Pen(appearance.PaneBorderBrush, metrics.PixelsPerDip * 1.0);
 
                 // Left pane
                 drawingContext.DrawRectangle(appearance.PaneBackgroundBrush,
                     panePen,
-                    metrics.Pane.LeftPaneBounds.ToRect());
+                    metrics.Pane.LeftPaneBounds.ToRect(RectConversionPurpose.Pen));
 
-                drawingContext.PushClip(new RectangleGeometry(metrics.Pane.LeftPaneArea.ToRect()));
+                drawingContext.PushClip(new RectangleGeometry(metrics.Pane.LeftPaneArea.ToRect(RectConversionPurpose.None)));
                 try
                 {
-                    // Draw left pane contents
+                    if (panesSwitched)
+                        secondRenderer.Render(drawingContext);
+                    else
+                        firstRenderer.Render(drawingContext);
                 }
                 finally
                 {
@@ -126,12 +123,15 @@ namespace File.Manager.Controls.Files
                 // Right pane
                 drawingContext.DrawRectangle(appearance.PaneBackgroundBrush,
                     panePen,
-                    metrics.Pane.RightPaneBounds.ToRect());
+                    metrics.Pane.RightPaneBounds.ToRect(RectConversionPurpose.Pen));
 
-                drawingContext.PushClip(new RectangleGeometry(metrics.Pane.RightPaneArea.ToRect()));
+                drawingContext.PushClip(new RectangleGeometry(metrics.Pane.RightPaneArea.ToRect(RectConversionPurpose.None)));
                 try
                 {
-                    // Draw right pane contents
+                    if (panesSwitched)
+                        firstRenderer.Render(drawingContext);
+                    else
+                        secondRenderer.Render(drawingContext);
                 }
                 finally
                 {
@@ -311,22 +311,22 @@ namespace File.Manager.Controls.Files
 
         private void ColumnsChanged(FileListColumnCollection oldValue, FileListColumnCollection newValue)
         {
-            ForEachRenderer(renderer => renderer.NotifyMetricsChanged());            
+            ForEachRenderer(renderer => renderer.Columns = newValue);
         }
 
         #endregion
 
         #region FontFamily dependency property
 
-        public string FontFamily
+        public System.Windows.Media.FontFamily FontFamily
         {
-            get { return (string)GetValue(FontFamilyProperty); }
+            get { return (System.Windows.Media.FontFamily)GetValue(FontFamilyProperty); }
             set { SetValue(FontFamilyProperty, value); }
         }
 
-        // Using a DependencyProperty as the backing store for FontFamily.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty FontFamilyProperty =
-            DependencyProperty.Register("FontFamily", typeof(string), typeof(FileList), new PropertyMetadata("Calibri", FontFamilyPropertyChanged));
+                TextElement.FontFamilyProperty.AddOwner(typeof(FileList), 
+                    new FrameworkPropertyMetadata(System.Windows.SystemFonts.CaptionFontFamily, FrameworkPropertyMetadataOptions.Inherits, FontFamilyPropertyChanged));
 
         private static void FontFamilyPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -349,9 +349,9 @@ namespace File.Manager.Controls.Files
             set { SetValue(FontSizeProperty, value); }
         }
 
-        // Using a DependencyProperty as the backing store for FontSize.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty FontSizeProperty =
-            DependencyProperty.Register("FontSize", typeof(double), typeof(FileList), new PropertyMetadata(11.0, FontSizePropertyChanged));
+            TextElement.FontSizeProperty.AddOwner(typeof(FileList),
+                new FrameworkPropertyMetadata(FontSizePropertyChanged));
 
         private static void FontSizePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {

@@ -18,6 +18,19 @@ namespace File.Manager.Controls.Files
                 fileListAppearance.OnAppearanceChanged();
         }
 
+        private static LinearGradientBrush BuildHeaderBrush()
+        {
+            var stops = new GradientStopCollection
+            {
+                new GradientStop(Color.FromArgb(0xff, 0xf8, 0xf8, 0xf8), 0.0),
+                new GradientStop(Color.FromArgb(0xff, 0xf8, 0xf8, 0xf8), 0.66),
+                new GradientStop(Color.FromArgb(0xff, 0xf0, 0xf0, 0xf0), 0.661),
+                new GradientStop(Color.FromArgb(0xff, 0xf0, 0xf0, 0xf0), 1.0)
+            };
+
+            return new LinearGradientBrush(stops, 90.0);
+        }
+
         // Protected methods --------------------------------------------------
 
         protected void OnAppearanceChanged()
@@ -66,6 +79,34 @@ namespace File.Manager.Controls.Files
         // Using a DependencyProperty as the backing store for PaneBackgroundBrush.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty PaneBackgroundBrushProperty =
             DependencyProperty.Register("PaneBackgroundBrush", typeof(Brush), typeof(FileListAppearance), new PropertyMetadata(new SolidColorBrush(Color.FromArgb(0xff, 0xff, 0xff, 0xff)), AppearancePropertyChanged));
+
+        #endregion
+
+        #region HeaderBrush dependency property
+
+        public Brush HeaderBrush
+        {
+            get { return (Brush)GetValue(HeaderBrushProperty); }
+            set { SetValue(HeaderBrushProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for HeaderBrush.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty HeaderBrushProperty =
+            DependencyProperty.Register("HeaderBrush", typeof(Brush), typeof(FileListAppearance), new PropertyMetadata(BuildHeaderBrush(), AppearancePropertyChanged));
+
+        #endregion
+
+        #region HeaderForegroundBrush
+
+        public Brush HeaderForegroundBrush
+        {
+            get { return (Brush)GetValue(HeaderForegroundBrushProperty); }
+            set { SetValue(HeaderForegroundBrushProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for HeaderForegroundBrush.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty HeaderForegroundBrushProperty =
+            DependencyProperty.Register("HeaderForegroundBrush", typeof(Brush), typeof(FileListAppearance), new PropertyMetadata(new SolidColorBrush(Color.FromArgb(0xff, 0x1e, 0x32, 0x87)), AppearancePropertyChanged));
 
         #endregion
 

@@ -46,7 +46,7 @@ namespace File.Manager.Geometry
 			return CreateRectangle(Math.Min(Left, point.X), Math.Min(Top, point.Y), Math.Max(Right, point.X), Math.Max(Bottom, point.Y));
 		}
 
-        public TConcreteRectangle Inflate(int dLeft, int dTop, int dRight, int dBottom) 
+        public TConcreteRectangle Offset(int dLeft, int dTop, int dRight, int dBottom) 
         {
             int newLeft = Left + dLeft;
             int newTop = Top + dTop;
