@@ -31,16 +31,27 @@ namespace File.Manager.Controls.Files
 
             var typeface = new Typeface(host.FontFamily.Source);
 
-            drawingContext.DrawRectangle(host.Appearance.HeaderBrush, null, metrics.Header.HeaderBounds.ToBrushRect());
+            drawingContext.DrawRectangle(host.Appearance.HeaderBackgroundBrush, null, metrics.Header.HeaderBounds.ToBrushRect());
 
             if (Columns == null || Columns.Count == 0)
                 return;
-            
+
+            var columnHeaderSeparatorPen = new Pen(host.Appearance.HeaderSeparatorBrush, host.PixelsPerDip * 1.0);
+
             for (int i = 0; i < Columns.Count; i++)
             {
                 drawingContext.PushClip(new RectangleGeometry(metrics.Column.Columns[i].HeaderBounds.ToBrushRect()));
                 try
                 {
+                    if (i > 0)
+                    {
+                        Rect headerRect = metrics.Column.Columns[i].HeaderBounds.ToPenRect(columnHeaderSeparatorPen.Thickness);
+
+                        drawingContext.DrawLine(columnHeaderSeparatorPen,
+                            new Point(headerRect.Left, headerRect.Top),
+                            new Point(headerRect.Left, headerRect.Bottom));
+                    }
+
                     var text = new FormattedText(Columns[i].Header,
                         CultureInfo.InvariantCulture,
                         FlowDirection.LeftToRight,

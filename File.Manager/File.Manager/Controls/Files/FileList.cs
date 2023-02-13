@@ -19,7 +19,7 @@ namespace File.Manager.Controls.Files
     {
         // Private constants --------------------------------------------------
 
-        private static readonly FileListAppearance DefaultAppearance = new FileListAppearance();
+        private static readonly FileListAppearance DefaultAppearance = new();
 
         // Private types ------------------------------------------------------
 
@@ -98,16 +98,18 @@ namespace File.Manager.Controls.Files
                 var appearance = Appearance ?? DefaultAppearance;
 
                 // Background
+
                 drawingContext.DrawRectangle(appearance.Background, null, metrics.General.ControlArea.ToBrushRect());
 
                 var panePen = new System.Windows.Media.Pen(appearance.PaneBorderBrush, metrics.PixelsPerDip * 1.0);
 
                 // Left pane
+
                 drawingContext.DrawRectangle(appearance.PaneBackgroundBrush,
                     panePen,
                     metrics.Pane.LeftPaneBounds.ToPenRect(panePen.Thickness));
 
-                //drawingContext.PushClip(new RectangleGeometry(metrics.Pane.LeftPaneArea.ToRect(RectConversionPurpose.None)));
+                drawingContext.PushClip(new RectangleGeometry(metrics.Pane.LeftPaneArea.ToRegionRect()));
                 try
                 {
                     if (panesSwitched)
@@ -117,10 +119,11 @@ namespace File.Manager.Controls.Files
                 }
                 finally
                 {
-                    //drawingContext.Pop();
+                    drawingContext.Pop();
                 }
 
                 // Right pane
+
                 drawingContext.DrawRectangle(appearance.PaneBackgroundBrush,
                     panePen,
                     metrics.Pane.RightPaneBounds.ToPenRect(panePen.Thickness));

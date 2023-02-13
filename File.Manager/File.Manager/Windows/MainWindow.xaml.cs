@@ -2,6 +2,7 @@
 using Autofac.Core;
 using File.Manager.API.Filesystem.Models.Items;
 using File.Manager.BusinessLogic.Models.Files;
+using File.Manager.BusinessLogic.Types;
 using File.Manager.BusinessLogic.ViewModels.Main;
 using Fluent;
 using Spooksoft.VisualStateManager.Commands;
@@ -40,10 +41,10 @@ namespace File.Manager.Windows
         {
             var columns = new FileListColumnCollection
             {
-                new FileListFilenameColumn(File.Manager.Resources.Modules.Filesystem.Common.Strings.Header_Filename) { Width = 300 },
-                new FileListKeyColumn(File.Manager.Resources.Modules.Filesystem.Common.Strings.Header_Size, Item.SizeDisplayKey) { Width = 100 },
-                new FileListKeyColumn(File.Manager.Resources.Modules.Filesystem.Common.Strings.Header_Modified, Item.ModifiedKey) { Width = 150 },
-                new FileListKeyColumn(File.Manager.Resources.Modules.Filesystem.Common.Strings.Header_Attributes, Item.AttributesKey) { Width = 100 }
+                new FileListFilenameColumn(File.Manager.Resources.Modules.Filesystem.Common.Strings.Header_Filename) { Width = 1, WidthKind = FileListColumnWidthKind.Star },
+                new FileListKeyColumn(File.Manager.Resources.Modules.Filesystem.Common.Strings.Header_Size, Item.SizeDisplayKey) { Width = 80 },
+                new FileListKeyColumn(File.Manager.Resources.Modules.Filesystem.Common.Strings.Header_Modified, Item.ModifiedKey) { Width = 120 },
+                new FileListKeyColumn(File.Manager.Resources.Modules.Filesystem.Common.Strings.Header_Attributes, Item.AttributesKey) { Width = 80 }
             };
 
             flList.Columns = columns;

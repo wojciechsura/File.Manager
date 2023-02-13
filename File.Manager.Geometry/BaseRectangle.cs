@@ -84,6 +84,11 @@ namespace File.Manager.Geometry
         public int Width { get; }
         public int Height { get; }
 
+        public TConcretePoint TopLeft => CreatePoint(Left, Top);
+        public TConcretePoint BottomLeft => CreatePoint(Left, Bottom);
+        public TConcretePoint TopRight => CreatePoint(Right, Top);
+        public TConcretePoint BottomRight => CreatePoint(Right, Bottom);
+
         public TConcretePoint Center => CreatePoint(Left + Width / 2, Top + Height / 2);
     }
 
@@ -169,6 +174,11 @@ namespace File.Manager.Geometry
         public float Width { get; }
         public float Height { get; }
 
+        public TConcretePoint TopLeft => CreatePoint(Left, Top);
+        public TConcretePoint BottomLeft => CreatePoint(Left, Bottom);
+        public TConcretePoint TopRight => CreatePoint(Right, Top);
+        public TConcretePoint BottomRight => CreatePoint(Right, Bottom);
+
         public TConcretePoint Center => CreatePoint(Left + Width / 2.0f, Top + Height / 2.0f);
     }
 
@@ -253,6 +263,11 @@ namespace File.Manager.Geometry
         public double Bottom => Top + Height;
         public double Width { get; }
         public double Height { get; }
+
+        public TConcretePoint TopLeft => CreatePoint(Left, Top);
+        public TConcretePoint BottomLeft => CreatePoint(Left, Bottom);
+        public TConcretePoint TopRight => CreatePoint(Right, Top);
+        public TConcretePoint BottomRight => CreatePoint(Right, Bottom);
 
         public TConcretePoint Center => CreatePoint(Left + Width / 2.0, Top + Height / 2.0);
     }

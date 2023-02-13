@@ -121,6 +121,11 @@ for (int i = 0; i < types.Count(); i++) {
         public <#=t#> Width { get; }
         public <#=t#> Height { get; }
 
+        public TConcretePoint TopLeft => CreatePoint(Left, Top);
+        public TConcretePoint BottomLeft => CreatePoint(Left, Bottom);
+        public TConcretePoint TopRight => CreatePoint(Right, Top);
+        public TConcretePoint BottomRight => CreatePoint(Right, Bottom);
+
         public TConcretePoint Center => CreatePoint(Left + Width / <#=two#>, Top + Height / <#=two#>);
     }
 
