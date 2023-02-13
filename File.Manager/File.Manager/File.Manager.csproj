@@ -17,6 +17,7 @@
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\File.Manager.Geometry\File.Manager.Geometry.csproj" />
     <ProjectReference Include="..\File.Manager.BusinessLogic\File.Manager.BusinessLogic.csproj" />
     <ProjectReference Include="..\File.Manager.Common.Wpf\File.Manager.Common.Wpf.csproj" />
     <ProjectReference Include="..\File.Manager.Common\File.Manager.Common.csproj" />

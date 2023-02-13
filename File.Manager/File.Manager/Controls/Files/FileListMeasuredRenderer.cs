@@ -9,18 +9,18 @@ using System.Windows.Media;
 namespace File.Manager.Controls.Files
 {
     internal abstract class FileListMeasuredRenderer<TMetrics> : FileListRenderer
-        where TMetrics : FileListRendererMetrics, new()
+        where TMetrics : FileListRendererMetrics
     {
         // Protected fields ---------------------------------------------------
 
-        protected readonly TMetrics metrics;
+        protected TMetrics metrics;
 
         // Protected methods --------------------------------------------------
 
-        protected FileListMeasuredRenderer(IFileListRendererHost host)
+        protected FileListMeasuredRenderer(IFileListRendererHost host, TMetrics metrics)
             : base(host)
         {
-            this.metrics = new TMetrics();
+            this.metrics = metrics ?? throw new ArgumentNullException(nameof(metrics));
         }
 
         protected void ValidateMetrics()
@@ -36,30 +36,19 @@ namespace File.Manager.Controls.Files
             metrics.Invalidate();
         }
 
-        protected override void OnBoundsChanged(Rect newBounds)
-        {
-            metrics.Bounds = newBounds;
-        }
-
-        protected override void OnDpiChanged(double newPixelsPerDip)
-        {
-            metrics.PixelsPerDip = newPixelsPerDip;
-        }
-
         protected override void OnColumnsChanged()
         {
-            metrics.Columns = host.Columns;
+            metrics.Columns = Columns;
             host.RequestInvalidateVisual();
         }
 
-        protected override void OnFontChanged(string fontFamily, double fontSize)
-        {
-            metrics.FontFamily = fontFamily;
-            metrics.FontSize = fontSize;
-        }
-
-
         // Public methods -----------------------------------------------------
+
+        public override void NotifyMetricsChanged()
+        {
+            InvalidateMetrics();
+            base.NotifyMetricsChanged();
+        }
 
         public override void Render(DrawingContext drawingContext)
         {

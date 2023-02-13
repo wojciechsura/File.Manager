@@ -10,7 +10,7 @@ namespace File.Manager.Controls.Files
     internal class FileListGridRenderer : FileListMeasuredRenderer<FileListGridRendererMetrics>
     {
         public FileListGridRenderer(IFileListRendererHost host) 
-            : base(host)
+            : base(host, new FileListGridRendererMetrics(host))
         {
 
         }

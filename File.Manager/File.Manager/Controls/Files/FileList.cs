@@ -1,8 +1,11 @@
 ﻿using File.Manager.API.Filesystem.Models.Items;
 using File.Manager.BusinessLogic.Models.Files;
+using File.Manager.Tools;
+using File.Manager.Types;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,7 +21,7 @@ namespace File.Manager.Controls.Files
     // 3. Finish FileListGridRendererMetrics.Validate*
     // 4. Render header
 
-    public partial class FileList : FrameworkElement, IFileListRendererHost
+    public partial class FileList : FrameworkElement
     {
         // Private constants --------------------------------------------------
 
@@ -26,10 +29,46 @@ namespace File.Manager.Controls.Files
 
         // Private types ------------------------------------------------------
 
+        private class FileListRendererHost : IFileListRendererHost
+        {
+            private readonly FileList fileList;
+            private readonly Func<PixelRectangle> getBounds;
+
+            public FileListRendererHost(FileList fileList,
+                Func<PixelRectangle> getBounds)
+            {
+                this.fileList = fileList;
+                this.getBounds = getBounds;
+            }
+
+            public void RequestInvalidateVisual()
+            {
+                fileList.InvalidateVisual();
+            }
+
+            public PixelRectangle Bounds => getBounds();
+
+            public FileListAppearance Appearance => fileList.Appearance ?? FileList.DefaultAppearance;
+
+            public IReadOnlyList<FileListColumn> Columns => fileList.Columns;
+
+            public string FontFamily => fileList.FontFamily;
+
+            public double FontSize => fileList.FontSize;
+
+            public double PixelsPerDip => fileList.metrics.PixelsPerDip;
+        }
+
+        // Private fields -----------------------------------------------------
+
         private FileListRenderer firstRenderer;
+        private readonly FileListRendererHost firstHost;
+
         private FileListRenderer secondRenderer;
+        private readonly FileListRendererHost secondHost;
+        
         private readonly Metrics metrics;
-        private bool firstIsLeft;
+        private bool panesSwitched;
 
         // Private methods ----------------------------------------------------
 
@@ -43,17 +82,7 @@ namespace File.Manager.Controls.Files
             if (!metrics.Valid)
             {
                 metrics.Validate();
-
-                if (firstIsLeft)
-                {
-                    firstRenderer.NotifyBoundsChanged(metrics.Pane.LeftPaneArea);
-                    secondRenderer.NotifyBoundsChanged(metrics.Pane.RightPaneArea);
-                }
-                else
-                {
-                    secondRenderer.NotifyBoundsChanged(metrics.Pane.LeftPaneArea);
-                    firstRenderer.NotifyBoundsChanged(metrics.Pane.RightPaneArea);
-                }
+                ForEachRenderer(renderer => renderer.NotifyMetricsChanged());
             }
         }
 
@@ -75,16 +104,16 @@ namespace File.Manager.Controls.Files
                 var appearance = Appearance ?? DefaultAppearance;
 
                 // Background
-                drawingContext.DrawRectangle(appearance.Background, null, metrics.General.ControlArea);
+                drawingContext.DrawRectangle(appearance.Background, null, metrics.General.ControlArea.ToRect());
 
-                var panePen = new Pen(appearance.PaneBorderBrush, metrics.PixelsPerDip * 1.0);
+                var panePen = new System.Windows.Media.Pen(appearance.PaneBorderBrush, metrics.PixelsPerDip * 1.0);
 
                 // Left pane
                 drawingContext.DrawRectangle(appearance.PaneBackgroundBrush,
                     panePen,
-                    metrics.Pane.LeftPaneBounds);
+                    metrics.Pane.LeftPaneBounds.ToRect());
 
-                drawingContext.PushClip(new RectangleGeometry(metrics.Pane.LeftPaneArea));
+                drawingContext.PushClip(new RectangleGeometry(metrics.Pane.LeftPaneArea.ToRect()));
                 try
                 {
                     // Draw left pane contents
@@ -97,9 +126,9 @@ namespace File.Manager.Controls.Files
                 // Right pane
                 drawingContext.DrawRectangle(appearance.PaneBackgroundBrush,
                     panePen,
-                    metrics.Pane.RightPaneBounds);
+                    metrics.Pane.RightPaneBounds.ToRect());
 
-                drawingContext.PushClip(new RectangleGeometry(metrics.Pane.RightPaneArea));
+                drawingContext.PushClip(new RectangleGeometry(metrics.Pane.RightPaneArea.ToRect()));
                 try
                 {
                     // Draw right pane contents
@@ -131,23 +160,8 @@ namespace File.Manager.Controls.Files
 
             metrics.PixelsPerDip = newDpi.PixelsPerDip;
 
-            ForEachRenderer(renderer => renderer.NotifyDpiChanged(metrics.PixelsPerDip));
-        }
-
-        // IFileListRendererHost implementation -------------------------------
-
-        void IFileListRendererHost.RequestInvalidateVisual()
-        {
-            InvalidateVisual();
-        }
-
-        FileListAppearance IFileListRendererHost.Appearance => Appearance ?? DefaultAppearance;
-
-        IReadOnlyList<FileListColumn> IFileListRendererHost.Columns => this.Columns;
-
-        string IFileListRendererHost.FontFamily => this.FontFamily;
-
-        double IFileListRendererHost.FontSize => this.FontSize;
+            ForEachRenderer(renderer => renderer.NotifyMetricsChanged());
+        }        
 
         // Public methods -----------------------------------------------------
 
@@ -155,8 +169,13 @@ namespace File.Manager.Controls.Files
         {
             metrics = new();
 
-            firstRenderer = new FileListGridRenderer(this);
-            secondRenderer = new FileListGridRenderer(this);
+            panesSwitched = false;
+
+            firstHost = new FileListRendererHost(this, () => panesSwitched ? metrics.Pane.RightPaneBounds : metrics.Pane.LeftPaneBounds);
+            secondHost = new FileListRendererHost(this, () => panesSwitched ? metrics.Pane.LeftPaneBounds : metrics.Pane.RightPaneBounds);
+
+            firstRenderer = new FileListGridRenderer(firstHost);
+            secondRenderer = new FileListGridRenderer(secondHost);
 
             metrics.PixelsPerDip = VisualTreeHelper.GetDpi(this).PixelsPerDip;
         }
@@ -292,10 +311,7 @@ namespace File.Manager.Controls.Files
 
         private void ColumnsChanged(FileListColumnCollection oldValue, FileListColumnCollection newValue)
         {
-            ForEachRenderer(renderer =>
-            {
-                renderer.Columns = newValue;
-            });
+            ForEachRenderer(renderer => renderer.NotifyMetricsChanged());            
         }
 
         #endregion
@@ -320,7 +336,7 @@ namespace File.Manager.Controls.Files
 
         private void FontFamilyChanged()
         {
-            ForEachRenderer(renderer => renderer.NotifyFontChanged(FontFamily, FontSize));
+            ForEachRenderer(renderer => renderer.NotifyMetricsChanged());
         }
 
         #endregion
@@ -347,7 +363,34 @@ namespace File.Manager.Controls.Files
 
         private void FontSizeChanged()
         {
-            ForEachRenderer(renderer => renderer.NotifyFontChanged(FontFamily, FontSize));
+            ForEachRenderer(renderer => renderer.NotifyMetricsChanged());
+        }
+
+        #endregion
+
+        #region PanesSwitched dependency property
+
+        public bool PanesSwitched
+        {
+            get { return (bool)GetValue(PanesSwitchedProperty); }
+            set { SetValue(PanesSwitchedProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for PanesSwitched.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty PanesSwitchedProperty =
+            DependencyProperty.Register("PanesSwitched", typeof(bool), typeof(FileList), new PropertyMetadata(false, PanesSwitchedPropertyChanged));
+
+        private static void PanesSwitchedPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is FileList fileList)
+            {
+                fileList.PanesSwitchedChanged();
+            }
+        }
+
+        private void PanesSwitchedChanged()
+        {
+            ForEachRenderer(renderer => renderer.NotifyMetricsChanged());
         }
 
         #endregion

@@ -56,49 +56,24 @@ namespace File.Manager.Controls.Files
 
         protected virtual void OnColumnsChanged()
         {
-            
-        }
 
-        protected virtual void OnBoundsChanged(Rect newBounds)
-        {
-
-        }
-
-        protected virtual void OnDpiChanged(double newPixelsPerDip)
-        {
-
-        }
-
-        protected virtual void OnFontChanged(string fontFamily, double fontSize)
-        {
-            
         }
 
         // Public methods -----------------------------------------------------
 
         public abstract void Render(DrawingContext drawingContext);
 
-        public void NotifyColumnsChanged() 
+        public virtual void NotifyMetricsChanged()
         {
-            OnColumnsChanged();
-        }
-
-        public void NotifyBoundsChanged(Rect newBounds)
-        {
-            OnBoundsChanged(newBounds);
             host.RequestInvalidateVisual();
         }
 
-        public void NotifyDpiChanged(double newPixelsPerDip)
-        {
-            OnDpiChanged(newPixelsPerDip);
-            host.RequestInvalidateVisual();
-        }
+        // Public properties --------------------------------------------------
 
-        public void NotifyFontChanged(string fontFamily, double fontSize)
+        public IReadOnlyList<FileListColumn> Columns
         {
-            OnFontChanged(fontFamily, fontSize);
-            host.RequestInvalidateVisual();
+            get => columns;
+            set => SetColumns(columns);
         }
     }
 }

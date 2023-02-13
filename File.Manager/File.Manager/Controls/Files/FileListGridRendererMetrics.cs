@@ -1,4 +1,5 @@
 ﻿using File.Manager.BusinessLogic.Types;
+using File.Manager.Types;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -14,20 +15,22 @@ namespace File.Manager.Controls.Files
     {
         // Private constants --------------------------------------------------
 
-        private const int MIN_COLUMN_WIDTH = 10;
+        private const int MIN_COLUMN_WIDTH_DIP = 10;
+        private const double COLUMN_HEIGHT_EM = 2;
+        private const double COLUMN_HEADER_MARGIN_EM = 0.5;
 
         // Public types -------------------------------------------------------
 
         public class ColumnMetric
         {
-            public ColumnMetric(Point headerTitle, Rect headerBounds)
+            public ColumnMetric(PixelRectangle headerBounds, PixelPoint headerTitle)
             {
                 HeaderTitle = headerTitle;
                 HeaderBounds = headerBounds;
             }
 
-            public Point HeaderTitle { get; }
-            public Rect HeaderBounds { get; }
+            public PixelPoint HeaderTitle { get; }
+            public PixelRectangle HeaderBounds { get; }
         }
 
         public class ColumnMetrics
@@ -71,6 +74,8 @@ namespace File.Manager.Controls.Files
 
         private void ValidateColumnMetrics()
         {
+            ValidateCharacterMetrics();
+
             if (columnMetrics != null)
                 return;
 
@@ -82,25 +87,25 @@ namespace File.Manager.Controls.Files
             {
                 // Evaluate required values
 
-                double availableWidthPx = Bounds.Width;
+                int availableWidthPx = host.Bounds.Width;
 
-                double requiredAbsoluteWidthPx = DipToPixels(Columns
-                    .Where(c => c.WidthKind == BusinessLogic.Types.FileListColumnWidthKind.Dip)
+                int requiredAbsoluteWidthPx = (int)DipToPx(Columns
+                    .Where(c => c.WidthKind == FileListColumnWidthKind.Dip)
                     .Sum(c => c.Width));
 
-                double remainingWidthPx = availableWidthPx - requiredAbsoluteWidthPx;
+                int remainingWidthPx = availableWidthPx - requiredAbsoluteWidthPx;
 
                 int starSum = Columns
-                    .Where(c => c.WidthKind == BusinessLogic.Types.FileListColumnWidthKind.Star)
+                    .Where(c => c.WidthKind == FileListColumnWidthKind.Star)
                     .Sum(c => c.Width);
 
                 // Evaluate column metrics
 
                 List<ColumnMetric> columns = new();
                 
-                double runningX = Bounds.Left;
-                double headerY = Bounds.Top;
-                double columnHeight = DipToPixels(10);
+                int runningX = host.Bounds.Left;
+                int headerY = host.Bounds.Top;
+                int columnHeight = (int)(characterMetrics.CharHeight * COLUMN_HEIGHT_EM);
 
                 for (int i = 0; i < Columns.Count; i++)
                 {
@@ -108,14 +113,14 @@ namespace File.Manager.Controls.Files
                     {
                         case FileListColumnWidthKind.Dip:
                             {
-                                double columnWidth = DipToPixels(Columns[i].Width);
+                                int columnWidth = (int)DipToPx(Math.Max(MIN_COLUMN_WIDTH_DIP, Columns[i].Width));
 
                                 Rect headerBounds = new Rect(runningX,
                                     headerY,
                                     columnWidth,
                                     columnHeight);
 
-                                
+                                // TODO
 
                                 runningX += columnWidth;
 
@@ -139,15 +144,22 @@ namespace File.Manager.Controls.Files
 
             FormattedText text = new FormattedText("W",
                 CultureInfo.InvariantCulture,
-                System.Windows.FlowDirection.LeftToRight,
-                new Typeface(FontFamily),
-                FontSize,
-                System.Windows.Media.Brushes.Black,
-                PixelsPerDip);
+                FlowDirection.LeftToRight,
+                new Typeface(host.FontFamily),
+                host.FontSize,
+                Brushes.Black,
+                host.PixelsPerDip);
 
             characterMetrics = new CharacterMetrics((int)Math.Ceiling(text.Width), (int)Math.Ceiling(text.Height));            
         }
+
         // Public methods -----------------------------------------------------
+
+        public FileListGridRendererMetrics(IFileListRendererHost host)
+            : base(host)
+        {
+
+        }
 
         public override void Invalidate()
         {

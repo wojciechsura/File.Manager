@@ -1,0 +1,46 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Update="BasePoint.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>BasePoint.cs</LastGenOutput>
+    </None>
+    <None Update="BaseRectangle.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>BaseRectangle.cs</LastGenOutput>
+    </None>
+    <None Update="NumericUtils.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>NumericUtils.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="BasePoint.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>BasePoint.tt</DependentUpon>
+    </Compile>
+    <Compile Update="BaseRectangle.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>BaseRectangle.tt</DependentUpon>
+    </Compile>
+    <Compile Update="NumericUtils.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>NumericUtils.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+</Project>

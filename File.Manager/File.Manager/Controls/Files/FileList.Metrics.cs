@@ -1,4 +1,5 @@
-﻿using System;
+﻿using File.Manager.Types;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -16,37 +17,37 @@ namespace File.Manager.Controls.Files
         {
             // Private constants ----------------------------------------------
 
-            private const int SPACE_BETWEEN_PANES = 4;
+            private const int SPACE_BETWEEN_PANES_DIP = 4;
 
-            private const int PANE_BORDER_THICKNESS = 1;
+            private const int PANE_BORDER_THICKNESS_DIP = 1;
 
             // Evaluated
 
-            private const int MIN_WIDTH = 2 * PANE_BORDER_THICKNESS + 1 +
-                    SPACE_BETWEEN_PANES +
-                    2 * PANE_BORDER_THICKNESS + 1;
-            private const int MIN_HEIGHT = 2 * PANE_BORDER_THICKNESS + 1 +
-				SPACE_BETWEEN_PANES +
-				2 * PANE_BORDER_THICKNESS + 1;
+            private const int MIN_WIDTH_DIP = 2 * PANE_BORDER_THICKNESS_DIP + 1 +
+                    SPACE_BETWEEN_PANES_DIP +
+                    2 * PANE_BORDER_THICKNESS_DIP + 1;
+            private const int MIN_HEIGHT_DIP = 2 * PANE_BORDER_THICKNESS_DIP + 1 +
+				SPACE_BETWEEN_PANES_DIP +
+				2 * PANE_BORDER_THICKNESS_DIP + 1;
 
 			// Public types ---------------------------------------------------
 
             public class GeneralMetrics
             {
-                public GeneralMetrics(Rect controlArea)
+                public GeneralMetrics(PixelRectangle controlArea)
                 {
                     ControlArea = controlArea;
                 }
 
-                public Rect ControlArea { get; }
+                public PixelRectangle ControlArea { get; }
             }
 
 			public class PaneMetrics
             {
-                public PaneMetrics (Rect leftPaneBounds, 
-                    Rect rightPaneBounds,
-                    Rect leftPaneArea,
-                    Rect rightPaneArea)
+                public PaneMetrics (PixelRectangle leftPaneBounds, 
+                    PixelRectangle rightPaneBounds,
+                    PixelRectangle leftPaneArea,
+                    PixelRectangle rightPaneArea)
                 {
                     LeftPaneBounds = leftPaneBounds;
                     RightPaneBounds = rightPaneBounds;
@@ -54,10 +55,10 @@ namespace File.Manager.Controls.Files
                     RightPaneArea = rightPaneArea;
                 }   
 
-                public Rect LeftPaneBounds { get; }
-                public Rect RightPaneBounds { get; }
-                public Rect LeftPaneArea { get; }
-				public Rect RightPaneArea { get; }
+                public PixelRectangle LeftPaneBounds { get; }
+                public PixelRectangle RightPaneBounds { get; }
+                public PixelRectangle LeftPaneArea { get; }
+				public PixelRectangle RightPaneArea { get; }
 			}
 
             // Private fields -------------------------------------------------
@@ -71,6 +72,10 @@ namespace File.Manager.Controls.Files
             private double pixelsPerDip;
 
             // Private methods ------------------------------------------------
+
+            private double PxToDip(double pixels) => pixels / pixelsPerDip;
+
+            private double DipToPx(double dip) => dip * pixelsPerDip;
 
             private void SetWidth(double value)
             {
@@ -123,7 +128,7 @@ namespace File.Manager.Controls.Files
                 if (generalMetrics != null)
                     return;
 
-                Rect controlArea = new Rect(0, 0, Width, Height);
+                PixelRectangle controlArea = new PixelRectangle(0, 0, (int)Width - 1, (int)Height - 1);
 
                 generalMetrics = new GeneralMetrics(controlArea);
             }
@@ -133,43 +138,42 @@ namespace File.Manager.Controls.Files
                 if (paneMetrics != null)
                     return;
 
-                Rect leftRect;
-                Rect rightRect;
+                PixelRectangle leftRectangle;
+                PixelRectangle rightRectangle;
 
-                if (Width - Padding.Left - Padding.Right < MIN_WIDTH  || 
-                    Height - Padding.Top - Padding.Bottom < MIN_HEIGHT)
+                if (Width - Padding.Left - Padding.Right < DipToPx(MIN_WIDTH_DIP) || 
+                    Height - Padding.Top - Padding.Bottom < DipToPx(MIN_HEIGHT_DIP))
                 {
-                    leftRect = new Rect(0, 0, 0, 0);
-                    rightRect = new Rect(0, 0, 0, 0);
+                    leftRectangle = new PixelRectangle(0, 0, 0, 0);
+                    rightRectangle = new PixelRectangle(0, 0, 0, 0);
                 }
                 else
                 {
-                    int PaneWidth = (int)((Width - Padding.Left - Padding.Right - SPACE_BETWEEN_PANES) / 2);
+                    int PaneWidth = (int)((Width - Padding.Left - Padding.Right - SPACE_BETWEEN_PANES_DIP) / 2);
                     int PaneHeight = (int)(Height - Padding.Top - Padding.Bottom);
 
-                    leftRect = new Rect((int)Padding.Left,
-                        (int)Padding.Top,
-                        PaneWidth,
-                        PaneHeight);
+                    int leftRectLeft = (int)Padding.Left;
+                    int leftRectTop = (int)Padding.Top;
 
-                    rightRect = new Rect((int)Width - 1 - (int)Padding.Right - PaneWidth,
-                        (int)Padding.Top,
-                        PaneWidth,
-                        PaneHeight);
+                    leftRectangle = new PixelRectangle(leftRectLeft,
+                        leftRectTop,
+                        leftRectLeft + PaneWidth - 1,
+                        leftRectTop + PaneHeight - 1);
+
+                    int rightRectLeft = (int)Width - 1 - (int)Padding.Right - PaneWidth;
+                    int rightRectTop = (int)Padding.Top;
+
+                    rightRectangle = new PixelRectangle(rightRectLeft,
+                        rightRectTop,
+                        rightRectLeft + PaneWidth - 1,
+                        rightRectTop + PaneHeight - 1);
                 }
 
-				var leftPaneArea = new Rect(leftRect.Left + 1,
-					leftRect.Top + 1,
-					Math.Max(0,leftRect.Width - 2),
-					Math.Max(0,leftRect.Height - 2));
+                var leftPaneArea = leftRectangle.Inflate(-1, -1, -1, -1);
+				var rightPaneArea = rightRectangle.Inflate(-1, -1, -1, -1);
 
-				var rightPaneArea = new Rect(rightRect.Left + 1,
-					rightRect.Top + 1,
-					Math.Max(0, rightRect.Width - 2),
-					Math.Max(0, rightRect.Height - 2));
-
-				paneMetrics = new PaneMetrics(leftRect, 
-                    rightRect,
+				paneMetrics = new PaneMetrics(leftRectangle, 
+                    rightRectangle,
                     leftPaneArea,
                     rightPaneArea);
 			}

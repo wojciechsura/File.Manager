@@ -15,11 +15,11 @@ namespace File.Manager.API.Filesystem
     {
         // Private fields -----------------------------------------------------
 
-        private IFilesystemNavigatorHandler handler;
+        private IFilesystemNavigatorHandler? handler;
 
         // Protected fields ---------------------------------------------------
 
-        protected IFilesystemNavigatorHandler Handler => handler;
+        protected IFilesystemNavigatorHandler? Handler => handler;
 
         // Protected methods --------------------------------------------------
 
