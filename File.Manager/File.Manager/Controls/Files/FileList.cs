@@ -15,54 +15,16 @@ using System.Windows.Media;
 
 namespace File.Manager.Controls.Files
 {
-    public partial class FileList : FrameworkElement
+    public partial class FileList : FrameworkElement, IFileListRendererHost
     {
         // Private constants --------------------------------------------------
 
         private static readonly FileListAppearance DefaultAppearance = new();
 
-        // Private types ------------------------------------------------------
-
-        private sealed class FileListRendererHost : IFileListRendererHost
-        {
-            private readonly FileList fileList;
-            private readonly Func<PixelRectangle> getBounds;
-
-            public FileListRendererHost(FileList fileList,
-                Func<PixelRectangle> getBounds)
-            {
-                this.fileList = fileList;
-                this.getBounds = getBounds;
-            }
-
-            public void RequestInvalidateVisual()
-            {
-                fileList.InvalidateVisual();
-            }
-
-            public PixelRectangle Bounds => getBounds();
-
-            public FileListAppearance Appearance => fileList.Appearance ?? FileList.DefaultAppearance;
-
-            public IReadOnlyList<FileListColumn> Columns => fileList.Columns;
-
-            public System.Windows.Media.FontFamily FontFamily => fileList.FontFamily;
-
-            public double FontSize => fileList.FontSize;
-
-            public double PixelsPerDip => fileList.metrics.PixelsPerDip;
-        }
-
         // Private fields -----------------------------------------------------
 
-        private FileListRenderer firstRenderer;
-        private readonly FileListRendererHost firstHost;
-
-        private FileListRenderer secondRenderer;
-        private readonly FileListRendererHost secondHost;
-        
+        private FileListRenderer renderer;        
         private readonly Metrics metrics;
-        private bool panesSwitched;
 
         // Private methods ----------------------------------------------------
 
@@ -76,14 +38,8 @@ namespace File.Manager.Controls.Files
             if (!metrics.Valid)
             {
                 metrics.Validate();
-                ForEachRenderer(renderer => renderer.NotifyMetricsChanged());
+                renderer.NotifyMetricsChanged();
             }
-        }
-
-        private void ForEachRenderer(Action<FileListRenderer> action)
-        {
-            action(firstRenderer);
-            action(secondRenderer);
         }
 
         // Protected methods --------------------------------------------------
@@ -103,38 +59,16 @@ namespace File.Manager.Controls.Files
 
                 var panePen = new System.Windows.Media.Pen(appearance.PaneBorderBrush, metrics.PixelsPerDip * 1.0);
 
-                // Left pane
+                // Pane
 
                 drawingContext.DrawRectangle(appearance.PaneBackgroundBrush,
                     panePen,
-                    metrics.Pane.LeftPaneBounds.ToPenRect(panePen.Thickness));
+                    metrics.Pane.PaneBounds.ToPenRect(panePen.Thickness));
 
-                drawingContext.PushClip(new RectangleGeometry(metrics.Pane.LeftPaneArea.ToRegionRect()));
+                drawingContext.PushClip(new RectangleGeometry(metrics.Pane.PaneArea.ToRegionRect()));
                 try
                 {
-                    if (panesSwitched)
-                        secondRenderer.Render(drawingContext);
-                    else
-                        firstRenderer.Render(drawingContext);
-                }
-                finally
-                {
-                    drawingContext.Pop();
-                }
-
-                // Right pane
-
-                drawingContext.DrawRectangle(appearance.PaneBackgroundBrush,
-                    panePen,
-                    metrics.Pane.RightPaneBounds.ToPenRect(panePen.Thickness));
-
-                drawingContext.PushClip(new RectangleGeometry(metrics.Pane.RightPaneArea.ToRegionRect()));
-                try
-                {
-                    if (panesSwitched)
-                        firstRenderer.Render(drawingContext);
-                    else
-                        secondRenderer.Render(drawingContext);
+                    renderer.Render(drawingContext);
                 }
                 finally
                 {
@@ -163,8 +97,25 @@ namespace File.Manager.Controls.Files
 
             metrics.PixelsPerDip = newDpi.PixelsPerDip;
 
-            ForEachRenderer(renderer => renderer.NotifyMetricsChanged());
-        }        
+            renderer.NotifyMetricsChanged();
+        }
+
+        // IFileListRendererHost implementation -------------------------------
+
+        PixelRectangle IFileListRendererHost.Bounds => metrics.Pane.PaneBounds;
+
+        FileListAppearance IFileListRendererHost.Appearance => Appearance ?? DefaultAppearance;
+
+        System.Windows.Media.FontFamily IFileListRendererHost.FontFamily => FontFamily;
+
+        double IFileListRendererHost.FontSize => FontSize;
+
+        double IFileListRendererHost.PixelsPerDip => metrics.PixelsPerDip;
+
+        void IFileListRendererHost.RequestInvalidateVisual()
+        {
+            InvalidateVisual();
+        }
 
         // Public methods -----------------------------------------------------
 
@@ -172,13 +123,7 @@ namespace File.Manager.Controls.Files
         {
             metrics = new();
 
-            panesSwitched = false;
-
-            firstHost = new FileListRendererHost(this, () => panesSwitched ? metrics.Pane.RightPaneArea : metrics.Pane.LeftPaneArea);
-            secondHost = new FileListRendererHost(this, () => panesSwitched ? metrics.Pane.LeftPaneArea : metrics.Pane.RightPaneArea);
-
-            firstRenderer = new FileListGridRenderer(firstHost);
-            secondRenderer = new FileListGridRenderer(secondHost);
+            renderer = new FileListGridRenderer(this);
 
             metrics.PixelsPerDip = VisualTreeHelper.GetDpi(this).PixelsPerDip;
         }
@@ -246,14 +191,14 @@ namespace File.Manager.Controls.Files
 
         #region FirstSource dependency property
 
-        public ICollectionView FirstSource
+        public ICollectionView FilesSource
         {
-            get { return (ICollectionView)GetValue(FirstSourceProperty); }
-            set { SetValue(FirstSourceProperty, value); }
+            get { return (ICollectionView)GetValue(FilesSourceProperty); }
+            set { SetValue(FilesSourceProperty, value); }
         }
 
-        public static readonly DependencyProperty FirstSourceProperty =
-            DependencyProperty.Register("FirstSource", typeof(ICollectionView), typeof(FileList), new PropertyMetadata(null, FirstSourcePropertyChanged));
+        public static readonly DependencyProperty FilesSourceProperty =
+            DependencyProperty.Register("FilesSource", typeof(ICollectionView), typeof(FileList), new PropertyMetadata(null, FirstSourcePropertyChanged));
 
         private static void FirstSourcePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -263,31 +208,7 @@ namespace File.Manager.Controls.Files
 
         private void FirstSourceChanged()
         {
-            // TODO
-        }
-
-        #endregion
-
-        #region SecondSource dependency property
-
-        public ICollectionView SecondSource
-        {
-            get { return (ICollectionView)GetValue(SecondSourceProperty); }
-            set { SetValue(SecondSourceProperty, value); }
-        }
-
-        public static readonly DependencyProperty SecondSourceProperty =
-            DependencyProperty.Register("SecondSource", typeof(ICollectionView), typeof(FileList), new PropertyMetadata(null, SecondSourcePropertyChanged));
-
-        private static void SecondSourcePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            if (d is FileList fileLister)
-                fileLister.SecondSourceChanged();
-        }
-
-        private void SecondSourceChanged()
-        {
-            // TODO
+            renderer.FilesSource = FilesSource;
         }
 
         #endregion
@@ -314,7 +235,7 @@ namespace File.Manager.Controls.Files
 
         private void ColumnsChanged(FileListColumnCollection oldValue, FileListColumnCollection newValue)
         {
-            ForEachRenderer(renderer => renderer.Columns = newValue);
+            renderer.Columns = newValue;
         }
 
         #endregion
@@ -339,7 +260,7 @@ namespace File.Manager.Controls.Files
 
         private void FontFamilyChanged()
         {
-            ForEachRenderer(renderer => renderer.NotifyMetricsChanged());
+            renderer.NotifyMetricsChanged();
         }
 
         #endregion
@@ -366,7 +287,7 @@ namespace File.Manager.Controls.Files
 
         private void FontSizeChanged()
         {
-            ForEachRenderer(renderer => renderer.NotifyMetricsChanged());
+            renderer.NotifyMetricsChanged();
         }
 
         #endregion
@@ -393,7 +314,7 @@ namespace File.Manager.Controls.Files
 
         private void PanesSwitchedChanged()
         {
-            ForEachRenderer(renderer => renderer.NotifyMetricsChanged());
+            renderer.NotifyMetricsChanged();
         }
 
         #endregion

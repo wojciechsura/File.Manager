@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Text;
@@ -17,6 +18,7 @@ namespace File.Manager.Controls.Files
         // Private fields -----------------------------------------------------
 
         private FileListColumnCollection columns;
+        private ICollectionView filesSource;
 
         // Private methods ----------------------------------------------------
 
@@ -39,6 +41,25 @@ namespace File.Manager.Controls.Files
             OnColumnsChanged();
         }
 
+        private void SetFilesSource(ICollectionView value)
+        {
+            if (filesSource != null)
+            {
+                filesSource.CollectionChanged -= HandleFilesSourceCollectionChanged;
+                filesSource.CurrentChanged -= HandleFilesSourceCurrentChanged;
+            }
+
+            filesSource = value;
+
+            if (filesSource != null)
+            {
+                filesSource.CollectionChanged += HandleFilesSourceCollectionChanged;
+                filesSource.CurrentChanged += HandleFilesSourceCurrentChanged;
+            }
+
+            OnFilesSourceChanged();
+        }
+
         // Protected fields ---------------------------------------------------
 
         protected readonly IFileListRendererHost host;
@@ -54,7 +75,16 @@ namespace File.Manager.Controls.Files
 
         protected abstract void HandleColumnsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e);
 
+        protected abstract void HandleFilesSourceCollectionChanged(object sender, NotifyCollectionChangedEventArgs e);
+
+        protected abstract void HandleFilesSourceCurrentChanged(object sender, EventArgs e);
+
         protected virtual void OnColumnsChanged()
+        {
+
+        }
+
+        protected virtual void OnFilesSourceChanged()
         {
 
         }
@@ -74,6 +104,12 @@ namespace File.Manager.Controls.Files
         {
             get => columns;
             set => SetColumns(value);
+        }
+        
+        public ICollectionView FilesSource 
+        {
+            get => filesSource;
+            set => SetFilesSource(value); 
         }
     }
 }

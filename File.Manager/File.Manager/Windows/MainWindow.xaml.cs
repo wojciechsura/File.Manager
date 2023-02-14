@@ -47,7 +47,8 @@ namespace File.Manager.Windows
                 new FileListKeyColumn(File.Manager.Resources.Modules.Filesystem.Common.Strings.Header_Attributes, Item.AttributesKey) { Width = 80 }
             };
 
-            flList.Columns = columns;
+            flLeftList.Columns = columns;
+            flRightList.Columns = columns;
         }
 
         public MainWindow()

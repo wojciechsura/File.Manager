@@ -25,6 +25,16 @@ namespace File.Manager.Controls.Files
             host.RequestInvalidateVisual();
         }
 
+        protected override void HandleFilesSourceCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            // TODO
+        }
+
+        protected override void HandleFilesSourceCurrentChanged(object sender, EventArgs e)
+        {
+            // TODO
+        }
+
         public override void Render(DrawingContext drawingContext)
         {
             base.Render(drawingContext);

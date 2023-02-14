@@ -17,18 +17,12 @@ namespace File.Manager.Controls.Files
         {
             // Private constants ----------------------------------------------
 
-            private const int SPACE_BETWEEN_PANES_DIP = 4;
-
             private const int PANE_BORDER_THICKNESS_DIP = 1;
 
             // Evaluated
 
-            private const int MIN_WIDTH_DIP = 2 * PANE_BORDER_THICKNESS_DIP + 1 +
-                    SPACE_BETWEEN_PANES_DIP +
-                    2 * PANE_BORDER_THICKNESS_DIP + 1;
-            private const int MIN_HEIGHT_DIP = 2 * PANE_BORDER_THICKNESS_DIP + 1 +
-				SPACE_BETWEEN_PANES_DIP +
-				2 * PANE_BORDER_THICKNESS_DIP + 1;
+            private const int MIN_WIDTH_DIP = 2 * PANE_BORDER_THICKNESS_DIP + 1;
+            private const int MIN_HEIGHT_DIP = 2 * PANE_BORDER_THICKNESS_DIP + 1;
 
 			// Public types ---------------------------------------------------
 
@@ -44,21 +38,15 @@ namespace File.Manager.Controls.Files
 
 			public class PaneMetrics
             {
-                public PaneMetrics (PixelRectangle leftPaneBounds, 
-                    PixelRectangle rightPaneBounds,
-                    PixelRectangle leftPaneArea,
-                    PixelRectangle rightPaneArea)
+                public PaneMetrics (PixelRectangle paneBounds, 
+                    PixelRectangle paneArea)
                 {
-                    LeftPaneBounds = leftPaneBounds;
-                    RightPaneBounds = rightPaneBounds;
-                    LeftPaneArea = leftPaneArea;
-                    RightPaneArea = rightPaneArea;
+                    PaneBounds = paneBounds;
+                    PaneArea = paneArea;
                 }   
 
-                public PixelRectangle LeftPaneBounds { get; }
-                public PixelRectangle RightPaneBounds { get; }
-                public PixelRectangle LeftPaneArea { get; }
-				public PixelRectangle RightPaneArea { get; }
+                public PixelRectangle PaneBounds { get; }
+                public PixelRectangle PaneArea { get; }
 			}
 
             // Private fields -------------------------------------------------
@@ -138,44 +126,25 @@ namespace File.Manager.Controls.Files
                 if (paneMetrics != null)
                     return;
 
-                PixelRectangle leftRectangle;
-                PixelRectangle rightRectangle;
+                PixelRectangle paneBounds;
 
                 if (Width - Padding.Left - Padding.Right < DipToPx(MIN_WIDTH_DIP) || 
                     Height - Padding.Top - Padding.Bottom < DipToPx(MIN_HEIGHT_DIP))
                 {
-                    leftRectangle = new PixelRectangle(0, 0, 0, 0);
-                    rightRectangle = new PixelRectangle(0, 0, 0, 0);
+                    paneBounds = new PixelRectangle(0, 0, 0, 0);
                 }
                 else
                 {
-                    int PaneWidth = (int)((Width - Padding.Left - Padding.Right - PxToDip(SPACE_BETWEEN_PANES_DIP)) / 2);
-                    int PaneHeight = (int)(Height - Padding.Top - Padding.Bottom);
-
-                    int leftRectLeft = (int)Padding.Left;
-                    int leftRectTop = (int)Padding.Top;
-
-                    leftRectangle = new PixelRectangle(leftRectLeft,
-                        leftRectTop,
-                        PaneWidth,
-                        PaneHeight);
-
-                    int rightRectLeft = (int)Width - 1 - (int)Padding.Right - PaneWidth;
-                    int rightRectTop = (int)Padding.Top;
-
-                    rightRectangle = new PixelRectangle(rightRectLeft,
-                        rightRectTop,
-                        PaneWidth,
-                        PaneHeight);
+                    paneBounds = new PixelRectangle((int)Padding.Left,
+                        (int)Padding.Top,
+                        (int)(Width - Padding.Left - Padding.Right),
+                        (int)(Height - Padding.Top - Padding.Bottom));
                 }
 
-                var leftPaneArea = leftRectangle.Offset(1, 1).OffsetSize(-2, -2);
-				var rightPaneArea = rightRectangle.Offset(1, 1).OffsetSize(-2, -2);
+                var paneArea = paneBounds.Offset(1, 1).OffsetSize(-2, -2);
 
-				paneMetrics = new PaneMetrics(leftRectangle, 
-                    rightRectangle,
-                    leftPaneArea,
-                    rightPaneArea);
+				paneMetrics = new PaneMetrics(paneBounds, 
+                    paneArea);
 			}
 
 			// Public methods -------------------------------------------------

@@ -18,6 +18,9 @@ namespace File.Manager.Controls.Files
         private const int MIN_COLUMN_WIDTH_DIP = 10;
         private const double COLUMN_HEADER_HEIGHT_EM = 2;
         private const double COLUMN_HORIZONTAL_MARGIN_EM = 0.5;
+        private const double ROW_VERTICAL_MARGIN_EM = 0.1;
+        private const double ROW_ITEM_SPACING_EM = 0.2;
+        private const int ICON_SIZE = 16;
 
         // Public types -------------------------------------------------------
 
@@ -69,11 +72,26 @@ namespace File.Manager.Controls.Files
             public PixelRectangle HeaderBounds { get; }
         }
 
+        public class RowMetrics
+        {
+            public RowMetrics(int rowHeight, int verticalMargin, int itemSpacing)
+            {
+                RowHeight = rowHeight;
+                VerticalMargin = verticalMargin;
+                ItemSpacing = itemSpacing;
+            }
+
+            public int RowHeight { get; }
+            public int VerticalMargin { get; }
+            public int ItemSpacing { get; }
+        }
+
         // Private fields -----------------------------------------------------
 
         private CharacterMetrics characterMetrics;
         private HeaderMetrics headerMetrics;
         private ColumnMetrics columnMetrics;
+        private RowMetrics rowMetrics;
 
         // Private methods ----------------------------------------------------
 
@@ -153,6 +171,7 @@ namespace File.Manager.Controls.Files
             characterMetrics = null;
             headerMetrics = null;
             columnMetrics = null;
+            rowMetrics = null;
         }
 
         private void InvalidateHeaderMetrics()
@@ -161,8 +180,16 @@ namespace File.Manager.Controls.Files
             columnMetrics = null;
         }
 
+        private void InvalidateRowMetrics()
+        {
+            rowMetrics = null;
+        }
+
         private void ValidateHeaderMetrics()
         {
+            if (headerMetrics != null)
+                return;
+
             ValidateCharacterMetrics();
 
             int headerTop = host.Bounds.Top;
@@ -177,11 +204,11 @@ namespace File.Manager.Controls.Files
 
         private void ValidateColumnMetrics()
         {
-            ValidateCharacterMetrics();
-            ValidateHeaderMetrics();
-
             if (columnMetrics != null)
                 return;
+
+            ValidateCharacterMetrics();
+            ValidateHeaderMetrics();
 
             int horizontalColumnMarginPx = (int)DipToPx(characterMetrics.CharWidth * COLUMN_HORIZONTAL_MARGIN_EM);
 
@@ -219,6 +246,22 @@ namespace File.Manager.Controls.Files
             characterMetrics = new CharacterMetrics((int)Math.Ceiling(text.Width), (int)Math.Ceiling(text.Height));            
         }
 
+        private void ValidateRowMetrics()
+        {
+            if (rowMetrics != null)
+                return;
+
+            ValidateCharacterMetrics();
+
+            int verticalMargin = (int)DipToPx(characterMetrics.CharHeight * ROW_VERTICAL_MARGIN_EM);
+            int itemSpacing = (int)DipToPx(characterMetrics.CharWidth * ROW_ITEM_SPACING_EM);
+
+            int iconSize = (int)DipToPx(ICON_SIZE);
+            int rowHeight = (int)(2 * verticalMargin + Math.Max(iconSize, characterMetrics.CharHeight));
+
+            rowMetrics = new RowMetrics(rowHeight, verticalMargin, itemSpacing);
+        }
+
         // Public methods -----------------------------------------------------
 
         public FileListGridRendererMetrics(IFileListRendererHost host)
@@ -232,6 +275,7 @@ namespace File.Manager.Controls.Files
             InvalidateColumnMetrics();
             InvalidateCharacterMetrics();
             InvalidateHeaderMetrics();
+            InvalidateRowMetrics();
         }
 
         public override void Validate()
@@ -244,6 +288,9 @@ namespace File.Manager.Controls.Files
 
             if (columnMetrics == null)
                 ValidateColumnMetrics();
+
+            if (rowMetrics == null)
+                ValidateRowMetrics();
         }
 
         // Public properties --------------------------------------------------
@@ -254,6 +301,8 @@ namespace File.Manager.Controls.Files
 
         public CharacterMetrics Character => characterMetrics;
 
-        public override bool Valid => headerMetrics != null && columnMetrics != null && characterMetrics != null;
+        public RowMetrics Row => rowMetrics;
+
+        public override bool Valid => headerMetrics != null && columnMetrics != null && characterMetrics != null && rowMetrics != null;
     }
 }

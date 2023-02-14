@@ -40,9 +40,18 @@
             <Button Grid.Column="5" Margin="{StaticResource DialogItemsExceptLeftMargin}">F8 Delete</Button>
         </Grid>
 
-        <Border UseLayoutRounding="True">
-        <c:FileList x:Name="flList" SnapsToDevicePixels="True" />
-        </Border>
+        <Grid></Grid>
+
+        <Grid Focusable="False">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="6" />
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
+
+            <c:FileList Grid.Column="0" x:Name="flLeftList" SnapsToDevicePixels="True" />
+            <c:FileList Grid.Column="2" x:Name="flRightList" SnapsToDevicePixels="True" />
+        </Grid>
 
         <!--
         
