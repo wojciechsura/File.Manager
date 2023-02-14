@@ -22,6 +22,20 @@ namespace File.Manager.Controls.Files
 
         double FontSize { get; }
 
+        FontWeight FontWeight { get; }
+
+        FontStyle FontStyle { get; }
+
+        FontStretch FontStretch { get; }
+
         double PixelsPerDip { get; }
+
+        int ScrollPosition { get; set; }
+        
+        int ScrollMaximum { get; set; }
+
+        int ScrollSmallChange { get; set; }
+        
+        int ScrollLargeChange { get; set; }
     }
 }

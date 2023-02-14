@@ -82,7 +82,7 @@ namespace File.Manager.Controls.Files
 
         #endregion
 
-        #region HeaderBrush dependency property
+        #region HeaderBackgroundBrush dependency property
 
         public Brush HeaderBackgroundBrush
         {

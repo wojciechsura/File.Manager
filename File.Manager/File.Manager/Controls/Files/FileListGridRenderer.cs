@@ -13,6 +13,19 @@ namespace File.Manager.Controls.Files
 {
     internal class FileListGridRenderer : FileListMeasuredRenderer<FileListGridRendererMetrics>
     {
+        // Private methods ----------------------------------------------------
+
+        private void UpdateScrollRanges()
+        {
+            ValidateMetrics();
+
+            host.ScrollMaximum = metrics.Item.ScrollMaximum;
+            host.ScrollSmallChange = metrics.Item.ScrollSmallChange;
+            host.ScrollLargeChange = metrics.Item.ScrollLargeChange;
+        }
+
+        // Protected methods --------------------------------------------------
+
         protected override void HandleColumnsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             InvalidateMetrics();
@@ -27,20 +40,25 @@ namespace File.Manager.Controls.Files
 
         protected override void HandleFilesSourceCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            // TODO
+            InvalidateMetrics();
+            host.RequestInvalidateVisual();
         }
 
         protected override void HandleFilesSourceCurrentChanged(object sender, EventArgs e)
         {
-            // TODO
+            host.RequestInvalidateVisual();
         }
 
-        public override void Render(DrawingContext drawingContext)
+        // Public methods -----------------------------------------------------
+
+        public FileListGridRenderer(IFileListRendererHost host)
+            : base(host, new FileListGridRendererMetrics(host))
         {
-            base.Render(drawingContext);
+            UpdateScrollRanges();
+        }
 
-            var typeface = new Typeface(host.FontFamily.Source);
-
+        private void DrawHeader(DrawingContext drawingContext, Typeface typeface)
+        {
             drawingContext.DrawRectangle(host.Appearance.HeaderBackgroundBrush, null, metrics.Header.HeaderBounds.ToBrushRect());
 
             if (Columns == null || Columns.Count == 0)
@@ -79,10 +97,16 @@ namespace File.Manager.Controls.Files
             }
         }
 
-        public FileListGridRenderer(IFileListRendererHost host)
-            : base(host, new FileListGridRendererMetrics(host))
+        public override void Render(DrawingContext drawingContext)
         {
+            base.Render(drawingContext);
 
+            var typeface = new Typeface(host.FontFamily, host.FontStyle, host.FontWeight, host.FontStretch);
+
+            DrawHeader(drawingContext, typeface);
+
+            // Items
+            
         }
     }
 }

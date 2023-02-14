@@ -1,6 +1,7 @@
 ﻿using File.Manager.BusinessLogic.Models.Files;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,6 +15,7 @@ namespace File.Manager.Controls.Files
         // Private fields -----------------------------------------------------
 
         private IReadOnlyList<FileListColumn> columns;
+        private ICollectionView filesSource;
 
         // Private methods ----------------------------------------------------
 
@@ -22,6 +24,15 @@ namespace File.Manager.Controls.Files
             if (columns != newColumns)
             {
                 columns = newColumns;
+                Invalidate();
+            }
+        }
+
+        private void SetFilesSource(ICollectionView value)
+        {
+            if (filesSource != value)
+            {
+                filesSource = value;
                 Invalidate();
             }
         }
@@ -53,6 +64,12 @@ namespace File.Manager.Controls.Files
         {
             get => columns;
             set => SetColumns(value);
+        }
+
+        public ICollectionView FilesSource 
+        { 
+            get => filesSource;
+            set => SetFilesSource(value); 
         }
 
         public abstract bool Valid { get; }

@@ -1,11 +1,11 @@
 ﻿using File.Manager.API.Filesystem.Models.Items;
 using File.Manager.BusinessLogic.Models.Files;
+using File.Manager.Geometry;
 using File.Manager.Tools;
 using File.Manager.Types;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -57,7 +57,7 @@ namespace File.Manager.Controls.Files
 
                 drawingContext.DrawRectangle(appearance.Background, null, metrics.General.ControlArea.ToBrushRect());
 
-                var panePen = new System.Windows.Media.Pen(appearance.PaneBorderBrush, metrics.PixelsPerDip * 1.0);
+                var panePen = new Pen(appearance.PaneBorderBrush, metrics.PixelsPerDip * 1.0);
 
                 // Pane
 
@@ -102,19 +102,49 @@ namespace File.Manager.Controls.Files
 
         // IFileListRendererHost implementation -------------------------------
 
+        void IFileListRendererHost.RequestInvalidateVisual()
+        {
+            InvalidateVisual();
+        }
+
         PixelRectangle IFileListRendererHost.Bounds => metrics.Pane.PaneBounds;
 
         FileListAppearance IFileListRendererHost.Appearance => Appearance ?? DefaultAppearance;
 
-        System.Windows.Media.FontFamily IFileListRendererHost.FontFamily => FontFamily;
+        FontFamily IFileListRendererHost.FontFamily => FontFamily;
+
+        FontWeight IFileListRendererHost.FontWeight => FontWeight;
 
         double IFileListRendererHost.FontSize => FontSize;
 
+        FontStyle IFileListRendererHost.FontStyle => FontStyle;
+
+        FontStretch IFileListRendererHost.FontStretch => FontStretch;
+
         double IFileListRendererHost.PixelsPerDip => metrics.PixelsPerDip;
 
-        void IFileListRendererHost.RequestInvalidateVisual()
+        int IFileListRendererHost.ScrollPosition 
         {
-            InvalidateVisual();
+            get => this.ScrollPosition;
+            set => this.ScrollPosition = value;
+        }
+
+        int IFileListRendererHost.ScrollMaximum 
+        {
+            get => this.ScrollMaximum;
+            set => this.ScrollMaximum = value;
+        }
+
+        int IFileListRendererHost.ScrollSmallChange 
+        {
+            get => this.ScrollSmallChange;
+            set => this.ScrollSmallChange = value;
+        }
+
+        int IFileListRendererHost.ScrollLargeChange 
+        {
+            get => this.ScrollLargeChange;
+            set => this.ScrollLargeChange = value;
         }
 
         // Public methods -----------------------------------------------------
@@ -242,15 +272,15 @@ namespace File.Manager.Controls.Files
 
         #region FontFamily dependency property
 
-        public System.Windows.Media.FontFamily FontFamily
+        public FontFamily FontFamily
         {
-            get { return (System.Windows.Media.FontFamily)GetValue(FontFamilyProperty); }
+            get { return (FontFamily)GetValue(FontFamilyProperty); }
             set { SetValue(FontFamilyProperty, value); }
         }
 
         public static readonly DependencyProperty FontFamilyProperty =
                 TextElement.FontFamilyProperty.AddOwner(typeof(FileList), 
-                    new FrameworkPropertyMetadata(System.Windows.SystemFonts.CaptionFontFamily, FrameworkPropertyMetadataOptions.Inherits, FontFamilyPropertyChanged));
+                    new FrameworkPropertyMetadata(TextElement.FontFamilyProperty.DefaultMetadata.DefaultValue, FrameworkPropertyMetadataOptions.Inherits, FontFamilyPropertyChanged));
 
         private static void FontFamilyPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -259,6 +289,81 @@ namespace File.Manager.Controls.Files
         }
 
         private void FontFamilyChanged()
+        {
+            renderer.NotifyMetricsChanged();
+        }
+
+        #endregion
+
+        #region FontStyle
+
+        public FontStyle FontStyle
+        {
+            get { return (FontStyle)GetValue(FontStyleProperty); }
+            set { SetValue(FontStyleProperty, value); }
+        }
+
+        public static readonly DependencyProperty FontStyleProperty =
+                TextElement.FontStyleProperty.AddOwner(typeof(FileList),
+                    new FrameworkPropertyMetadata(TextElement.FontStyleProperty.DefaultMetadata.DefaultValue, FrameworkPropertyMetadataOptions.Inherits, FontStylePropertyChanged));
+
+        private static void FontStylePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is FileList fileList)
+                fileList.FontStyleChanged();
+        }
+
+        private void FontStyleChanged()
+        {
+            renderer.NotifyMetricsChanged();
+        }
+
+        #endregion
+
+        #region FontWeight
+
+        public FontWeight FontWeight
+        {
+            get { return (FontWeight)GetValue(FontWeightProperty); }
+            set { SetValue(FontWeightProperty, value); }
+        }
+
+        public static readonly DependencyProperty FontWeightProperty =
+                TextElement.FontWeightProperty.AddOwner(typeof(FileList),
+                    new FrameworkPropertyMetadata(TextElement.FontWeightProperty.DefaultMetadata.DefaultValue, FrameworkPropertyMetadataOptions.Inherits, FontWeightPropertyChanged));
+
+        private static void FontWeightPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is FileList fileList)
+                fileList.FontWeightChanged();
+        }
+
+        private void FontWeightChanged()
+        {
+            renderer.NotifyMetricsChanged();
+        }
+
+        #endregion
+
+        #region FontStretch
+
+        public FontStretch FontStretch
+        {
+            get { return (FontStretch)GetValue(FontStretchProperty); }
+            set { SetValue(FontStretchProperty, value); }
+        }
+
+        public static readonly DependencyProperty FontStretchProperty =
+                TextElement.FontStretchProperty.AddOwner(typeof(FileList),
+                    new FrameworkPropertyMetadata(TextElement.FontStretchProperty.DefaultMetadata.DefaultValue, FrameworkPropertyMetadataOptions.Inherits, FontStretchPropertyChanged));
+
+        private static void FontStretchPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is FileList fileList)
+                fileList.FontStretchChanged();
+        }
+
+        private void FontStretchChanged()
         {
             renderer.NotifyMetricsChanged();
         }
@@ -316,6 +421,108 @@ namespace File.Manager.Controls.Files
         {
             renderer.NotifyMetricsChanged();
         }
+
+        #endregion
+
+        #region ScrollPosition dependency property
+
+        public int ScrollPosition
+        {
+            get { return (int)GetValue(ScrollPositionProperty); }
+            set { SetValue(ScrollPositionProperty, value); }
+        }
+
+        public static readonly DependencyProperty ScrollPositionProperty =
+            DependencyProperty.Register("ScrollPosition", typeof(int), typeof(FileList), new PropertyMetadata(0, HandleScrollPositionPropertyChanged, HandleScrollPositionPropertyCoerce));
+
+        private static void HandleScrollPositionPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is FileList fileList)
+            {
+                fileList.HandleScrollPositionChanged();
+            }
+        }
+
+        private void HandleScrollPositionChanged()
+        {
+            if (ScrollPosition < 0 || ScrollPosition > ScrollMaximum)
+                throw new ArgumentOutOfRangeException(nameof(ScrollPosition));
+
+            renderer.NotifyScrollPositionChanged();
+        }
+
+        private static object HandleScrollPositionPropertyCoerce(DependencyObject d, object baseValue)
+        {
+            if (d is FileList fileList)
+            {
+                return fileList.HandleScrollPositionCoerce((int)baseValue);
+            }
+
+            return baseValue;
+        }
+
+        private object HandleScrollPositionCoerce(int scrollPosition)
+        {
+            return scrollPosition.ClampTo(0, ScrollMaximum);
+        }
+
+        #endregion
+
+        #region ScrollMaximum dependency property
+
+        public int ScrollMaximum
+        {
+            get => (int)GetValue(ScrollMaximumProperty);
+            private set => SetValue(ScrollMaximumPropertyKey, value);
+        }
+
+        private static readonly DependencyPropertyKey ScrollMaximumPropertyKey =
+            DependencyProperty.RegisterReadOnly("ScrollMaximum", typeof(int), typeof(FileList), new PropertyMetadata(0, ScrollMaximumPropertyChanged));
+
+        public static readonly DependencyProperty ScrollMaximumProperty = ScrollMaximumPropertyKey.DependencyProperty;
+
+        private static void ScrollMaximumPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is FileList fileList)
+            {
+                fileList.ScrollMaximumChanged();
+            }
+        }
+
+        private void ScrollMaximumChanged()
+        {
+            CoerceValue(ScrollPositionProperty);
+        }
+
+        #endregion
+
+        #region ScrollLargeChange dependency property
+
+        public int ScrollLargeChange
+        {
+            get => (int)GetValue(ScrollLargeChangeProperty);
+            private set => SetValue(ScrollLargeChangePropertyKey, value);
+        }
+
+        private static readonly DependencyPropertyKey ScrollLargeChangePropertyKey =
+                    DependencyProperty.RegisterReadOnly("ScrollLargeChange", typeof(int), typeof(FileList), new PropertyMetadata(0));
+
+        public static readonly DependencyProperty ScrollLargeChangeProperty = ScrollLargeChangePropertyKey.DependencyProperty;
+
+        #endregion
+
+        #region ScrollSmallChange dependency property
+
+        public int ScrollSmallChange
+        {
+            get => (int)GetValue(ScrollSmallChangeProperty);
+            private set => SetValue(ScrollSmallChangePropertyKey, value);
+        }
+
+        private static readonly DependencyPropertyKey ScrollSmallChangePropertyKey =
+                    DependencyProperty.RegisterReadOnly("ScrollSmallChange", typeof(int), typeof(FileList), new PropertyMetadata(1));
+
+        public static readonly DependencyProperty ScrollSmallChangeProperty = ScrollSmallChangePropertyKey.DependencyProperty;
 
         #endregion
     }

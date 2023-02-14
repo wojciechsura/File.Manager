@@ -72,16 +72,39 @@ namespace File.Manager.Controls.Files
             public PixelRectangle HeaderBounds { get; }
         }
 
-        public class RowMetrics
+        public class ItemMetrics
         {
-            public RowMetrics(int rowHeight, int verticalMargin, int itemSpacing)
+            public ItemMetrics(PixelRectangle itemArea,
+                int itemCount,
+                int itemTotalHeight,
+                int scrollMaximum,
+                int scrollSmallChange,
+                int scrollLargeChange,
+                int itemsInView,
+                int itemHeight, 
+                int verticalMargin, 
+                int itemSpacing)
             {
-                RowHeight = rowHeight;
+                ItemArea = itemArea;
+                ItemCount = itemCount;
+                ItemTotalHeight = itemTotalHeight;
+                ScrollMaximum = scrollMaximum;
+                ScrollSmallChange = scrollSmallChange;
+                ScrollLargeChange = scrollLargeChange;
+                ItemsInView = itemsInView;
+                ItemHeight = itemHeight;
                 VerticalMargin = verticalMargin;
                 ItemSpacing = itemSpacing;
             }
 
-            public int RowHeight { get; }
+            public PixelRectangle ItemArea { get; }
+            public int ItemCount { get; }
+            public int ItemTotalHeight { get; }
+            public int ScrollMaximum { get; }
+            public int ScrollSmallChange { get; }
+            public int ScrollLargeChange { get; }
+            public int ItemsInView { get; }
+            public int ItemHeight { get; }
             public int VerticalMargin { get; }
             public int ItemSpacing { get; }
         }
@@ -91,7 +114,7 @@ namespace File.Manager.Controls.Files
         private CharacterMetrics characterMetrics;
         private HeaderMetrics headerMetrics;
         private ColumnMetrics columnMetrics;
-        private RowMetrics rowMetrics;
+        private ItemMetrics itemMetrics;
 
         // Private methods ----------------------------------------------------
 
@@ -171,18 +194,19 @@ namespace File.Manager.Controls.Files
             characterMetrics = null;
             headerMetrics = null;
             columnMetrics = null;
-            rowMetrics = null;
+            itemMetrics = null;
         }
 
         private void InvalidateHeaderMetrics()
         {
             headerMetrics = null;
             columnMetrics = null;
+            itemMetrics = null;
         }
 
-        private void InvalidateRowMetrics()
+        private void InvalidateItemMetrics()
         {
-            rowMetrics = null;
+            itemMetrics = null;
         }
 
         private void ValidateHeaderMetrics()
@@ -246,20 +270,43 @@ namespace File.Manager.Controls.Files
             characterMetrics = new CharacterMetrics((int)Math.Ceiling(text.Width), (int)Math.Ceiling(text.Height));            
         }
 
-        private void ValidateRowMetrics()
+        private void ValidateItemMetrics()
         {
-            if (rowMetrics != null)
+            if (itemMetrics != null)
                 return;
 
             ValidateCharacterMetrics();
+            ValidateHeaderMetrics();
 
             int verticalMargin = (int)DipToPx(characterMetrics.CharHeight * ROW_VERTICAL_MARGIN_EM);
             int itemSpacing = (int)DipToPx(characterMetrics.CharWidth * ROW_ITEM_SPACING_EM);
 
             int iconSize = (int)DipToPx(ICON_SIZE);
-            int rowHeight = (int)(2 * verticalMargin + Math.Max(iconSize, characterMetrics.CharHeight));
+            int itemHeight = (int)(2 * verticalMargin + Math.Max(iconSize, characterMetrics.CharHeight));
 
-            rowMetrics = new RowMetrics(rowHeight, verticalMargin, itemSpacing);
+            PixelRectangle itemArea = new PixelRectangle(headerMetrics.HeaderBounds.Bottom + 1,
+                host.Bounds.Left,
+                host.Bounds.Bottom - headerMetrics.HeaderBounds.Bottom,
+                host.Bounds.Width);
+
+            int itemCount = FilesSource?.Cast<object>().Count() ?? 0;
+            int itemTotalHeight = itemCount * itemHeight;
+            int scrollMaximum = itemTotalHeight - itemArea.Height - 1;
+            int scrollSmallChange = itemTotalHeight;
+            int scrollLargeChange = itemArea.Height;
+
+            int itemsInView = (int)Math.Ceiling((double)host.Bounds.Height / itemHeight);
+
+            itemMetrics = new ItemMetrics(itemArea,
+                itemCount,
+                itemTotalHeight,
+                scrollMaximum,
+                scrollSmallChange,
+                scrollLargeChange,
+                itemHeight,
+                itemsInView,
+                verticalMargin,
+                itemSpacing);
         }
 
         // Public methods -----------------------------------------------------
@@ -275,7 +322,7 @@ namespace File.Manager.Controls.Files
             InvalidateColumnMetrics();
             InvalidateCharacterMetrics();
             InvalidateHeaderMetrics();
-            InvalidateRowMetrics();
+            InvalidateItemMetrics();
         }
 
         public override void Validate()
@@ -289,8 +336,8 @@ namespace File.Manager.Controls.Files
             if (columnMetrics == null)
                 ValidateColumnMetrics();
 
-            if (rowMetrics == null)
-                ValidateRowMetrics();
+            if (itemMetrics == null)
+                ValidateItemMetrics();
         }
 
         // Public properties --------------------------------------------------
@@ -301,8 +348,8 @@ namespace File.Manager.Controls.Files
 
         public CharacterMetrics Character => characterMetrics;
 
-        public RowMetrics Row => rowMetrics;
+        public ItemMetrics Item => itemMetrics;
 
-        public override bool Valid => headerMetrics != null && columnMetrics != null && characterMetrics != null && rowMetrics != null;
+        public override bool Valid => headerMetrics != null && columnMetrics != null && characterMetrics != null && itemMetrics != null;
     }
 }

@@ -42,6 +42,12 @@ namespace File.Manager.Controls.Files
             host.RequestInvalidateVisual();
         }
 
+        protected override void OnFilesSourceChanged()
+        {
+            metrics.FilesSource = FilesSource;
+            host.RequestInvalidateVisual();
+        }
+
         // Public methods -----------------------------------------------------
 
         public override void NotifyMetricsChanged()

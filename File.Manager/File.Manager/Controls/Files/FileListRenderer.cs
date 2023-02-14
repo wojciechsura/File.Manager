@@ -98,6 +98,11 @@ namespace File.Manager.Controls.Files
             host.RequestInvalidateVisual();
         }
 
+        public virtual void NotifyScrollPositionChanged()
+        {
+            
+        }
+
         // Public properties --------------------------------------------------
 
         public FileListColumnCollection Columns
