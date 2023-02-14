@@ -6,8 +6,9 @@
              xmlns:vm="clr-namespace:File.Manager.BusinessLogic.ViewModels.Pane;assembly=File.Manager.BusinessLogic"
              xmlns:local="clr-namespace:File.Manager.Controls" 
              xmlns:res="clr-namespace:File.Manager.Resources.Controls.Pane;assembly=File.Manager.Resources"
-             d:DataContext="{d:DesignInstance Type=vm:PaneViewModel}"
+             xmlns:c="clr-namespace:File.Manager.Controls.Files"             
              mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance Type=vm:PaneViewModel}"
              d:DesignHeight="450" d:DesignWidth="800" GotFocus="HandlePaneGotFocus" LostFocus="HandlePaneLostFocus"
              PreviewKeyDown="HandlePanePreviewKeyDown">
     <UserControl.Resources>
@@ -21,22 +22,6 @@
         <CollectionViewSource x:Key="cvsItems" Source="{Binding Items}" />
     </UserControl.Resources>
     <DockPanel>
-        <ListView x:Name="lbItems" ItemsSource="{Binding Source={StaticResource cvsItems}}" SelectedItem="{Binding SelectedItem}" 
-                  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" SelectionMode="Single" PreviewKeyDown="ItemDisplayPreviewKeyDown" 
-                  MouseDoubleClick="HandleListViewMouseDoubleClick" IsSynchronizedWithCurrentItem="True" SelectionChanged="HandleListViewItemSelectionChanged"
-                  GotFocus="HandleListViewGotFocus">
-            <ListView.ItemContainerStyle>
-                <Style TargetType="ListBoxItem">
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding IsSelected}" Value="True">
-                            <Setter Property="TextBlock.Foreground" Value="{StaticResource SelectedItemForegroundBrush}" />
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </ListView.ItemContainerStyle>
-            <ListView.View>
-                <GridView />
-            </ListView.View>
-        </ListView>
+        <c:FileList Grid.Column="0" x:Name="flList" SnapsToDevicePixels="True" FilesSource="{Binding Source={StaticResource cvsItems}}" />
     </DockPanel>
 </UserControl>

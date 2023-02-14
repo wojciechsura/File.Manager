@@ -7,11 +7,13 @@
 ******************************************************************************/
 
 using System;
+using System.Diagnostics;
 
 namespace File.Manager.Geometry
 {
     // *** BaseIntRectangle ***
 
+    [DebuggerDisplay("IntRectangle, {Left}; {Top}; {Width}; {Height}")]
     public abstract class BaseIntRectangle<TConcreteRectangle, TConcretePoint>
 	    where TConcreteRectangle : BaseIntRectangle<TConcreteRectangle, TConcretePoint>
 		where TConcretePoint : BaseIntPoint<TConcretePoint>
@@ -94,6 +96,7 @@ namespace File.Manager.Geometry
 
     // *** BaseFloatRectangle ***
 
+    [DebuggerDisplay("FloatRectangle, {Left}; {Top}; {Width}; {Height}")]
     public abstract class BaseFloatRectangle<TConcreteRectangle, TConcretePoint>
 	    where TConcreteRectangle : BaseFloatRectangle<TConcreteRectangle, TConcretePoint>
 		where TConcretePoint : BaseFloatPoint<TConcretePoint>
@@ -184,6 +187,7 @@ namespace File.Manager.Geometry
 
     // *** BaseDoubleRectangle ***
 
+    [DebuggerDisplay("DoubleRectangle, {Left}; {Top}; {Width}; {Height}")]
     public abstract class BaseDoubleRectangle<TConcreteRectangle, TConcretePoint>
 	    where TConcreteRectangle : BaseDoubleRectangle<TConcreteRectangle, TConcretePoint>
 		where TConcretePoint : BaseDoublePoint<TConcretePoint>

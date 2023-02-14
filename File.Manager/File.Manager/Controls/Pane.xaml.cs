@@ -1,4 +1,6 @@
 ﻿using File.Manager.API.Filesystem.Models.Items;
+using File.Manager.BusinessLogic.Models.Files;
+using File.Manager.BusinessLogic.Types;
 using File.Manager.BusinessLogic.ViewModels.Pane;
 using File.Manager.Tools;
 using System;
@@ -137,51 +139,20 @@ namespace File.Manager.Controls
 
             DataContextChanged += HandleDataContextChanged;
 
-            SetDefaultColumns(lbItems);
+            SetDefaultColumns();
         }
 
-        public void FocusList()
+        public void SetDefaultColumns()
         {
-            lbItems.Focus();
-        }
+            var columns = new FileListColumnCollection
+            {
+                new FileListFilenameColumn(File.Manager.Resources.Modules.Filesystem.Common.Strings.Header_Filename) { Width = 1, WidthKind = FileListColumnWidthKind.Star },
+                new FileListKeyColumn(File.Manager.Resources.Modules.Filesystem.Common.Strings.Header_Size, Item.SizeDisplayKey) { Width = 80 },
+                new FileListKeyColumn(File.Manager.Resources.Modules.Filesystem.Common.Strings.Header_Modified, Item.ModifiedKey) { Width = 120 },
+                new FileListKeyColumn(File.Manager.Resources.Modules.Filesystem.Common.Strings.Header_Attributes, Item.AttributesKey) { Width = 80 }
+            };
 
-        public void SetDefaultColumns(ListView listView)
-        {
-            var gridView = listView.View as GridView;
-            if (gridView == null)
-                return;
-
-            gridView.Columns.Clear();
-
-            // Add name column
-            /*
-            var nameColumn = new GridViewColumn();
-            nameColumn.Header = File.Manager.Resources.Controls.Pane.Strings.Column_Header_Name;
-            nameColumn.Width = 300;
-            nameColumn.CellTemplate = (DataTemplate)FindResource("NameColumnTemplate");
-            gridView.Columns.Add(nameColumn);
-
-            // Add size column
-            var sizeColumn = new GridViewColumn();
-            sizeColumn.Header = File.Manager.Resources.Controls.Pane.Strings.Column_Header_Size;
-            sizeColumn.Width = 100;
-            sizeColumn.DisplayMemberBinding = new Binding() { Path = new PropertyPath(nameof(Item.SizeDisplay)) };
-            gridView.Columns.Add(sizeColumn);
-
-            // Add modified column
-            var modifiedColumn = new GridViewColumn();
-            modifiedColumn.Header = File.Manager.Resources.Controls.Pane.Strings.Column_Header_Modified;
-            modifiedColumn.Width = 150;
-            modifiedColumn.DisplayMemberBinding = new Binding() { Path = new PropertyPath(nameof(Item.Modified)) };
-            gridView.Columns.Add(modifiedColumn);
-
-            // Add attributes column
-            var attributesColumn = new GridViewColumn();
-            attributesColumn.Header = File.Manager.Resources.Controls.Pane.Strings.Column_Header_Attributes;
-            attributesColumn.Width = 100;
-            attributesColumn.DisplayMemberBinding = new Binding() { Path = new PropertyPath(nameof(Item.Attributes)) };
-            gridView.Columns.Add(attributesColumn);
-            */
+            flList.Columns = columns;
         }
     }
 }

@@ -91,7 +91,14 @@ namespace File.Manager.Controls.Files
 
         // Public methods -----------------------------------------------------
 
+        public FileListRenderer()
+        {
+            
+        }
+
         public abstract void Render(DrawingContext drawingContext);
+
+        public abstract void UpdateScrollData();
 
         public virtual void NotifyMetricsChanged()
         {

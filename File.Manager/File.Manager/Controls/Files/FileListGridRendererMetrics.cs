@@ -16,25 +16,29 @@ namespace File.Manager.Controls.Files
         // Private constants --------------------------------------------------
 
         private const int MIN_COLUMN_WIDTH_DIP = 10;
-        private const double COLUMN_HEADER_HEIGHT_EM = 2;
+        private const double COLUMN_HEADER_HEIGHT_EM = 1.6;
         private const double COLUMN_HORIZONTAL_MARGIN_EM = 0.5;
-        private const double ROW_VERTICAL_MARGIN_EM = 0.1;
-        private const double ROW_ITEM_SPACING_EM = 0.2;
+        private const double ROW_VERTICAL_MARGIN_EM = 0.4;
+        private const double ROW_ITEM_SPACING_EM = 0.6;
         private const int ICON_SIZE = 16;
+        private const int SELECTION_HORIZONTAL_MARGIN_DP = 2;
+        private const int SELECTION_VERTICAL_MARGIN_DP = 1;
+        private const int SELECTION_LINE_THICKNESS_DP = 1;
+        private const int SELECTION_CORNER_RADIUS_DP = 2;
 
         // Public types -------------------------------------------------------
 
         public class ColumnMetric
         {
-            public ColumnMetric(PixelRectangle headerBounds,
-                PixelPoint headerTitle)
+            public ColumnMetric(PixelRectangle titleBounds,
+                PixelPoint titlePosition)
             {
-                HeaderTitle = headerTitle;
-                HeaderBounds = headerBounds;
+                TitlePosition = titlePosition;
+                TitleBounds = titleBounds;
             }
 
-            public PixelPoint HeaderTitle { get; }
-            public PixelRectangle HeaderBounds { get; }
+            public PixelPoint TitlePosition { get; }
+            public PixelRectangle TitleBounds { get; }
         }
 
         public class ColumnMetrics
@@ -64,12 +68,14 @@ namespace File.Manager.Controls.Files
 
         public class HeaderMetrics
         {
-            public HeaderMetrics(PixelRectangle headerBounds)
+            public HeaderMetrics(PixelRectangle headerBounds, PixelRectangle headerArea)
             {
                 HeaderBounds = headerBounds;
+                HeaderArea = headerArea;
             }
 
             public PixelRectangle HeaderBounds { get; }
+            public PixelRectangle HeaderArea { get; }
         }
 
         public class ItemMetrics
@@ -83,7 +89,12 @@ namespace File.Manager.Controls.Files
                 int itemsInView,
                 int itemHeight, 
                 int verticalMargin, 
-                int itemSpacing)
+                int itemSpacing,
+                int iconSizePx,
+                int selectionHorizontalMargin,
+                int selectionVerticalMargin,    
+                int selectionLineThickness,
+                int selectionCornerRadius)
             {
                 ItemArea = itemArea;
                 ItemCount = itemCount;
@@ -95,6 +106,11 @@ namespace File.Manager.Controls.Files
                 ItemHeight = itemHeight;
                 VerticalMargin = verticalMargin;
                 ItemSpacing = itemSpacing;
+                IconSize = iconSizePx;
+                SelectionHorizontalMargin = selectionHorizontalMargin;
+                SelectionVerticalMargin = selectionVerticalMargin;
+                SelectionLineThickness = selectionLineThickness;
+                SelectionCornerRadius = selectionCornerRadius;
             }
 
             public PixelRectangle ItemArea { get; }
@@ -107,6 +123,11 @@ namespace File.Manager.Controls.Files
             public int ItemHeight { get; }
             public int VerticalMargin { get; }
             public int ItemSpacing { get; }
+            public int IconSize { get; }
+            public int SelectionHorizontalMargin { get; }
+            public int SelectionVerticalMargin { get; }
+            public int SelectionLineThickness { get; }
+            public int SelectionCornerRadius { get; }
         }
 
         // Private fields -----------------------------------------------------
@@ -141,7 +162,7 @@ namespace File.Manager.Controls.Files
         {
             List<ColumnMetric> columns = new();
 
-            int runningX = headerMetrics.HeaderBounds.Left;
+            int runningX = headerMetrics.HeaderArea.Left;
 
             if (Columns != null && Columns.Count > 0)
             {
@@ -166,15 +187,15 @@ namespace File.Manager.Controls.Files
                             throw new InvalidOperationException("Unsupported FileListColumnWidthKind!");
                     }
 
-                    PixelRectangle headerBounds = new PixelRectangle(runningX,
-                        headerMetrics.HeaderBounds.Top,
+                    PixelRectangle titleBounds = new PixelRectangle(runningX,
+                        headerMetrics.HeaderArea.Top,
                         columnWidth,
-                        headerMetrics.HeaderBounds.Height);
+                        headerMetrics.HeaderArea.Height);
 
-                    PixelPoint headerTitlePosition = new PixelPoint((int)(headerBounds.Left + characterMetrics.CharWidth * COLUMN_HORIZONTAL_MARGIN_EM),
-                        (headerBounds.Top + (headerBounds.Height - characterMetrics.CharHeight) / 2));
+                    PixelPoint titlePosition = new PixelPoint((int)(titleBounds.Left + characterMetrics.CharWidth * COLUMN_HORIZONTAL_MARGIN_EM),
+                        (titleBounds.Top + (titleBounds.Height - characterMetrics.CharHeight) / 2));
 
-                    var columnMetric = new ColumnMetric(headerBounds, headerTitlePosition);
+                    var columnMetric = new ColumnMetric(titleBounds, titlePosition);
                     columns.Add(columnMetric);
 
                     runningX += columnWidth;
@@ -216,14 +237,22 @@ namespace File.Manager.Controls.Files
 
             ValidateCharacterMetrics();
 
-            int headerTop = host.Bounds.Top;
-            int headerLeft = host.Bounds.Left;
-            int headerWidth = host.Bounds.Width;
-            int headerHeight = (int)(characterMetrics.CharHeight * COLUMN_HEADER_HEIGHT_EM);
+            int selectionMargin = (int)DipToPx(SELECTION_HORIZONTAL_MARGIN_DP + SELECTION_LINE_THICKNESS_DP);
 
-            var headerArea = new PixelRectangle(headerLeft, headerTop, headerWidth, headerHeight);
+            int headerBoundsTop = host.Bounds.Top;
+            int headerBoundsLeft = host.Bounds.Left;
+            int headerBoundsWidth = host.Bounds.Width;
+            int headerBoundsHeight = (int)(characterMetrics.CharHeight * COLUMN_HEADER_HEIGHT_EM);
 
-            headerMetrics = new HeaderMetrics(headerArea);
+            int headerAreaTop = headerBoundsTop;
+            int headerAreaLeft = headerBoundsLeft + selectionMargin;
+            int headerAreaWidth = Math.Max(0, headerBoundsWidth - 2 * selectionMargin);
+            int headerAreaHeight = headerBoundsHeight;
+
+            var headerBounds = new PixelRectangle(headerBoundsLeft, headerBoundsTop, headerBoundsWidth, headerBoundsHeight);
+            var headerArea = new PixelRectangle(headerAreaLeft, headerAreaTop, headerAreaWidth, headerAreaHeight);
+
+            headerMetrics = new HeaderMetrics(headerBounds, headerArea);
         }
 
         private void ValidateColumnMetrics()
@@ -278,16 +307,21 @@ namespace File.Manager.Controls.Files
             ValidateCharacterMetrics();
             ValidateHeaderMetrics();
 
+            int selectionVerticalMargin = (int)DipToPx(SELECTION_VERTICAL_MARGIN_DP);
+            int selectionHorizontalMargin = (int)DipToPx(SELECTION_HORIZONTAL_MARGIN_DP);
+            int selectionLineThickness = (int)DipToPx(SELECTION_LINE_THICKNESS_DP);
+            int selectionCornerRadius = (int)DipToPx(SELECTION_CORNER_RADIUS_DP);
+
             int verticalMargin = (int)DipToPx(characterMetrics.CharHeight * ROW_VERTICAL_MARGIN_EM);
             int itemSpacing = (int)DipToPx(characterMetrics.CharWidth * ROW_ITEM_SPACING_EM);
 
-            int iconSize = (int)DipToPx(ICON_SIZE);
-            int itemHeight = (int)(2 * verticalMargin + Math.Max(iconSize, characterMetrics.CharHeight));
+            int iconSizePx = (int)DipToPx(ICON_SIZE);
+            int itemHeight = (int)(2 * verticalMargin + 2 * (selectionVerticalMargin + selectionLineThickness) + Math.Max(iconSizePx, characterMetrics.CharHeight));
 
-            PixelRectangle itemArea = new PixelRectangle(headerMetrics.HeaderBounds.Bottom + 1,
-                host.Bounds.Left,
-                host.Bounds.Bottom - headerMetrics.HeaderBounds.Bottom,
-                host.Bounds.Width);
+            PixelRectangle itemArea = new PixelRectangle(host.Bounds.Left,
+                headerMetrics.HeaderArea.Bottom + 1,                
+                Math.Max(0, host.Bounds.Width),
+                Math.Max(0, host.Bounds.Bottom - headerMetrics.HeaderArea.Bottom));
 
             int itemCount = FilesSource?.Cast<object>().Count() ?? 0;
             int itemTotalHeight = itemCount * itemHeight;
@@ -303,10 +337,15 @@ namespace File.Manager.Controls.Files
                 scrollMaximum,
                 scrollSmallChange,
                 scrollLargeChange,
-                itemHeight,
                 itemsInView,
+                itemHeight,
                 verticalMargin,
-                itemSpacing);
+                itemSpacing,
+                iconSizePx,
+                selectionHorizontalMargin,
+                selectionVerticalMargin,
+                selectionLineThickness,
+                selectionCornerRadius);
         }
 
         // Public methods -----------------------------------------------------

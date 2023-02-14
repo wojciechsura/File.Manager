@@ -37,20 +37,6 @@ namespace File.Manager.Windows
             throw new NotImplementedException();
         }
 
-        private void SetupDefaultColumns()
-        {
-            var columns = new FileListColumnCollection
-            {
-                new FileListFilenameColumn(File.Manager.Resources.Modules.Filesystem.Common.Strings.Header_Filename) { Width = 1, WidthKind = FileListColumnWidthKind.Star },
-                new FileListKeyColumn(File.Manager.Resources.Modules.Filesystem.Common.Strings.Header_Size, Item.SizeDisplayKey) { Width = 80 },
-                new FileListKeyColumn(File.Manager.Resources.Modules.Filesystem.Common.Strings.Header_Modified, Item.ModifiedKey) { Width = 120 },
-                new FileListKeyColumn(File.Manager.Resources.Modules.Filesystem.Common.Strings.Header_Attributes, Item.AttributesKey) { Width = 80 }
-            };
-
-            flLeftList.Columns = columns;
-            flRightList.Columns = columns;
-        }
-
         public MainWindow()
         {
             SwitchPanesCommand = new AppCommand(obj => DoSwitchPanes());
@@ -59,8 +45,6 @@ namespace File.Manager.Windows
 
             viewModel = Dependencies.Container.Instance.Resolve<MainWindowViewModel>(new NamedParameter("access", this));
             DataContext = viewModel;
-
-            SetupDefaultColumns();
         }
 
         public ICommand SwitchPanesCommand { get; }

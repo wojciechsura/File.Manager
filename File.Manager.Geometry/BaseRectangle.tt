@@ -13,6 +13,7 @@
 ******************************************************************************/
 
 using System;
+using System.Diagnostics;
 
 namespace File.Manager.Geometry
 {
@@ -30,6 +31,7 @@ for (int i = 0; i < types.Count(); i++) {
 #>
     // *** Base<#=n#>Rectangle ***
 
+    [DebuggerDisplay("<#=n#>Rectangle, {Left}; {Top}; {Width}; {Height}")]
     public abstract class Base<#=n#>Rectangle<TConcreteRectangle, TConcretePoint>
 	    where TConcreteRectangle : Base<#=n#>Rectangle<TConcreteRectangle, TConcretePoint>
 		where TConcretePoint : Base<#=n#>Point<TConcretePoint>

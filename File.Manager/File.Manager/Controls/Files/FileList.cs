@@ -42,6 +42,22 @@ namespace File.Manager.Controls.Files
             }
         }
 
+        private void SetNewRenderer(FileListRenderer newRenderer)
+        {
+            if (newRenderer == null)
+                throw new ArgumentNullException(nameof(newRenderer));
+
+            renderer = newRenderer;
+
+            renderer.Columns = Columns;
+            renderer.FilesSource = FilesSource;
+
+            // Trigger notifications, so that renderer updates itself
+
+            renderer.NotifyMetricsChanged();
+            renderer.UpdateScrollData();
+        }
+
         // Protected methods --------------------------------------------------
 
         protected override void OnRender(DrawingContext drawingContext)
@@ -107,7 +123,7 @@ namespace File.Manager.Controls.Files
             InvalidateVisual();
         }
 
-        PixelRectangle IFileListRendererHost.Bounds => metrics.Pane.PaneBounds;
+        PixelRectangle IFileListRendererHost.Bounds => metrics.Pane.PaneArea;
 
         FileListAppearance IFileListRendererHost.Appearance => Appearance ?? DefaultAppearance;
 
@@ -152,8 +168,9 @@ namespace File.Manager.Controls.Files
         public FileList()
         {
             metrics = new();
+            metrics.Validate();
 
-            renderer = new FileListGridRenderer(this);
+            SetNewRenderer(new FileListGridRenderer(this));
 
             metrics.PixelsPerDip = VisualTreeHelper.GetDpi(this).PixelsPerDip;
         }
