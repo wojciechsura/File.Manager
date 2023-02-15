@@ -16,6 +16,11 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Media;
 using File.Manager.API.Exceptions.Filesystem;
+using System.Windows.Input;
+using Spooksoft.VisualStateManager.Commands;
+using System.Windows.Data;
+using System.ComponentModel;
+using File.Manager.BusinessLogic.Models.Files;
 
 namespace File.Manager.BusinessLogic.ViewModels.Pane
 {
@@ -30,8 +35,10 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
 
         private FilesystemNavigator navigator;
         private readonly ObservableCollection<ItemViewModel> items;
+        private readonly CollectionView collectionView;
+
         private IPaneAccess access;
-        private ItemViewModel selectedItem;
+        private bool active;
 
         // Private methods ----------------------------------------------------
 
@@ -72,9 +79,9 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
             }
 
             if (newSelectedItemViewModel != null)
-                SelectedItem = newSelectedItemViewModel;
+                collectionView.MoveCurrentTo(newSelectedItemViewModel);
             else
-                SelectedItem = items.FirstOrDefault();
+                collectionView.MoveCurrentToFirst();
         }
 
         private void ReplaceCurrentNavigator(FilesystemNavigator newNavigator, FocusedItemData data)
@@ -96,6 +103,21 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
             homeNavigator.NavigateToRoot();
 
             ReplaceCurrentNavigator(homeNavigator, data);
+        }
+
+        public void DoExecuteCurrentItem(object item)
+        {
+            if (item is not ItemViewModel itemViewModel)
+                throw new InvalidOperationException("Invalid item!");
+
+            try
+            {
+                navigator.Execute(itemViewModel.Item);
+            }
+            catch (ItemExecutionException e)
+            {
+                messagingService.ShowError(String.Format(Resources.Controls.Pane.Strings.Message_CannotExecuteItem, e.Message));
+            }
         }
 
         // IFilesystemNavigatorHandler implementation -------------------------
@@ -154,47 +176,14 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
             this.messagingService = messagingService;
 
             items = new();
-            
+            collectionView = new CollectionView(items);
+
+            ExecuteCurrentItemCommand = new AppCommand(DoExecuteCurrentItem);
+
             SetHomeNavigator(null);
             UpdateItems(null);
         }
-
-        public void ExecuteCurrentItem()
-        {
-            if (selectedItem != null)
-            {
-                try
-                {
-                    navigator.Execute(selectedItem.Item);
-                }
-                catch (ItemExecutionException e)
-                {
-                    messagingService.ShowError(String.Format(Resources.Controls.Pane.Strings.Message_CannotExecuteItem, e.Message));
-                }
-            }
-        }
-
-        public void NotifyGotFocus()
-        {
-            handler.NotifyPaneFocused(this);
-        }
-
-        public void NotifyLostFocus()
-        {
-            handler.NotifyPaneUnfocused(this);
-        }
-
-        public void NotifySpacePressed()
-        {
-            SelectedItem.IsSelected = !SelectedItem.IsSelected;
-        }
-
-        public void NotifyInsertPressed()
-        {
-            SelectedItem.IsSelected = !SelectedItem.IsSelected;
-            access?.SetNextItem();
-        }
-
+       
         public void NotifyTabPressed()
         {
             handler.RequestSwithPane();
@@ -202,13 +191,9 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
 
         // Public properties --------------------------------------------------
 
-        public ObservableCollection<ItemViewModel> Items => items;
+        public IReadOnlyList<ItemViewModel> Items => items;
 
-        public ItemViewModel SelectedItem
-        {
-            get => selectedItem;
-            set => Set(ref selectedItem, value);
-        }
+        public ICollectionView ItemsView => collectionView;
 
         public FilesystemNavigator Navigator => navigator;
 
@@ -223,5 +208,13 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
                 access = value;
             }            
         }
+
+        public bool Active 
+        {  
+            get => active; 
+            set => Set(ref active, value);
+        }
+
+        public ICommand ExecuteCurrentItemCommand { get; }
     }
 }

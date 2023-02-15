@@ -8,6 +8,6 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
 {
     public interface IPaneAccess
     {
-        void SetNextItem();
+        
     }
 }

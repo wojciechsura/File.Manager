@@ -4,6 +4,8 @@ using File.Manager.API.Filesystem.Models.Items;
 using File.Manager.BusinessLogic.Models.Files;
 using File.Manager.BusinessLogic.Types;
 using File.Manager.BusinessLogic.ViewModels.Main;
+using File.Manager.BusinessLogic.ViewModels.Pane;
+using File.Manager.Controls;
 using Fluent;
 using Spooksoft.VisualStateManager.Commands;
 using System;
@@ -48,5 +50,10 @@ namespace File.Manager.Windows
         }
 
         public ICommand SwitchPanesCommand { get; }
+
+        private void paneGotFocus(object sender, RoutedEventArgs e)
+        {
+            viewModel.NotifyActivated((sender as Pane)?.DataContext as PaneViewModel);
+        }
     }
 }

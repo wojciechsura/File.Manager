@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace File.Manager.Controls.Files
@@ -143,6 +144,27 @@ namespace File.Manager.Controls.Files
 
             if (FilesSource.CurrentPosition == itemIndex)
             {
+                Brush border, background;
+
+                if (host.IsFocused)
+                {
+                    border = host.Appearance.FocusActiveFocusedBorderBrush;
+                    background = host.Appearance.FocusActiveFocusedBackgroundBrush;
+                }
+                else
+                {
+                    if (host.IsActive)
+                    {
+                        border = host.Appearance.FocusActiveUnfocusedBorderBrush;
+                        background = host.Appearance.FocusActiveUnfocusedBackgroundBrush;
+                    }
+                    else
+                    {
+                        border = host.Appearance.FocusInactiveBorderBrush;
+                        background = host.Appearance.FocusInactiveBackgroundBrush;
+                    }
+                }
+
                 // Focus bar
 
                 PixelRectangle focusRect = new PixelRectangle(metrics.Item.ItemArea.Left + metrics.Item.SelectionHorizontalMargin,
@@ -150,13 +172,12 @@ namespace File.Manager.Controls.Files
                     metrics.Item.ItemArea.Width - 2 * metrics.Item.SelectionHorizontalMargin,
                     metrics.Item.ItemHeight - 2 * metrics.Item.SelectionVerticalMargin);
 
-                drawingContext.DrawRoundedRectangle(host.Appearance.FocusBackgroundBrush,
-                    new Pen(host.Appearance.FocusBorderBrush, metrics.Item.SelectionLineThickness),
+                drawingContext.DrawRoundedRectangle(background,
+                    new Pen(border, metrics.Item.SelectionLineThickness),
                     focusRect.ToPenRect(metrics.Item.SelectionLineThickness),
                     metrics.Item.SelectionCornerRadius,
                     metrics.Item.SelectionCornerRadius);
             }
-
 
             for (int col = 0; col < Columns.Count; col++)
             {
@@ -190,6 +211,32 @@ namespace File.Manager.Controls.Files
             }
         }
 
+        private void EnsureFocusedItemVisible()
+        {
+            int selectedItemTopY = FilesSource.CurrentPosition * metrics.Item.ItemHeight;
+            int selectedItemBottomY = selectedItemTopY + metrics.Item.ItemHeight - 1;
+            int topY = host.ScrollPosition;
+            int bottomY = host.ScrollPosition + metrics.Item.ItemArea.Height - 1;
+
+            int topDifference = selectedItemTopY - topY;
+            int bottomDifference = selectedItemBottomY - bottomY;
+
+            if (topDifference < 0)
+            {
+                // Selected item is above current view
+                host.ScrollPosition = Math.Max(0, Math.Min(host.ScrollMaximum, selectedItemTopY));
+                host.RequestInvalidateVisual();
+            }
+            else if (bottomDifference > 0)
+            {
+                // Selected item is below current view
+                host.ScrollPosition = Math.Max(0, Math.Min(host.ScrollMaximum, selectedItemBottomY - metrics.Item.ItemArea.Height + 1));
+                host.RequestInvalidateVisual();
+            }
+
+            // Else item is already in current view
+        }
+
         // Protected methods --------------------------------------------------
 
         protected override void HandleColumnsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -207,11 +254,13 @@ namespace File.Manager.Controls.Files
         protected override void HandleFilesSourceCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             InvalidateMetrics();
+            UpdateScrollData();
             host.RequestInvalidateVisual();
         }
 
         protected override void HandleFilesSourceCurrentChanged(object sender, EventArgs e)
         {
+            EnsureFocusedItemVisible();
             host.RequestInvalidateVisual();
         }
 
@@ -221,6 +270,86 @@ namespace File.Manager.Controls.Files
             : base(host, new FileListGridRendererMetrics(host))
         {
             
+        }
+
+        public override void NotifyMetricsChanged()
+        {
+            InvalidateMetrics();
+            UpdateScrollData();
+            host.RequestInvalidateVisual();
+        }
+
+        protected override void OnFilesSourceChanged()
+        {
+            base.OnFilesSourceChanged();
+            InvalidateMetrics();
+            UpdateScrollData();
+            host.RequestInvalidateVisual();
+        }
+
+        public override void NotifyScrollPositionChanged()
+        {
+            host.RequestInvalidateVisual();
+        }
+
+        protected override void OnColumnsChanged()
+        {
+            base.OnColumnsChanged();
+            InvalidateMetrics();
+            host.RequestInvalidateVisual();
+        }
+
+        public override void OnKeyDown(KeyEventArgs e)
+        {
+            base.OnKeyDown(e);
+
+            if (e.Key == Key.Up)
+            {
+                if (FilesSource != null)
+                {
+                    if (FilesSource.CurrentItem == null)
+                    {
+                        FilesSource.MoveCurrentToLast();
+                        EnsureFocusedItemVisible();
+                        host.RequestInvalidateVisual();
+                    }
+                    else if (FilesSource.CurrentPosition > 0)
+                    {
+                        FilesSource.MoveCurrentToPrevious();
+                        EnsureFocusedItemVisible();
+                        host.RequestInvalidateVisual();
+                    }
+                }
+
+                e.Handled = true;
+            }
+            else if (e.Key == Key.Down)
+            {
+                if (FilesSource != null)
+                {
+                    if (FilesSource.CurrentItem == null)
+                    {
+                        FilesSource.MoveCurrentToFirst();
+                        EnsureFocusedItemVisible();
+                        host.RequestInvalidateVisual();
+                    }
+                    else if (FilesSource.CurrentPosition < FilesSource.Cast<object>().Count() - 1)
+                    {
+                        FilesSource.MoveCurrentToNext();
+                        EnsureFocusedItemVisible();
+                        host.RequestInvalidateVisual();
+                    }
+                }
+
+                e.Handled = true;
+            }
+            else if (e.Key == Key.Enter)
+            {
+                if (FilesSource != null && FilesSource.CurrentItem != null) 
+                {
+                    host.RequestExecuteCurrentItem();
+                }
+            }
         }
 
         public override void UpdateScrollData()

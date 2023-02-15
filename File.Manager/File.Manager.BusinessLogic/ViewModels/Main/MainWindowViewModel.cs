@@ -26,48 +26,30 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
         
         private PaneViewModel activePane;
 
-        private bool leftPaneFocused = false;
-        private bool rightPaneFocused = false;
-
         // Private methods ----------------------------------------------------
-
-        private void NotifyPaneFocusChange(PaneViewModel paneViewModel, bool newFocus)
-        {
-            if (newFocus)
-            {
-                if (paneViewModel == leftPane)
-                {
-                    ActivePane = leftPane;
-                }
-                else if (paneViewModel == rightPane)
-                {
-                    ActivePane = rightPane;
-                }
-            }            
-        }
 
         // IPaneHandler implementation ----------------------------------------
 
-        void IPaneHandler.NotifyPaneFocused(PaneViewModel paneViewModel)
-        {
-            NotifyPaneFocusChange(paneViewModel, true);
-        }
-
-        void IPaneHandler.NotifyPaneUnfocused(PaneViewModel paneViewModel)
-        {
-            NotifyPaneFocusChange(paneViewModel, false);
-        }
-
         void IPaneHandler.RequestSwithPane()
         {
-            if (ActivePane == LeftPane)
+            if (ActivePane == leftPane)
             {
-                ActivePane = RightPane;
+                leftPane.Active = false;
+                rightPane.Active = true;
+
             }
             else
             {
-                ActivePane = LeftPane;
+                rightPane.Active = false;
+                leftPane.Active = true;
             }
+        }
+
+        public void NotifyActivated(PaneViewModel paneViewModel)
+        {
+            activePane = paneViewModel;
+            InactivePane.Active = false;
+            ActivePane.Active = true;
         }
 
         // Public methods -----------------------------------------------------

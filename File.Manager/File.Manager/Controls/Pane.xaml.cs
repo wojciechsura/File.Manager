@@ -28,7 +28,6 @@ namespace File.Manager.Controls
     {
         // Private fields -----------------------------------------------------
 
-        private readonly CollectionViewSource collectionViewSource;
         private PaneViewModel viewModel;
 
         // Private methods ----------------------------------------------------
@@ -75,70 +74,23 @@ namespace File.Manager.Controls
             listView.ScrollIntoView(listView.SelectedItem);
         }
 
-        private void HandleListViewMouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            ListViewItem listViewItem = VisualTreeTools.VisualUpwardSearch<ListViewItem>(e.OriginalSource as DependencyObject);
-
-            if (listViewItem != null)
-            {
-                viewModel.ExecuteCurrentItem();
-            }
-        }
-
-        private void HandlePaneGotFocus(object sender, RoutedEventArgs e)
-        {
-            viewModel?.NotifyGotFocus();
-        }
-
-        private void HandlePaneLostFocus(object sender, RoutedEventArgs e)
-        {
-            viewModel.NotifyLostFocus();
-        }
-
         private void HandlePanePreviewKeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Space)
-            {
-                viewModel.NotifySpacePressed();
-                e.Handled = true;
-            }
-            else if (e.Key == Key.Insert)
-            {
-                viewModel.NotifyInsertPressed();
-                e.Handled = true;
-            }
-            else if (e.Key == Key.Tab)
+            if (e.Key == Key.Tab)
             {
                 viewModel.NotifyTabPressed();
                 e.Handled = true;
             }
         }
 
-        private void ItemDisplayPreviewKeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter)
-            {
-                (DataContext as PaneViewModel)?.ExecuteCurrentItem();
-            }
-        }
-
         // IPaneAccess implementation -----------------------------------------
-
-        void IPaneAccess.SetNextItem()
-        {
-            collectionViewSource.View.MoveCurrentToNext();
-        }
 
         // Public methods -----------------------------------------------------
 
         public Pane()
         {
             InitializeComponent();
-
-            collectionViewSource = (CollectionViewSource)FindResource("cvsItems");
-
             DataContextChanged += HandleDataContextChanged;
-
             SetDefaultColumns();
         }
 

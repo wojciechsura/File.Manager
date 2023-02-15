@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Documents;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace File.Manager.Controls.Files
@@ -116,6 +117,30 @@ namespace File.Manager.Controls.Files
             renderer.NotifyMetricsChanged();
         }
 
+        protected override void OnGotFocus(RoutedEventArgs e)
+        {
+            base.OnGotFocus(e);
+            InvalidateVisual();
+        }
+
+        protected override void OnLostFocus(RoutedEventArgs e)
+        {
+            base.OnLostFocus(e);
+            InvalidateVisual();
+        }
+
+        protected override void OnPreviewMouseDown(MouseButtonEventArgs e)
+        {
+            base.OnPreviewMouseDown(e);
+            Focus();
+        }
+
+        protected override void OnPreviewKeyDown(KeyEventArgs e)
+        {
+            base.OnPreviewKeyDown(e);
+            renderer.OnKeyDown(e);
+        }
+
         // IFileListRendererHost implementation -------------------------------
 
         void IFileListRendererHost.RequestInvalidateVisual()
@@ -123,7 +148,21 @@ namespace File.Manager.Controls.Files
             InvalidateVisual();
         }
 
+        void IFileListRendererHost.RequestExecuteCurrentItem()
+        {
+            var currentItem = FilesSource.CurrentItem;
+
+            if (ExecuteCurrentItemCommand != null && ExecuteCurrentItemCommand.CanExecute(currentItem))
+            {
+                ExecuteCurrentItemCommand.Execute(currentItem);
+            }
+        }
+
         PixelRectangle IFileListRendererHost.Bounds => metrics.Pane.PaneArea;
+
+        bool IFileListRendererHost.IsActive => IsActive;
+
+        bool IFileListRendererHost.IsFocused => IsFocused;
 
         FileListAppearance IFileListRendererHost.Appearance => Appearance ?? DefaultAppearance;
 
@@ -173,6 +212,8 @@ namespace File.Manager.Controls.Files
             SetNewRenderer(new FileListGridRenderer(this));
 
             metrics.PixelsPerDip = VisualTreeHelper.GetDpi(this).PixelsPerDip;
+
+            Focusable = true;
         }
 
         // Public properties --------------------------------------------------
@@ -494,7 +535,13 @@ namespace File.Manager.Controls.Files
         }
 
         private static readonly DependencyPropertyKey ScrollMaximumPropertyKey =
-            DependencyProperty.RegisterReadOnly("ScrollMaximum", typeof(int), typeof(FileList), new PropertyMetadata(0, ScrollMaximumPropertyChanged));
+            DependencyProperty.RegisterReadOnly("ScrollMaximum", typeof(int), typeof(FileList), new PropertyMetadata(0, ScrollMaximumPropertyChanged, ScrollMaximumPropertyCoerce));
+
+        private static object ScrollMaximumPropertyCoerce(DependencyObject d, object baseValue)
+        {
+            var intValue = (int)baseValue;
+            return Math.Max(0, intValue);
+        }
 
         public static readonly DependencyProperty ScrollMaximumProperty = ScrollMaximumPropertyKey.DependencyProperty;
 
@@ -540,6 +587,52 @@ namespace File.Manager.Controls.Files
                     DependencyProperty.RegisterReadOnly("ScrollSmallChange", typeof(int), typeof(FileList), new PropertyMetadata(1));
 
         public static readonly DependencyProperty ScrollSmallChangeProperty = ScrollSmallChangePropertyKey.DependencyProperty;
+
+        #endregion
+
+        #region IsActive dependency property
+
+        public bool IsActive
+        {
+            get { return (bool)GetValue(IsActiveProperty); }
+            set { SetValue(IsActiveProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for IsActive.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty IsActiveProperty =
+            DependencyProperty.Register("IsActive", typeof(bool), typeof(FileList), new PropertyMetadata(false, IsActivePropertyChanged));
+
+        private static void IsActivePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is FileList fileList)
+            {
+                fileList.ActiveChanged();
+            }
+        }
+
+        private void ActiveChanged()
+        {
+            InvalidateVisual();
+
+            // Keep in mind, this happens only on change. It is possible that
+            // pane is active and not focused.
+            if (IsActive && !IsFocused)
+                Focus();
+        }
+
+        #endregion
+
+        #region ExecuteCurrentItemCommand dependency property
+
+        public ICommand ExecuteCurrentItemCommand
+        {
+            get { return (ICommand)GetValue(ExecuteCurrentItemCommandProperty); }
+            set { SetValue(ExecuteCurrentItemCommandProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for ExecuteCurrentItemCommand.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ExecuteCurrentItemCommandProperty =
+            DependencyProperty.Register("ExecuteCurrentItemCommand", typeof(ICommand), typeof(FileList), new PropertyMetadata(null));
 
         #endregion
     }

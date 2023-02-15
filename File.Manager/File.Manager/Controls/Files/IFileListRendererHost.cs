@@ -13,6 +13,11 @@ namespace File.Manager.Controls.Files
     internal interface IFileListRendererHost
     {
         void RequestInvalidateVisual();
+        void RequestExecuteCurrentItem();
+
+        bool IsActive { get; }
+
+        bool IsFocused { get; }
 
         PixelRectangle Bounds { get; }
 

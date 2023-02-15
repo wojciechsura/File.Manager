@@ -9,8 +9,7 @@
              xmlns:c="clr-namespace:File.Manager.Controls.Files"             
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance Type=vm:PaneViewModel}"
-             d:DesignHeight="450" d:DesignWidth="800" GotFocus="HandlePaneGotFocus" LostFocus="HandlePaneLostFocus"
-             PreviewKeyDown="HandlePanePreviewKeyDown">
+             d:DesignHeight="450" d:DesignWidth="800" PreviewKeyDown="HandlePanePreviewKeyDown">
     <UserControl.Resources>
         <DataTemplate x:Key="NameColumnTemplate" DataType="{x:Type vm:ItemViewModel}">
             <DockPanel>
@@ -18,10 +17,9 @@
                 <TextBlock Margin="{StaticResource DialogItemsExceptLeftMargin}" Text="{Binding Name, Mode=OneWay}" />
             </DockPanel>
         </DataTemplate>
-
-        <CollectionViewSource x:Key="cvsItems" Source="{Binding Items}" />
     </UserControl.Resources>
     <DockPanel>
-        <c:FileList Grid.Column="0" x:Name="flList" SnapsToDevicePixels="True" FilesSource="{Binding Source={StaticResource cvsItems}}" />
+        <c:FileList Grid.Column="0" x:Name="flList" SnapsToDevicePixels="True" FilesSource="{Binding ItemsView}"
+                    IsActive="{Binding Active, Mode=TwoWay}" ExecuteCurrentItemCommand="{Binding ExecuteCurrentItemCommand}" />
     </DockPanel>
 </UserControl>

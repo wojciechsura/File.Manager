@@ -3,12 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Forms;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace File.Manager.Controls.Files
@@ -96,19 +95,18 @@ namespace File.Manager.Controls.Files
             
         }
 
+        public virtual void OnKeyDown(KeyEventArgs e)
+        {
+
+        }
+
         public abstract void Render(DrawingContext drawingContext);
 
         public abstract void UpdateScrollData();
 
-        public virtual void NotifyMetricsChanged()
-        {
-            host.RequestInvalidateVisual();
-        }
+        public abstract void NotifyMetricsChanged();
 
-        public virtual void NotifyScrollPositionChanged()
-        {
-            
-        }
+        public abstract void NotifyScrollPositionChanged();
 
         // Public properties --------------------------------------------------
 

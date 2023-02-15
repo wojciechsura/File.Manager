@@ -138,31 +138,87 @@ namespace File.Manager.Controls.Files
 
         #endregion
 
-        #region FocusBorderBrush dependency property
+        #region FocusActiveFocusedBorderBrush dependency property
 
-        public Brush FocusBorderBrush
+        public Brush FocusActiveFocusedBorderBrush
         {
-            get { return (Brush)GetValue(FocusBorderBrushProperty); }
-            set { SetValue(FocusBorderBrushProperty, value); }
+            get { return (Brush)GetValue(FocusActiveFocusedBorderBrushProperty); }
+            set { SetValue(FocusActiveFocusedBorderBrushProperty, value); }
         }
 
         // Using a DependencyProperty as the backing store for FocusBorderBrush.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty FocusBorderBrushProperty =
-            DependencyProperty.Register("FocusBorderBrush", typeof(Brush), typeof(FileListAppearance), new PropertyMetadata(new SolidColorBrush(Color.FromArgb(0xff, 0x99, 0xd1, 0xff)), AppearancePropertyChanged));
+        public static readonly DependencyProperty FocusActiveFocusedBorderBrushProperty =
+            DependencyProperty.Register("FocusActiveFocusedBorderBrush", typeof(Brush), typeof(FileListAppearance), new PropertyMetadata(new SolidColorBrush(Color.FromArgb(0xff, 0x99, 0xd1, 0xff)), AppearancePropertyChanged));
+
+        #endregion
+
+        #region FocusActiveFocusedBackgroundBrush dependency property
+
+        public Brush FocusActiveFocusedBackgroundBrush
+        {
+            get { return (Brush)GetValue(FocusActiveFocusedBackgroundBrushProperty); }
+            set { SetValue(FocusActiveFocusedBackgroundBrushProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for BackgroundBorderBrush.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty FocusActiveFocusedBackgroundBrushProperty =
+            DependencyProperty.Register("FocusActiveFocusedBackgroundBrush", typeof(Brush), typeof(FileListAppearance), new PropertyMetadata(new SolidColorBrush(Color.FromArgb(0xff, 0xcc, 0xe8, 0xff)), AppearancePropertyChanged));
+
+        #endregion
+
+        #region FocusActiveUnfocusedBorderBrush dependency property
+
+        public Brush FocusActiveUnfocusedBorderBrush
+        {
+            get { return (Brush)GetValue(FocusActiveUnfocusedBorderBrushProperty); }
+            set { SetValue(FocusActiveUnfocusedBorderBrushProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for FocusBorderBrush.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty FocusActiveUnfocusedBorderBrushProperty =
+            DependencyProperty.Register("FocusActiveUnfocusedBorderBrush", typeof(Brush), typeof(FileListAppearance), new PropertyMetadata(new SolidColorBrush(Color.FromArgb(0xff, 0x80, 0xD4, 0xFF)), AppearancePropertyChanged));
 
         #endregion
 
         #region FocusBackgroundBrush dependency property
 
-        public Brush FocusBackgroundBrush
+        public Brush FocusActiveUnfocusedBackgroundBrush
         {
-            get { return (Brush)GetValue(FocusBackgroundBrushProperty); }
-            set { SetValue(FocusBackgroundBrushProperty, value); }
+            get { return (Brush)GetValue(FocusActiveUnfocusedBackgroundBrushProperty); }
+            set { SetValue(FocusActiveUnfocusedBackgroundBrushProperty, value); }
         }
 
         // Using a DependencyProperty as the backing store for BackgroundBorderBrush.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty FocusBackgroundBrushProperty =
-            DependencyProperty.Register("FocusBackgroundBrush", typeof(Brush), typeof(FileListAppearance), new PropertyMetadata(new SolidColorBrush(Color.FromArgb(0xff, 0xcc, 0xe8, 0xff)), AppearancePropertyChanged));
+        public static readonly DependencyProperty FocusActiveUnfocusedBackgroundBrushProperty =
+            DependencyProperty.Register("FocusActiveUnfocusedBackgroundBrush", typeof(Brush), typeof(FileListAppearance), new PropertyMetadata(new SolidColorBrush(Color.FromArgb(0xff, 0xe9, 0xf5, 0xff)), AppearancePropertyChanged));
+
+        #endregion
+
+        #region FocusInactiveBorderBrush dependency property
+
+        public Brush FocusInactiveBorderBrush
+        {
+            get { return (Brush)GetValue(FocusInactiveBorderBrushProperty); }
+            set { SetValue(FocusInactiveBorderBrushProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for FocusBorderBrush.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty FocusInactiveBorderBrushProperty =
+            DependencyProperty.Register("FocusInactiveBorderBrush", typeof(Brush), typeof(FileListAppearance), new PropertyMetadata(new SolidColorBrush(Color.FromArgb(0xff, 0xc6, 0xc6, 0xc6)), AppearancePropertyChanged));
+
+        #endregion
+
+        #region FocusBackgroundBrush dependency property
+
+        public Brush FocusInactiveBackgroundBrush
+        {
+            get { return (Brush)GetValue(FocusInactiveBackgroundBrushProperty); }
+            set { SetValue(FocusInactiveBackgroundBrushProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for BackgroundBorderBrush.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty FocusInactiveBackgroundBrushProperty =
+            DependencyProperty.Register("FocusInactiveBackgroundBrush", typeof(Brush), typeof(FileListAppearance), new PropertyMetadata(new SolidColorBrush(Color.FromArgb(0xff, 0xe6, 0xe6, 0xe6)), AppearancePropertyChanged));
 
         #endregion
 

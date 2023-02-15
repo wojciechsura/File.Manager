@@ -18,7 +18,7 @@ namespace File.Manager.Controls.Files
         private const int MIN_COLUMN_WIDTH_DIP = 10;
         private const double COLUMN_HEADER_HEIGHT_EM = 1.6;
         private const double COLUMN_HORIZONTAL_MARGIN_EM = 0.5;
-        private const double ROW_VERTICAL_MARGIN_EM = 0.4;
+        private const double ROW_VERTICAL_MARGIN_EM = 0.2;
         private const double ROW_ITEM_SPACING_EM = 0.6;
         private const int ICON_SIZE = 16;
         private const int SELECTION_HORIZONTAL_MARGIN_DP = 2;

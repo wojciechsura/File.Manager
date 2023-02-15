@@ -39,22 +39,14 @@ namespace File.Manager.Controls.Files
         protected override void OnColumnsChanged()
         {
             metrics.Columns = Columns;
-            host.RequestInvalidateVisual();
         }
 
         protected override void OnFilesSourceChanged()
         {
             metrics.FilesSource = FilesSource;
-            host.RequestInvalidateVisual();
         }
 
         // Public methods -----------------------------------------------------
-
-        public override void NotifyMetricsChanged()
-        {
-            InvalidateMetrics();
-            base.NotifyMetricsChanged();
-        }
 
         public override void Render(DrawingContext drawingContext)
         {
