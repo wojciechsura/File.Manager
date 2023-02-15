@@ -323,6 +323,36 @@ namespace File.Manager.Controls.Files
 
                 e.Handled = true;
             }
+            else if (e.Key == Key.PageUp)
+            {
+                if (FilesSource != null) 
+                {
+                    if (FilesSource.CurrentItem == null)
+                    {
+                        FilesSource.MoveCurrentToLast();
+                        EnsureFocusedItemVisible();
+                        host.RequestInvalidateVisual();
+                    }
+                    else if (FilesSource.CurrentPosition > 0)
+                    {
+                        // Rounding down on purpose
+                        int itemsInPage = Math.Max(1, metrics.Item.ItemArea.Height / metrics.Item.ItemHeight);
+
+                        FilesSource.MoveCurrentToPosition(Math.Max(0, FilesSource.CurrentPosition - itemsInPage));
+                        EnsureFocusedItemVisible();
+                        host.RequestInvalidateVisual();
+                    }
+                }
+            }
+            else if (e.Key == Key.Home)
+            {
+                if (FilesSource != null)
+                {
+                    FilesSource.MoveCurrentToFirst();
+                    EnsureFocusedItemVisible();
+                    host.RequestInvalidateVisual();
+                }
+            }
             else if (e.Key == Key.Down)
             {
                 if (FilesSource != null)
@@ -343,9 +373,40 @@ namespace File.Manager.Controls.Files
 
                 e.Handled = true;
             }
+            else if (e.Key == Key.PageDown)
+            {
+                if (FilesSource != null)
+                {
+                    if (FilesSource.CurrentItem == null)
+                    {
+                        FilesSource.MoveCurrentToFirst();
+                        EnsureFocusedItemVisible();
+                        host.RequestInvalidateVisual();
+                    }
+                    else if (FilesSource.CurrentPosition < FilesSource.Cast<object>().Count() - 1)
+                    {
+                        int itemCount = FilesSource.Cast<object>().Count();
+                        // Rounding down on purpose
+                        int itemsInPage = Math.Max(1, metrics.Item.ItemArea.Height / metrics.Item.ItemHeight);
+
+                        FilesSource.MoveCurrentToPosition(Math.Min(itemCount - 1, FilesSource.CurrentPosition + itemsInPage));
+                        EnsureFocusedItemVisible();
+                        host.RequestInvalidateVisual();
+                    }
+                }
+            }
+            else if (e.Key == Key.End)
+            {
+                if (FilesSource != null)
+                {
+                    FilesSource.MoveCurrentToLast();
+                    EnsureFocusedItemVisible();
+                    host.RequestInvalidateVisual();
+                }
+            }
             else if (e.Key == Key.Enter)
             {
-                if (FilesSource != null && FilesSource.CurrentItem != null) 
+                if (FilesSource != null && FilesSource.CurrentItem != null)
                 {
                     host.RequestExecuteCurrentItem();
                 }
