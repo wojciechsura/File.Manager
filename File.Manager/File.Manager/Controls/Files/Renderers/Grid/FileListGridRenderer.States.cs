@@ -14,42 +14,51 @@ namespace File.Manager.Controls.Files.Renderers.Grid
 {
     internal partial class FileListGridRenderer
     {
-        internal class IdleState : FileListRendererState<FileListGridRenderer>
+        internal abstract class BaseState : FileListRendererState<FileListGridRenderer>
         {
-			private void CleanHoverInfo()
-			{
-				if (renderer.mouseHover != null)
-				{
-					renderer.mouseHover = null;
-					renderer.host.RequestInvalidateVisual();
-				}
-			}
+            protected BaseState(FileListGridRenderer renderer)
+                : base(renderer)
+            {
 
-			private void UpdateHoverInfo(PixelPoint point)
-			{
-				var mouseHit = renderer.metrics.GetMouseHit(point);
+            }
 
-				if (mouseHit is FileListGridRendererMetrics.HeaderMouseHit headerHit)
-				{
-					if (renderer.mouseHover is not ColumnHoverInfo columnHover || columnHover.ColumnIndex != headerHit.Column)
-					{
-						renderer.mouseHover = new ColumnHoverInfo(headerHit.Column);
-						renderer.host.RequestInvalidateVisual();
-					}
-				}
-				else
-				{					
-					CleanHoverInfo();
-				}
-			}
+            protected void CleanHoverInfo()
+            {
+                if (renderer.mouseHover != null)
+                {
+                    renderer.mouseHover = null;
+                    renderer.host.RequestInvalidateVisual();
+                }
+            }
 
-			private PixelPoint GetMousePosition(MouseEventArgs e)
-			{
-				var mousePoint = e.GetPosition(renderer.host.InputElement);
-				var mousePixelPoint = new PixelPoint((int)mousePoint.X, (int)mousePoint.Y);
-				return mousePixelPoint;
-			}
+            protected void UpdateHoverInfo(PixelPoint point)
+            {
+                var mouseHit = renderer.metrics.GetMouseHit(point);
 
+                if (mouseHit is FileListGridRendererMetrics.HeaderMouseHit headerHit)
+                {
+                    if (renderer.mouseHover is not ColumnHoverInfo columnHover || columnHover.ColumnIndex != headerHit.Column)
+                    {
+                        renderer.mouseHover = new ColumnHoverInfo(headerHit.Column);
+                        renderer.host.RequestInvalidateVisual();
+                    }
+                }
+                else
+                {
+                    CleanHoverInfo();
+                }
+            }
+
+            protected PixelPoint GetMousePosition(MouseEventArgs e)
+            {
+                var mousePoint = e.GetPosition(renderer.host.InputElement);
+                var mousePixelPoint = new PixelPoint((int)mousePoint.X, (int)mousePoint.Y);
+                return mousePixelPoint;
+            }
+        }
+
+        internal class IdleState : BaseState
+        {
 			public IdleState(FileListGridRenderer renderer)
 				: base(renderer)
 			{
@@ -194,7 +203,45 @@ namespace File.Manager.Controls.Files.Renderers.Grid
 
 			public override void OnMouseDown(MouseButtonEventArgs e)
             {
-				CleanHoverInfo();
+                CleanHoverInfo();
+
+				if (e.ChangedButton == MouseButton.Left)
+				{
+					var position = GetMousePosition(e);
+					var mouseHit = renderer.metrics.GetMouseHit(position);
+
+					if (renderer.FilesSource != null && mouseHit is FileListGridRendererMetrics.ItemMouseHit itemHit && itemHit.ItemIndex != null)
+					{
+						if (renderer.FilesSource.CurrentPosition != itemHit.ItemIndex)
+						{
+							renderer.FilesSource.MoveCurrentToPosition(itemHit.ItemIndex.Value);
+							renderer.host.RequestInvalidateVisual();
+						}
+
+						var state = new FocusState(renderer);
+						renderer.State = state;
+					}
+				}
+				if (e.ChangedButton == MouseButton.Right)
+				{
+					var position = GetMousePosition(e);
+					var mouseHit = renderer.metrics.GetMouseHit(position);
+
+					if (renderer.FilesSource != null && mouseHit is FileListGridRendererMetrics.ItemMouseHit itemHit && itemHit.ItemIndex != null)
+					{
+						var item = renderer.FilesSource.Cast<IFileListItem>().Skip(itemHit.ItemIndex.Value).FirstOrDefault();
+						if (item != null)
+						{
+							var newSelected = !item.IsSelected;
+							item.IsSelected = newSelected;
+							renderer.host.RequestInvalidateVisual();
+
+							var state = new SelectionState(renderer, newSelected);
+							renderer.State = state;
+						}
+
+					}
+				}
             }
 
             public override void OnMouseMove(MouseEventArgs e)
@@ -218,6 +265,139 @@ namespace File.Manager.Controls.Files.Renderers.Grid
             public override void OnMouseLeave(MouseEventArgs e)
             {
 				CleanHoverInfo();
+            }
+        }
+
+        internal class FocusState : BaseState
+        {
+            public FocusState(FileListGridRenderer renderer) 
+				: base(renderer)
+            {
+
+            }
+
+            public override void OnEnter()
+            {
+                base.OnEnter();
+				renderer.host.RequestMouseCapture();
+            }
+
+            public override void OnLeave()
+            {
+                base.OnLeave();
+				renderer.host.RequestMouseRelease();
+            }
+
+            public override void OnKeyDown(KeyEventArgs e)
+            {
+                
+            }
+
+            public override void OnMouseDown(MouseButtonEventArgs e)
+            {
+                
+            }
+
+            public override void OnMouseEnter(MouseEventArgs e)
+            {
+                
+            }
+
+            public override void OnMouseLeave(MouseEventArgs e)
+            {
+                
+            }
+
+            public override void OnMouseMove(MouseEventArgs e)
+            {
+				var position = GetMousePosition(e);
+				var mouseHit = renderer.metrics.GetMouseHit(position);
+
+				if (renderer.FilesSource != null && mouseHit is FileListGridRendererMetrics.ItemMouseHit itemHit && itemHit.ItemIndex != null)
+				{
+					if (renderer.FilesSource.CurrentPosition != itemHit.ItemIndex)
+					{
+						renderer.FilesSource.MoveCurrentToPosition(itemHit.ItemIndex.Value);
+						renderer.host.RequestInvalidateVisual();
+					}
+				}
+            }
+
+            public override void OnMouseUp(MouseButtonEventArgs e)
+            {
+				if (e.ChangedButton == MouseButton.Left)
+				{
+					var idle = new IdleState(renderer);
+					renderer.State = idle;
+				}
+            }
+        }
+
+        internal class SelectionState : BaseState
+        {
+            private readonly bool newSelection;
+
+            public SelectionState(FileListGridRenderer renderer, bool newSelection)
+                : base(renderer)
+            {
+                this.newSelection = newSelection;
+            }
+
+            public override void OnEnter()
+            {
+                base.OnEnter();
+                renderer.host.RequestMouseCapture();
+            }
+
+            public override void OnLeave()
+            {
+                base.OnLeave();
+                renderer.host.RequestMouseRelease();
+            }
+
+            public override void OnKeyDown(KeyEventArgs e)
+            {
+
+            }
+
+            public override void OnMouseDown(MouseButtonEventArgs e)
+            {
+
+            }
+
+            public override void OnMouseEnter(MouseEventArgs e)
+            {
+
+            }
+
+            public override void OnMouseLeave(MouseEventArgs e)
+            {
+
+            }
+
+            public override void OnMouseMove(MouseEventArgs e)
+            {
+                var position = GetMousePosition(e);
+                var mouseHit = renderer.metrics.GetMouseHit(position);
+
+                if (renderer.FilesSource != null && mouseHit is FileListGridRendererMetrics.ItemMouseHit itemHit && itemHit.ItemIndex != null)
+                {
+					var item = renderer.FilesSource.Cast<IFileListItem>().Skip(itemHit.ItemIndex.Value).FirstOrDefault();
+					if (item != null && item.IsSelected != newSelection)
+					{
+						item.IsSelected = newSelection;
+						renderer.host.RequestInvalidateVisual();
+					}
+                }
+            }
+
+            public override void OnMouseUp(MouseButtonEventArgs e)
+            {
+                if (e.ChangedButton == MouseButton.Right)
+                {
+                    var idle = new IdleState(renderer);
+                    renderer.State = idle;
+                }
             }
         }
     }

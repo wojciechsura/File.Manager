@@ -28,7 +28,7 @@ namespace File.Manager.Controls.Files
         protected FileListRendererState<TConcreteRenderer> State
         {
             get => state;
-            set => SetState(state);
+            set => SetState(value);
         }
 
         public FileListStateRenderer(IFileListRendererHost host, Func<TConcreteRenderer, FileListRendererState<TConcreteRenderer>> initialStateBuilder)

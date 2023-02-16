@@ -149,13 +149,13 @@ namespace File.Manager.Controls.Files.Renderers.Grid
 
         public class ItemMouseHit : MouseHit
         {
-            public ItemMouseHit(int itemIndex, int? column)
+            public ItemMouseHit(int? itemIndex, int? column)
             {
                 ItemIndex = itemIndex;
                 Column = column;
             }
 
-            public int ItemIndex { get; }
+            public int? ItemIndex { get; }
             public int? Column { get; }
         }
 
@@ -455,7 +455,11 @@ namespace File.Manager.Controls.Files.Renderers.Grid
 
             if (itemMetrics.ItemArea.Contains(point))
             {
-                int itemIndex = (int)((point.Y + host.ScrollPosition) / itemMetrics.ItemHeight);
+                int? itemIndex = FilesSource == null ? 
+                    null : 
+                    Math.Max(0, Math.Min(FilesSource.Cast<object>().Count() - 1, 
+                        (point.Y - itemMetrics.ItemArea.Top + host.ScrollPosition) / itemMetrics.ItemHeight));
+
                 int? column = null;
 
                 for (int i = 0; i < columnMetrics.Columns.Count; i++)
