@@ -194,18 +194,74 @@ namespace File.Manager.Controls.Files
 
         private void DrawItems(DrawingContext drawingContext, Typeface typeface)
         {
+            int firstItemInViewIndex = host.ScrollPosition / metrics.Item.ItemHeight;
+
+            var itemIndex = firstItemInViewIndex;
+            var itemsToShow = FilesSource.Cast<IFileListItem>().Skip(firstItemInViewIndex).Take(metrics.Item.ItemsInView);
+            foreach (var fileItem in itemsToShow)
+            {
+                DrawItem(drawingContext, typeface, itemIndex, fileItem);
+
+                itemIndex++;
+            }
+        }
+
+        private void DrawSelectionBoxes(DrawingContext drawingContext)
+        {
+            int firstItemInViewIndex = host.ScrollPosition / metrics.Item.ItemHeight;
+            int firstItemCheckedIndex = Math.Max(0, firstItemInViewIndex - 1);
+            int checkedItemCount = metrics.Item.ItemsInView + 2;
+
+            int itemIndex = firstItemCheckedIndex;
+            
+            int? currentSelectionBoxFirstItemIndex = null;
+
+            var itemsToCheck = FilesSource
+                .Cast<IFileListItem>()
+                .Skip(firstItemCheckedIndex)
+                .Take(checkedItemCount);
+
+            foreach (var fileItem in itemsToCheck)
+            {
+                if (fileItem.IsSelected && currentSelectionBoxFirstItemIndex == null)
+                {
+                    currentSelectionBoxFirstItemIndex = itemIndex;
+                }
+                else if ((!fileItem.IsSelected || itemIndex == firstItemCheckedIndex + checkedItemCount - 1) && currentSelectionBoxFirstItemIndex != null)
+                {
+                    int firstItemY = currentSelectionBoxFirstItemIndex.Value * metrics.Item.ItemHeight - host.ScrollPosition;
+                    int currentSelectedItemsCount = itemIndex - (int)currentSelectionBoxFirstItemIndex;
+
+                    PixelRectangle selectionRect = new PixelRectangle(metrics.Item.ItemArea.Left + metrics.Item.SelectionHorizontalMargin,
+                        metrics.Item.ItemArea.Top + firstItemY + metrics.Item.SelectionVerticalMargin,
+                        metrics.Item.ItemArea.Width - 2 * metrics.Item.SelectionHorizontalMargin,
+                        currentSelectedItemsCount * metrics.Item.ItemHeight - 2 * metrics.Item.SelectionVerticalMargin);
+
+                    drawingContext.DrawRoundedRectangle(host.Appearance.SelectionBackgroundBrush,
+                        new Pen(host.Appearance.SelectionBorderBrush, metrics.Item.SelectionLineThickness),
+                        selectionRect.ToPenRect(metrics.Item.SelectionLineThickness),
+                        metrics.Item.SelectionCornerRadius,
+                        metrics.Item.SelectionCornerRadius);
+
+                    currentSelectionBoxFirstItemIndex = null;
+                }
+
+                itemIndex++;
+            }
+        }
+
+        private void DrawItemArea(DrawingContext drawingContext, Typeface typeface)
+        {
             drawingContext.PushClip(new RectangleGeometry(metrics.Item.ItemArea.ToRegionRect()));
             try
             {
-                int itemIndex = host.ScrollPosition / metrics.Item.ItemHeight;
+                // Draw selection boxes first
 
-                var itemsToShow = FilesSource.Cast<IFileListItem>().Skip(itemIndex).Take(metrics.Item.ItemsInView);
-                foreach (var fileItem in itemsToShow)
-                {
-                    DrawItem(drawingContext, typeface, itemIndex, fileItem);
+                DrawSelectionBoxes(drawingContext);
 
-                    itemIndex++;
-                }
+                // Draw items
+
+                DrawItems(drawingContext, typeface);
             }
             finally
             {
@@ -456,7 +512,7 @@ namespace File.Manager.Controls.Files
             // Items
 
             if (FilesSource != null)
-                DrawItems(drawingContext, typeface);
+                DrawItemArea(drawingContext, typeface);
         }        
     }
 }

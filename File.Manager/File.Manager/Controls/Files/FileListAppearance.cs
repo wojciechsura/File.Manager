@@ -152,6 +152,34 @@ namespace File.Manager.Controls.Files
 
         #endregion
 
+        #region SelectionBorderBrush dependency property
+
+        public Brush SelectionBorderBrush
+        {
+            get { return (Brush)GetValue(SelectionBorderBrushProperty); }
+            set { SetValue(SelectionBorderBrushProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for SelectionBorderBrush.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty SelectionBorderBrushProperty =
+            DependencyProperty.Register("SelectionBorderBrush", typeof(Brush), typeof(FileListAppearance), new PropertyMetadata(new SolidColorBrush(Color.FromArgb(0xff, 0xff, 0xdd, 0xdd)), AppearancePropertyChanged));
+
+        #endregion
+
+        #region SelectionBackgroundBrush dependency property
+
+        public Brush SelectionBackgroundBrush
+        {
+            get { return (Brush)GetValue(SelectionBackgroundBrushProperty); }
+            set { SetValue(SelectionBackgroundBrushProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for SelectionBackgroundBrush.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty SelectionBackgroundBrushProperty =
+            DependencyProperty.Register("SelectionBackgroundBrush", typeof(Brush), typeof(FileListAppearance), new PropertyMetadata(new SolidColorBrush(Color.FromArgb(0xff, 0xff, 0xee, 0xee)), AppearancePropertyChanged));
+
+        #endregion
+
         #region FocusActiveFocusedBorderBrush dependency property
 
         public Brush FocusActiveFocusedBorderBrush
