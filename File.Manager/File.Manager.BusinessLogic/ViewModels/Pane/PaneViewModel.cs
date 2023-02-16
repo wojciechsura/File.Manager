@@ -21,6 +21,7 @@ using Spooksoft.VisualStateManager.Commands;
 using System.Windows.Data;
 using System.ComponentModel;
 using File.Manager.BusinessLogic.Models.Files;
+using Gstc.Collections.ObservableLists;
 
 namespace File.Manager.BusinessLogic.ViewModels.Pane
 {
@@ -34,7 +35,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
         private readonly IMessagingService messagingService;
 
         private FilesystemNavigator navigator;
-        private readonly ObservableCollection<ItemViewModel> items;
+        private readonly ObservableList<ItemViewModel> items;
         private readonly CollectionView collectionView;
 
         private IPaneAccess access;
@@ -45,6 +46,8 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
         private void UpdateItems(FocusedItemData data)
         {
             items.Clear();
+
+            var newItems = new List<ItemViewModel>();
 
             Item newSelectedItem = navigator.ResolveFocusedItem(data);
             ItemViewModel newSelectedItemViewModel = null;
@@ -72,11 +75,13 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
                 }
 
                 var itemViewModel = new ItemViewModel(item);
-                items.Add(itemViewModel);
+                newItems.Add(itemViewModel);
 
                 if (item != null && item == newSelectedItem)
                     newSelectedItemViewModel = itemViewModel;
             }
+
+            items.AddRange(newItems);
 
             if (newSelectedItemViewModel != null)
                 collectionView.MoveCurrentTo(newSelectedItemViewModel);
@@ -176,6 +181,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
             this.messagingService = messagingService;
 
             items = new();
+            items.IsAddRangeResetEvent = true;
             collectionView = new CollectionView(items);
 
             ExecuteCurrentItemCommand = new AppCommand(DoExecuteCurrentItem);
@@ -191,7 +197,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
 
         // Public properties --------------------------------------------------
 
-        public IReadOnlyList<ItemViewModel> Items => items;
+        public IEnumerable<ItemViewModel> Items => items;
 
         public ICollectionView ItemsView => collectionView;
 
