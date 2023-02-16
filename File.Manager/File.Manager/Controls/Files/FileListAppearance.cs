@@ -138,6 +138,20 @@ namespace File.Manager.Controls.Files
 
         #endregion
 
+        #region SelectedItemForegroundBrush dependency property
+
+        public Brush SelectedItemForegroundBrush
+        {
+            get { return (Brush)GetValue(SelectedItemForegroundBrushProperty); }
+            set { SetValue(SelectedItemForegroundBrushProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for SelectedItemForegroundBrush.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty SelectedItemForegroundBrushProperty =
+            DependencyProperty.Register("SelectedItemForegroundBrush", typeof(Brush), typeof(FileListAppearance), new PropertyMetadata(new SolidColorBrush(Color.FromArgb(0xff, 0xff, 0x40, 0x40)), AppearancePropertyChanged));
+
+        #endregion
+
         #region FocusActiveFocusedBorderBrush dependency property
 
         public Brush FocusActiveFocusedBorderBrush

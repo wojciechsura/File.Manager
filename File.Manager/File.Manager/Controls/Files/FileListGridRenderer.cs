@@ -59,7 +59,7 @@ namespace File.Manager.Controls.Files
             }
         }
 
-        private void DrawKeyCell(DrawingContext drawingContext, Typeface typeface, IFileListItem fileItem, PixelRectangle itemRect, string key)
+        private void DrawKeyCell(DrawingContext drawingContext, Typeface typeface, IFileListItem fileItem, PixelRectangle itemRect, Brush foregroundBrush, string key)
         {
             var valueToDisplay = fileItem[key];
 
@@ -79,7 +79,7 @@ namespace File.Manager.Controls.Files
                 FlowDirection.LeftToRight,
                 typeface,
                 host.FontSize,
-                host.Appearance.ItemForegroundBrush,
+                foregroundBrush,
                 host.PixelsPerDip);
 
             drawingContext.DrawText(valueText, valuePosition.ToPoint());
@@ -89,19 +89,21 @@ namespace File.Manager.Controls.Files
         {
             drawingContext.PushClip(new RectangleGeometry(itemRect.ToRegionRect()));
 
+            var brush = fileItem.IsSelected ? host.Appearance.SelectedItemForegroundBrush : host.Appearance.ItemForegroundBrush;
+
             try
             {
                 switch (Columns[col])
                 {
                     case FileListFilenameColumn filenameColumn:
                         {
-                            DrawFilenameCell(drawingContext, typeface, fileItem, itemRect);
+                            DrawFilenameCell(drawingContext, typeface, fileItem, itemRect, brush);
 
                             break;
                         }
                     case FileListKeyColumn keyColumn:
                         {
-                            DrawKeyCell(drawingContext, typeface, fileItem, itemRect, keyColumn.Key);
+                            DrawKeyCell(drawingContext, typeface, fileItem, itemRect, brush, keyColumn.Key);
 
                             break;
                         }
@@ -115,7 +117,7 @@ namespace File.Manager.Controls.Files
             }
         }
 
-        private void DrawFilenameCell(DrawingContext drawingContext, Typeface typeface, IFileListItem fileItem, PixelRectangle itemRect)
+        private void DrawFilenameCell(DrawingContext drawingContext, Typeface typeface, IFileListItem fileItem, PixelRectangle itemRect, Brush foregroundBrush)
         {
             PixelRectangle iconRect = new PixelRectangle(itemRect.Left + metrics.Column.HorizontalMarginPx,
                                         itemRect.Top + (itemRect.Height - metrics.Item.IconSize) / 2,
@@ -132,7 +134,7 @@ namespace File.Manager.Controls.Files
                 FlowDirection.LeftToRight,
                 typeface,
                 host.FontSize,
-                host.Appearance.ItemForegroundBrush,
+                foregroundBrush,
                 host.PixelsPerDip);
 
             drawingContext.DrawText(filenameText, filenamePosition.ToPoint());
@@ -400,6 +402,27 @@ namespace File.Manager.Controls.Files
                 if (FilesSource != null)
                 {
                     FilesSource.MoveCurrentToLast();
+                    EnsureFocusedItemVisible();
+                    host.RequestInvalidateVisual();
+                }
+            }
+            else if (e.Key == Key.Space)
+            {
+                if (FilesSource != null && FilesSource.CurrentItem != null)
+                {
+                    IFileListItem item = (IFileListItem)FilesSource.CurrentItem;
+                    item.IsSelected = !item.IsSelected;
+                    EnsureFocusedItemVisible();
+                    host.RequestInvalidateVisual();
+                }
+            }
+            else if (e.Key == Key.Insert)
+            {
+                if (FilesSource != null && FilesSource.CurrentItem != null)
+                {
+                    IFileListItem item = (IFileListItem)FilesSource.CurrentItem;
+                    item.IsSelected = !item.IsSelected;
+                    FilesSource.MoveCurrentToNext();
                     EnsureFocusedItemVisible();
                     host.RequestInvalidateVisual();
                 }
