@@ -182,7 +182,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
 
             items = new();
             items.IsAddRangeResetEvent = true;
-            collectionView = new CollectionView(items);
+            collectionView = new CollectionView(items);            
 
             ExecuteCurrentItemCommand = new AppCommand(DoExecuteCurrentItem);
 

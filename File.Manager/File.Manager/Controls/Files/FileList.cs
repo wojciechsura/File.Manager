@@ -1,5 +1,6 @@
 ﻿using File.Manager.API.Filesystem.Models.Items;
 using File.Manager.BusinessLogic.Models.Files;
+using File.Manager.Controls.Files.Renderers.Grid;
 using File.Manager.Geometry;
 using File.Manager.Tools;
 using File.Manager.Types;
@@ -132,13 +133,46 @@ namespace File.Manager.Controls.Files
         protected override void OnPreviewMouseDown(MouseButtonEventArgs e)
         {
             base.OnPreviewMouseDown(e);
-            Focus();
+            
+            if (!IsFocused)
+                Focus();
+
+            renderer.OnMouseDown(e);
+        }
+
+        protected override void OnPreviewMouseMove(MouseEventArgs e)
+        {
+            base.OnMouseMove(e);
+
+            renderer.OnMouseMove(e);
+        }
+
+        protected override void OnPreviewMouseUp(MouseButtonEventArgs e)
+        {
+            base.OnMouseUp(e);
+
+            renderer.OnMouseUp(e);
         }
 
         protected override void OnPreviewKeyDown(KeyEventArgs e)
         {
             base.OnPreviewKeyDown(e);
+
             renderer.OnKeyDown(e);
+        }
+
+        protected override void OnMouseEnter(MouseEventArgs e)
+        {
+            base.OnMouseEnter(e);
+
+            renderer.OnMouseEnter(e);
+        }
+
+        protected override void OnMouseLeave(MouseEventArgs e)
+        {
+            base.OnMouseLeave(e);
+
+            renderer.OnMouseLeave(e);
         }
 
         // IFileListRendererHost implementation -------------------------------
@@ -156,6 +190,16 @@ namespace File.Manager.Controls.Files
             {
                 ExecuteCurrentItemCommand.Execute(currentItem);
             }
+        }
+
+        void IFileListRendererHost.RequestMouseCapture()
+        {
+            CaptureMouse();
+        }
+
+        void IFileListRendererHost.RequestMouseRelease()
+        {
+            ReleaseMouseCapture();
         }
 
         PixelRectangle IFileListRendererHost.Bounds => metrics.Pane.PaneArea;
@@ -201,6 +245,8 @@ namespace File.Manager.Controls.Files
             get => this.ScrollLargeChange;
             set => this.ScrollLargeChange = value;
         }
+
+        IInputElement IFileListRendererHost.InputElement => this;
 
         // Public methods -----------------------------------------------------
 

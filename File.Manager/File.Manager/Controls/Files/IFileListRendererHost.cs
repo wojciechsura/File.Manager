@@ -14,6 +14,8 @@ namespace File.Manager.Controls.Files
     {
         void RequestInvalidateVisual();
         void RequestExecuteCurrentItem();
+        void RequestMouseCapture();
+        void RequestMouseRelease();
 
         bool IsActive { get; }
 
@@ -42,5 +44,7 @@ namespace File.Manager.Controls.Files
         int ScrollSmallChange { get; set; }
         
         int ScrollLargeChange { get; set; }
+
+        IInputElement InputElement { get; }
     }
 }

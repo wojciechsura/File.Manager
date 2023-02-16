@@ -31,6 +31,19 @@ namespace File.Manager.Controls.Files
             return new LinearGradientBrush(stops, 90.0);
         }
 
+        private static LinearGradientBrush BuildHeaderFocusedBackgroundBrush()
+        {
+            var stops = new GradientStopCollection
+            {
+                new GradientStop(Color.FromArgb(0xff, 0xc6, 0xe1, 0xf8), 0.0),
+                new GradientStop(Color.FromArgb(0xff, 0xc6, 0xe1, 0xf8), 0.66),
+                new GradientStop(Color.FromArgb(0xff, 0xc0, 0xda, 0xf0), 0.661),
+                new GradientStop(Color.FromArgb(0xff, 0xc0, 0xda, 0xf0), 1.0)
+            };
+
+            return new LinearGradientBrush(stops, 90.0);
+        }     
+
         // Protected methods --------------------------------------------------
 
         protected void OnAppearanceChanged()
@@ -93,6 +106,20 @@ namespace File.Manager.Controls.Files
         // Using a DependencyProperty as the backing store for HeaderBrush.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty HeaderBackgroundBrushProperty =
             DependencyProperty.Register("HeaderBackgroundBrush", typeof(Brush), typeof(FileListAppearance), new PropertyMetadata(BuildHeaderBackgroundBrush(), AppearancePropertyChanged));
+
+        #endregion
+
+        #region HeaderFocusedBackgroundBrush dependency property
+
+        public Brush HeaderFocusedBackgroundBrush
+        {
+            get { return (Brush)GetValue(HeaderFocusedBackgroundBrushProperty); }
+            set { SetValue(HeaderFocusedBackgroundBrushProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for HeaderFocusedBackgroundBrush.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty HeaderFocusedBackgroundBrushProperty =
+            DependencyProperty.Register("HeaderFocusedBackgroundBrush", typeof(Brush), typeof(FileListAppearance), new PropertyMetadata(BuildHeaderFocusedBackgroundBrush(), AppearancePropertyChanged));
 
         #endregion
 

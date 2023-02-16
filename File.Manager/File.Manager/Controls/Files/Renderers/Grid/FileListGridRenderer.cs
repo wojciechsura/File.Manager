@@ -13,11 +13,46 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 
-namespace File.Manager.Controls.Files
+namespace File.Manager.Controls.Files.Renderers.Grid
 {
-    internal class FileListGridRenderer : FileListMeasuredRenderer<FileListGridRendererMetrics>
+    internal partial class FileListGridRenderer : FileListStateRenderer<FileListGridRenderer>
     {
+        // Private types ------------------------------------------------------
+
+        private abstract class MouseHoverInfo
+        {
+
+        }
+
+        private class ColumnHoverInfo : MouseHoverInfo
+        {
+            public ColumnHoverInfo(int columnIndex)
+            {
+                ColumnIndex = columnIndex;
+            }
+
+            public int ColumnIndex { get; }
+        }
+
+        // Private fields -----------------------------------------------------
+
+        private readonly FileListGridRendererMetrics metrics;
+        private MouseHoverInfo mouseHover;
+
         // Private methods ----------------------------------------------------
+
+        private void ValidateMetrics()
+        {
+            if (!metrics.Valid)
+            {
+                metrics.Validate();
+            }
+        }
+
+        private void InvalidateMetrics()
+        {
+            metrics.Invalidate();
+        }
 
         private void DrawHeader(DrawingContext drawingContext, Typeface typeface)
         {
@@ -33,6 +68,13 @@ namespace File.Manager.Controls.Files
                 drawingContext.PushClip(new RectangleGeometry(metrics.Column.Columns[i].TitleBounds.ToBrushRect()));
                 try
                 {
+                    if (mouseHover is ColumnHoverInfo columnHover && columnHover.ColumnIndex == i)
+                    {
+                        drawingContext.DrawRectangle(host.Appearance.HeaderFocusedBackgroundBrush,
+                            null,
+                            metrics.Column.Columns[i].TitleBounds.ToBrushRect());
+                    }
+
                     if (i > 0)
                     {
                         Rect headerRect = metrics.Column.Columns[i].TitleBounds.ToPenRect(columnHeaderSeparatorPen.Thickness);
@@ -333,9 +375,9 @@ namespace File.Manager.Controls.Files
         // Public methods -----------------------------------------------------
 
         public FileListGridRenderer(IFileListRendererHost host)
-            : base(host, new FileListGridRendererMetrics(host))
+            : base(host, renderer => new IdleState(renderer))
         {
-            
+            metrics = new FileListGridRendererMetrics(host);
         }
 
         public override void NotifyMetricsChanged()
@@ -347,7 +389,8 @@ namespace File.Manager.Controls.Files
 
         protected override void OnFilesSourceChanged()
         {
-            base.OnFilesSourceChanged();
+            metrics.FilesSource = FilesSource;
+
             InvalidateMetrics();
             UpdateScrollData();
             host.RequestInvalidateVisual();
@@ -360,147 +403,9 @@ namespace File.Manager.Controls.Files
 
         protected override void OnColumnsChanged()
         {
-            base.OnColumnsChanged();
+            metrics.Columns = Columns;
             InvalidateMetrics();
             host.RequestInvalidateVisual();
-        }
-
-        public override void OnKeyDown(KeyEventArgs e)
-        {
-            base.OnKeyDown(e);
-
-            if (e.Key == Key.Up)
-            {
-                if (FilesSource != null)
-                {
-                    if (FilesSource.CurrentItem == null)
-                    {
-                        FilesSource.MoveCurrentToLast();
-                        EnsureFocusedItemVisible();
-                        host.RequestInvalidateVisual();
-                    }
-                    else if (FilesSource.CurrentPosition > 0)
-                    {
-                        FilesSource.MoveCurrentToPrevious();
-                        EnsureFocusedItemVisible();
-                        host.RequestInvalidateVisual();
-                    }
-                }
-
-                e.Handled = true;
-            }
-            else if (e.Key == Key.PageUp)
-            {
-                if (FilesSource != null) 
-                {
-                    if (FilesSource.CurrentItem == null)
-                    {
-                        FilesSource.MoveCurrentToLast();
-                        EnsureFocusedItemVisible();
-                        host.RequestInvalidateVisual();
-                    }
-                    else if (FilesSource.CurrentPosition > 0)
-                    {
-                        // Rounding down on purpose
-                        int itemsInPage = Math.Max(1, metrics.Item.ItemArea.Height / metrics.Item.ItemHeight);
-
-                        FilesSource.MoveCurrentToPosition(Math.Max(0, FilesSource.CurrentPosition - itemsInPage));
-                        EnsureFocusedItemVisible();
-                        host.RequestInvalidateVisual();
-                    }
-                }
-            }
-            else if (e.Key == Key.Home)
-            {
-                if (FilesSource != null)
-                {
-                    FilesSource.MoveCurrentToFirst();
-                    EnsureFocusedItemVisible();
-                    host.RequestInvalidateVisual();
-                }
-            }
-            else if (e.Key == Key.Down)
-            {
-                if (FilesSource != null)
-                {
-                    if (FilesSource.CurrentItem == null)
-                    {
-                        FilesSource.MoveCurrentToFirst();
-                        EnsureFocusedItemVisible();
-                        host.RequestInvalidateVisual();
-                    }
-                    else if (FilesSource.CurrentPosition < FilesSource.Cast<object>().Count() - 1)
-                    {
-                        FilesSource.MoveCurrentToNext();
-                        EnsureFocusedItemVisible();
-                        host.RequestInvalidateVisual();
-                    }
-                }
-
-                e.Handled = true;
-            }
-            else if (e.Key == Key.PageDown)
-            {
-                if (FilesSource != null)
-                {
-                    if (FilesSource.CurrentItem == null)
-                    {
-                        FilesSource.MoveCurrentToFirst();
-                        EnsureFocusedItemVisible();
-                        host.RequestInvalidateVisual();
-                    }
-                    else if (FilesSource.CurrentPosition < FilesSource.Cast<object>().Count() - 1)
-                    {
-                        int itemCount = FilesSource.Cast<object>().Count();
-                        // Rounding down on purpose
-                        int itemsInPage = Math.Max(1, metrics.Item.ItemArea.Height / metrics.Item.ItemHeight);
-
-                        FilesSource.MoveCurrentToPosition(Math.Min(itemCount - 1, FilesSource.CurrentPosition + itemsInPage));
-                        EnsureFocusedItemVisible();
-                        host.RequestInvalidateVisual();
-                    }
-                }
-            }
-            else if (e.Key == Key.End)
-            {
-                if (FilesSource != null)
-                {
-                    FilesSource.MoveCurrentToLast();
-                    EnsureFocusedItemVisible();
-                    host.RequestInvalidateVisual();
-                }
-            }
-            else if (e.Key == Key.Space)
-            {
-                if (FilesSource != null && FilesSource.CurrentItem != null)
-                {
-                    IFileListItem item = (IFileListItem)FilesSource.CurrentItem;
-                    item.IsSelected = !item.IsSelected;
-                    EnsureFocusedItemVisible();
-                    host.RequestInvalidateVisual();
-                }
-            }
-            else if (e.Key == Key.Insert)
-            {
-                if (FilesSource != null && FilesSource.CurrentItem != null)
-                {
-                    IFileListItem item = (IFileListItem)FilesSource.CurrentItem;
-                    item.IsSelected = !item.IsSelected;
-
-                    if (FilesSource.CurrentPosition < FilesSource.Cast<object>().Count() - 1)
-                        FilesSource.MoveCurrentToNext();
-
-                    EnsureFocusedItemVisible();
-                    host.RequestInvalidateVisual();
-                }
-            }
-            else if (e.Key == Key.Enter)
-            {
-                if (FilesSource != null && FilesSource.CurrentItem != null)
-                {
-                    host.RequestExecuteCurrentItem();
-                }
-            }
         }
 
         public override void UpdateScrollData()
@@ -514,7 +419,7 @@ namespace File.Manager.Controls.Files
 
         public override void Render(DrawingContext drawingContext)
         {
-            base.Render(drawingContext);
+            ValidateMetrics();
 
             var typeface = new Typeface(host.FontFamily, host.FontStyle, host.FontWeight, host.FontStretch);
 

@@ -89,13 +89,32 @@ namespace File.Manager.Controls.Files
         }
 
         // Public methods -----------------------------------------------------
-
-        public FileListRenderer()
+        public virtual void OnKeyDown(KeyEventArgs e)
         {
-            
+
         }
 
-        public virtual void OnKeyDown(KeyEventArgs e)
+        public virtual void OnMouseDown(MouseButtonEventArgs e)
+        {
+
+        }
+
+        public virtual void OnMouseMove(MouseEventArgs e)
+        {
+
+        }
+
+        public virtual void OnMouseUp(MouseButtonEventArgs e)
+        {
+
+        }
+
+        public virtual void OnMouseEnter(MouseEventArgs e)
+        {
+
+        }
+
+        public virtual void OnMouseLeave(MouseEventArgs e)
         {
 
         }

@@ -1,7 +1,9 @@
-﻿using File.Manager.BusinessLogic.Types;
+﻿using File.Manager.BusinessLogic.Models.Files;
+using File.Manager.BusinessLogic.Types;
 using File.Manager.Types;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -9,9 +11,9 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 
-namespace File.Manager.Controls.Files
+namespace File.Manager.Controls.Files.Renderers.Grid
 {
-    internal class FileListGridRendererMetrics : FileListRendererMetrics
+    internal class FileListGridRendererMetrics 
     {
         // Private constants --------------------------------------------------
 
@@ -130,7 +132,38 @@ namespace File.Manager.Controls.Files
             public int SelectionCornerRadius { get; }
         }
 
+        public abstract class MouseHit
+        {
+
+        }
+
+        public class HeaderMouseHit : MouseHit
+        {
+            public HeaderMouseHit(int column)
+            {
+                Column = column;
+            }
+
+            public int Column { get; }
+        }
+
+        public class ItemMouseHit : MouseHit
+        {
+            public ItemMouseHit(int itemIndex, int? column)
+            {
+                ItemIndex = itemIndex;
+                Column = column;
+            }
+
+            public int ItemIndex { get; }
+            public int? Column { get; }
+        }
+
         // Private fields -----------------------------------------------------
+
+        private readonly IFileListRendererHost host;
+        private IReadOnlyList<FileListColumn> columns;
+        private ICollectionView filesSource;
 
         private CharacterMetrics characterMetrics;
         private HeaderMetrics headerMetrics;
@@ -138,6 +171,28 @@ namespace File.Manager.Controls.Files
         private ItemMetrics itemMetrics;
 
         // Private methods ----------------------------------------------------
+
+        private void SetColumns(IReadOnlyList<FileListColumn> newColumns)
+        {
+            if (columns != newColumns)
+            {
+                columns = newColumns;
+                Invalidate();
+            }
+        }
+
+        private void SetFilesSource(ICollectionView value)
+        {
+            if (filesSource != value)
+            {
+                filesSource = value;
+                Invalidate();
+            }
+        }
+
+        private double PxToDip(double pixels) => pixels / host.PixelsPerDip;
+
+        private double DipToPx(double dip) => dip * host.PixelsPerDip;
 
         private (int remainingWidthPx, int starSum) EvalColumnWidthStats()
         {
@@ -350,13 +405,12 @@ namespace File.Manager.Controls.Files
 
         // Public methods -----------------------------------------------------
 
-        public FileListGridRendererMetrics(IFileListRendererHost host)
-            : base(host)
+        public FileListGridRendererMetrics(IFileListRendererHost host)            
         {
-
+            this.host = host;
         }
 
-        public override void Invalidate()
+        public void Invalidate()
         {
             InvalidateColumnMetrics();
             InvalidateCharacterMetrics();
@@ -364,7 +418,7 @@ namespace File.Manager.Controls.Files
             InvalidateItemMetrics();
         }
 
-        public override void Validate()
+        public void Validate()
         {
             if (characterMetrics == null)
                 ValidateCharacterMetrics();
@@ -379,7 +433,60 @@ namespace File.Manager.Controls.Files
                 ValidateItemMetrics();
         }
 
+        public MouseHit GetMouseHit(PixelPoint point)
+        {
+            Validate();
+
+            // Header
+
+            if (headerMetrics.HeaderArea.Contains(point))
+            {
+                // Check for column
+                for (int i = 0; i < columnMetrics.Columns.Count; i++)
+                {
+                    if (columnMetrics.Columns[i].TitleBounds.Contains(point))
+                        return new HeaderMouseHit(i);
+                }
+
+                return null;
+            }
+
+            // Item
+
+            if (itemMetrics.ItemArea.Contains(point))
+            {
+                int itemIndex = (int)((point.Y + host.ScrollPosition) / itemMetrics.ItemHeight);
+                int? column = null;
+
+                for (int i = 0; i < columnMetrics.Columns.Count; i++)
+                {
+                    if (columnMetrics.Columns[i].TitleBounds.Left <= point.X &&
+                        columnMetrics.Columns[i].TitleBounds.Right >= point.X)
+                    {
+                        column = i;
+                        break;
+                    }
+                }
+
+                return new ItemMouseHit(itemIndex, column);
+            }
+
+            return null;
+        }
+
         // Public properties --------------------------------------------------
+
+        public IReadOnlyList<FileListColumn> Columns
+        {
+            get => columns;
+            set => SetColumns(value);
+        }
+
+        public ICollectionView FilesSource
+        {
+            get => filesSource;
+            set => SetFilesSource(value);
+        }
 
         public ColumnMetrics Column => columnMetrics;
 
@@ -389,6 +496,6 @@ namespace File.Manager.Controls.Files
 
         public ItemMetrics Item => itemMetrics;
 
-        public override bool Valid => headerMetrics != null && columnMetrics != null && characterMetrics != null && itemMetrics != null;
+        public bool Valid => headerMetrics != null && columnMetrics != null && characterMetrics != null && itemMetrics != null;
     }
 }
