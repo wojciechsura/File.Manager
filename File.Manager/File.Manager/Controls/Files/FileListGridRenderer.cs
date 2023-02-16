@@ -208,6 +208,23 @@ namespace File.Manager.Controls.Files
 
         private void DrawSelectionBoxes(DrawingContext drawingContext)
         {
+            void DrawSelectionBox(int firstUnselectedItemIndex, int firstItemIndex)
+            {
+                int firstItemY = firstItemIndex * metrics.Item.ItemHeight - host.ScrollPosition;
+                int currentSelectedItemsCount = firstUnselectedItemIndex - (int)firstItemIndex;
+
+                PixelRectangle selectionRect = new PixelRectangle(metrics.Item.ItemArea.Left + metrics.Item.SelectionHorizontalMargin,
+                    metrics.Item.ItemArea.Top + firstItemY + metrics.Item.SelectionVerticalMargin,
+                    metrics.Item.ItemArea.Width - 2 * metrics.Item.SelectionHorizontalMargin,
+                    currentSelectedItemsCount * metrics.Item.ItemHeight - 2 * metrics.Item.SelectionVerticalMargin);
+
+                drawingContext.DrawRoundedRectangle(host.Appearance.SelectionBackgroundBrush,
+                    new Pen(host.Appearance.SelectionBorderBrush, metrics.Item.SelectionLineThickness),
+                    selectionRect.ToPenRect(metrics.Item.SelectionLineThickness),
+                    metrics.Item.SelectionCornerRadius,
+                    metrics.Item.SelectionCornerRadius);
+            }
+
             int firstItemInViewIndex = host.ScrollPosition / metrics.Item.ItemHeight;
             int firstItemCheckedIndex = Math.Max(0, firstItemInViewIndex - 1);
             int checkedItemCount = metrics.Item.ItemsInView + 2;
@@ -229,25 +246,16 @@ namespace File.Manager.Controls.Files
                 }
                 else if ((!fileItem.IsSelected || itemIndex == firstItemCheckedIndex + checkedItemCount - 1) && currentSelectionBoxFirstItemIndex != null)
                 {
-                    int firstItemY = currentSelectionBoxFirstItemIndex.Value * metrics.Item.ItemHeight - host.ScrollPosition;
-                    int currentSelectedItemsCount = itemIndex - (int)currentSelectionBoxFirstItemIndex;
-
-                    PixelRectangle selectionRect = new PixelRectangle(metrics.Item.ItemArea.Left + metrics.Item.SelectionHorizontalMargin,
-                        metrics.Item.ItemArea.Top + firstItemY + metrics.Item.SelectionVerticalMargin,
-                        metrics.Item.ItemArea.Width - 2 * metrics.Item.SelectionHorizontalMargin,
-                        currentSelectedItemsCount * metrics.Item.ItemHeight - 2 * metrics.Item.SelectionVerticalMargin);
-
-                    drawingContext.DrawRoundedRectangle(host.Appearance.SelectionBackgroundBrush,
-                        new Pen(host.Appearance.SelectionBorderBrush, metrics.Item.SelectionLineThickness),
-                        selectionRect.ToPenRect(metrics.Item.SelectionLineThickness),
-                        metrics.Item.SelectionCornerRadius,
-                        metrics.Item.SelectionCornerRadius);
-
+                    DrawSelectionBox(itemIndex, currentSelectionBoxFirstItemIndex.Value);
                     currentSelectionBoxFirstItemIndex = null;
                 }
 
                 itemIndex++;
             }
+
+            // This happens if last item in series is in view and is selected
+            if (currentSelectionBoxFirstItemIndex != null)
+                DrawSelectionBox(itemIndex, currentSelectionBoxFirstItemIndex.Value);
         }
 
         private void DrawItemArea(DrawingContext drawingContext, Typeface typeface)
@@ -478,7 +486,10 @@ namespace File.Manager.Controls.Files
                 {
                     IFileListItem item = (IFileListItem)FilesSource.CurrentItem;
                     item.IsSelected = !item.IsSelected;
-                    FilesSource.MoveCurrentToNext();
+
+                    if (FilesSource.CurrentPosition < FilesSource.Cast<object>().Count() - 1)
+                        FilesSource.MoveCurrentToNext();
+
                     EnsureFocusedItemVisible();
                     host.RequestInvalidateVisual();
                 }
