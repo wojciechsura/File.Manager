@@ -25,8 +25,11 @@ namespace File.Manager.Controls.Files
 
         // Private fields -----------------------------------------------------
 
-        private FileListRenderer renderer;        
         private readonly Metrics metrics;
+        private FileListRenderer renderer;
+        private MouseButton lastMouseButton;
+        private long lastMouseButtonDown;
+        private Point lastMouseButtonPos;
 
         // Private methods ----------------------------------------------------
 
@@ -137,7 +140,34 @@ namespace File.Manager.Controls.Files
             if (!IsFocused)
                 Focus();
 
-            renderer.OnMouseDown(e);
+            long nowTicks = DateTime.Now.Ticks;
+            long diffMs = (nowTicks - lastMouseButtonDown) / TimeSpan.TicksPerMillisecond;
+            Point clickPosition = e.GetPosition(this);
+            Size diffSize = new Size(Math.Abs(lastMouseButtonPos.X - clickPosition.X),
+                Math.Abs(lastMouseButtonPos.Y - clickPosition.Y));
+
+            if (e.ChangedButton == lastMouseButton &&
+                diffMs <= System.Windows.Forms.SystemInformation.DoubleClickTime &&
+                diffSize.Width <= System.Windows.Forms.SystemInformation.DoubleClickSize.Width &&
+                diffSize.Height <= System.Windows.Forms.SystemInformation.DoubleClickSize.Height)
+            {
+                // Double click
+
+                // Reset double click data
+                lastMouseButton = MouseButton.Left;
+                lastMouseButtonDown = 0;
+                lastMouseButtonPos = new Point(0, 0);
+
+                renderer.OnMouseDoubleClick(e);
+            }
+            else
+            {
+                lastMouseButton = e.ChangedButton;
+                lastMouseButtonDown = DateTime.Now.Ticks;
+                lastMouseButtonPos = clickPosition;
+
+                renderer.OnMouseDown(e);
+            }
         }
 
         protected override void OnPreviewMouseMove(MouseEventArgs e)
@@ -173,6 +203,12 @@ namespace File.Manager.Controls.Files
             base.OnMouseLeave(e);
 
             renderer.OnMouseLeave(e);
+        }
+
+        protected override void OnPreviewMouseWheel(MouseWheelEventArgs e)
+        {
+            base.OnPreviewMouseWheel(e);
+            renderer.OnMouseWheel(e);
         }
 
         // IFileListRendererHost implementation -------------------------------
@@ -260,6 +296,9 @@ namespace File.Manager.Controls.Files
             metrics.PixelsPerDip = VisualTreeHelper.GetDpi(this).PixelsPerDip;
 
             Focusable = true;
+
+            lastMouseButton = MouseButton.Left;
+            lastMouseButtonDown = 0;
         }
 
         // Public properties --------------------------------------------------

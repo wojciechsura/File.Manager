@@ -72,5 +72,17 @@ namespace File.Manager.Controls.Files
             base.OnMouseLeave(e);
             state.OnMouseLeave(e);
         }
+
+        public override void OnMouseDoubleClick(MouseButtonEventArgs e)
+        {
+            base.OnMouseDoubleClick(e);
+            state.OnMouseDoubleClick(e);
+        }
+
+        public override void OnMouseWheel(MouseWheelEventArgs e)
+        {
+            base.OnMouseWheel(e);
+            state.OnMouseWheel(e);
+        }
     }
 }

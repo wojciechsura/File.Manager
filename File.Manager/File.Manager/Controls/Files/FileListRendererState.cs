@@ -26,11 +26,44 @@ namespace File.Manager.Controls.Files
         
         }
 
-        public abstract void OnKeyDown(KeyEventArgs e);
-        public abstract void OnMouseDown(MouseButtonEventArgs e);
-        public abstract void OnMouseMove(MouseEventArgs e);
-        public abstract void OnMouseUp(MouseButtonEventArgs e);
-        public abstract void OnMouseEnter(MouseEventArgs e);
-        public abstract void OnMouseLeave(MouseEventArgs e);        
+        public virtual void OnKeyDown(KeyEventArgs e)
+        {
+
+        }
+
+        public virtual void OnMouseDown(MouseButtonEventArgs e)
+        {
+
+        }
+
+        public virtual void OnMouseMove(MouseEventArgs e)
+        {
+
+        }
+
+        public virtual void OnMouseUp(MouseButtonEventArgs e)
+        {
+
+        }
+
+        public virtual void OnMouseEnter(MouseEventArgs e)
+        {
+
+        }
+
+        public virtual void OnMouseLeave(MouseEventArgs e)
+        {
+
+        }
+
+        public virtual void OnMouseDoubleClick(MouseButtonEventArgs e)
+        {
+
+        }
+
+        public virtual void OnMouseWheel(MouseWheelEventArgs e)
+        {
+
+        }
     }
 }

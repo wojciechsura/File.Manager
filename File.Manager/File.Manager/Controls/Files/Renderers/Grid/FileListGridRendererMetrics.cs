@@ -381,7 +381,7 @@ namespace File.Manager.Controls.Files.Renderers.Grid
             int itemCount = FilesSource?.Cast<object>().Count() ?? 0;
             int itemTotalHeight = itemCount * itemHeight;
             int scrollMaximum = itemTotalHeight - itemArea.Height - 1;
-            int scrollSmallChange = itemTotalHeight;
+            int scrollSmallChange = itemHeight;
             int scrollLargeChange = itemArea.Height;
 
             int itemsInView = (int)Math.Ceiling((double)host.Bounds.Height / itemHeight);

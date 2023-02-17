@@ -119,6 +119,16 @@ namespace File.Manager.Controls.Files
 
         }
 
+        public virtual void OnMouseDoubleClick(MouseButtonEventArgs e)
+        {
+            
+        }
+
+        public virtual void OnMouseWheel(MouseWheelEventArgs e)
+        {
+            
+        }
+
         public abstract void Render(DrawingContext drawingContext);
 
         public abstract void UpdateScrollData();

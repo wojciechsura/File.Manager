@@ -266,6 +266,34 @@ namespace File.Manager.Controls.Files.Renderers.Grid
             {
 				CleanHoverInfo();
             }
+
+            public override void OnMouseDoubleClick(MouseButtonEventArgs e)
+            {
+				CleanHoverInfo();
+
+                if (e.ChangedButton == MouseButton.Left)
+                {
+                    var position = GetMousePosition(e);
+                    var mouseHit = renderer.metrics.GetMouseHit(position);
+
+                    if (renderer.FilesSource != null && 
+						mouseHit is FileListGridRendererMetrics.ItemMouseHit itemHit && 
+						itemHit.ItemIndex != null && 
+						renderer.FilesSource.CurrentPosition == itemHit.ItemIndex)
+                    {
+                        renderer.host.RequestExecuteCurrentItem();
+                    }
+                }
+            }
+
+            public override void OnMouseWheel(MouseWheelEventArgs e)
+            {
+				renderer.host.ScrollPosition = Math.Max(0, 
+					Math.Min(
+						renderer.host.ScrollMaximum, 
+						renderer.host.ScrollPosition + ((-e.Delta / Mouse.MouseWheelDeltaForOneLine) * renderer.host.ScrollSmallChange)));
+				renderer.host.RequestInvalidateVisual();
+            }
         }
 
         internal class FocusState : BaseState
@@ -286,27 +314,7 @@ namespace File.Manager.Controls.Files.Renderers.Grid
             {
                 base.OnLeave();
 				renderer.host.RequestMouseRelease();
-            }
-
-            public override void OnKeyDown(KeyEventArgs e)
-            {
-                
-            }
-
-            public override void OnMouseDown(MouseButtonEventArgs e)
-            {
-                
-            }
-
-            public override void OnMouseEnter(MouseEventArgs e)
-            {
-                
-            }
-
-            public override void OnMouseLeave(MouseEventArgs e)
-            {
-                
-            }
+            }            
 
             public override void OnMouseMove(MouseEventArgs e)
             {
@@ -353,26 +361,6 @@ namespace File.Manager.Controls.Files.Renderers.Grid
             {
                 base.OnLeave();
                 renderer.host.RequestMouseRelease();
-            }
-
-            public override void OnKeyDown(KeyEventArgs e)
-            {
-
-            }
-
-            public override void OnMouseDown(MouseButtonEventArgs e)
-            {
-
-            }
-
-            public override void OnMouseEnter(MouseEventArgs e)
-            {
-
-            }
-
-            public override void OnMouseLeave(MouseEventArgs e)
-            {
-
             }
 
             public override void OnMouseMove(MouseEventArgs e)
