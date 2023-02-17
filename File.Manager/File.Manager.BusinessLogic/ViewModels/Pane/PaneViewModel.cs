@@ -195,6 +195,23 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
             handler.RequestSwithPane();
         }
 
+        public List<Item> GetSelectedItems()
+        {
+            var selectedItems = items
+                .Where(i => i.IsSelected)
+                .Select(i => i.Item)
+                .ToList();
+
+            // If user selected no items, choose focused one
+            // as selected
+            if (!selectedItems.Any() && collectionView.CurrentItem != null)
+            {
+                selectedItems.Add(((ItemViewModel)collectionView.CurrentItem).Item);
+            }
+
+            return selectedItems;
+        }
+
         // Public properties --------------------------------------------------
 
         public IEnumerable<ItemViewModel> Items => items;

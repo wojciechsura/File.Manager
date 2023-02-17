@@ -1,4 +1,5 @@
-﻿using File.Manager.BusinessLogic.Services.Icons;
+﻿using File.Manager.API.Types;
+using File.Manager.BusinessLogic.Services.Icons;
 using File.Manager.BusinessLogic.Services.Messaging;
 using File.Manager.BusinessLogic.Services.Modules;
 using File.Manager.BusinessLogic.ViewModels.Base;
@@ -15,8 +16,6 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
 {
     public class MainWindowViewModel : BaseViewModel, IPaneHandler
     {
-
-
         // Private fields -----------------------------------------------------
 
         private readonly IMainWindowAccess access;
@@ -27,6 +26,67 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
         private PaneViewModel activePane;
 
         // Private methods ----------------------------------------------------
+
+        private void DoBufferedCopy(PaneViewModel activePane, PaneViewModel inactivePane)
+        {
+            var items = activePane.GetSelectedItems();
+            if (!items.Any())
+                return;
+
+
+        }
+
+        private void DoCopy()
+        {
+            var activePane = ActivePane;
+            var inactivePane = InactivePane;
+
+            var activeCapabilities = activePane.Navigator.GetLocationCapabilities();
+            var inactiveCapabilities = inactivePane.Navigator.GetLocationCapabilities();
+
+            LocationCapabilities requiredActiveCapabilities = LocationCapabilities.BufferedRead;
+            LocationCapabilities requiredInactiveCapabilities = LocationCapabilities.BufferedWrite | LocationCapabilities.CreateFolder;
+
+            // TODO direct copy
+
+            if ((activeCapabilities & requiredActiveCapabilities) == requiredActiveCapabilities &&
+                (inactiveCapabilities & requiredInactiveCapabilities) == requiredInactiveCapabilities)
+            {
+                DoBufferedCopy(activePane, inactivePane);
+            }
+        }
+
+        private void DoSwitchPanes()
+        {
+            var oldLeftPane = leftPane;
+            var oldRightPane = rightPane;
+
+            LeftPane = null;
+            RightPane = oldLeftPane;
+            LeftPane = oldRightPane;
+
+            access.FocusActivePane();
+        }
+
+        // Private properties -------------------------------------------------
+
+        private PaneViewModel ActivePane
+        {
+            get => activePane;            
+        }
+
+        private PaneViewModel InactivePane
+        {
+            get
+            {
+                if (activePane == leftPane)
+                    return rightPane;
+                else if (activePane == rightPane)
+                    return leftPane;
+                else
+                    return null;
+            }
+        }
 
         // IPaneHandler implementation ----------------------------------------
 
@@ -45,13 +105,6 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
             }
         }
 
-        public void NotifyActivated(PaneViewModel paneViewModel)
-        {
-            activePane = paneViewModel;
-            InactivePane.Active = false;
-            ActivePane.Active = true;
-        }
-
         // Public methods -----------------------------------------------------
 
         public MainWindowViewModel(IMainWindowAccess access, 
@@ -64,7 +117,19 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
             leftPane = new PaneViewModel(this, moduleService, iconService, messagingService);
             rightPane = new PaneViewModel(this, moduleService, iconService, messagingService);
 
+            SwitchPanesCommand = new AppCommand(obj => DoSwitchPanes());
+            CopyCommand = new AppCommand(obj => DoCopy());
+
             activePane = leftPane;
+        }
+
+        public void NotifyActivated(PaneViewModel paneViewModel)
+        {
+            activePane = paneViewModel;
+            if (InactivePane != null)
+                InactivePane.Active = false;
+            if (ActivePane != null)
+                ActivePane.Active = true;
         }
 
         // Public properties --------------------------------------------------
@@ -81,23 +146,8 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
             set => Set(ref rightPane, value);
         }
 
-        public PaneViewModel ActivePane
-        {
-            get => activePane;
-            set => Set(ref activePane, value);
-        }
+        public ICommand SwitchPanesCommand { get; }
 
-        public PaneViewModel InactivePane
-        {
-            get
-            {
-                if (activePane == leftPane)
-                    return rightPane;
-                else if (activePane == rightPane)
-                    return leftPane;
-                else
-                    return null;
-            }
-        }
+        public ICommand CopyCommand { get; }
     }
 }

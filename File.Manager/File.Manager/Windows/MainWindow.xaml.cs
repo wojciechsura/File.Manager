@@ -34,22 +34,21 @@ namespace File.Manager.Windows
     {
         private MainWindowViewModel viewModel;
 
-        private void DoSwitchPanes()
+        void IMainWindowAccess.FocusActivePane()
         {
-            throw new NotImplementedException();
+            if ((pLeft.DataContext as PaneViewModel)?.Active ?? false)
+                pLeft.Focus();
+            else if ((pRight.DataContext as PaneViewModel)?.Active ?? false)
+                pRight.Focus();
         }
 
         public MainWindow()
         {
-            SwitchPanesCommand = new AppCommand(obj => DoSwitchPanes());
-
             InitializeComponent();
 
             viewModel = Dependencies.Container.Instance.Resolve<MainWindowViewModel>(new NamedParameter("access", this));
             DataContext = viewModel;
         }
-
-        public ICommand SwitchPanesCommand { get; }
 
         private void paneGotFocus(object sender, RoutedEventArgs e)
         {

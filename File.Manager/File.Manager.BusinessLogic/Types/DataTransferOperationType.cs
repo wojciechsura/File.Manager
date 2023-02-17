@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace File.Manager.BusinessLogic.ViewModels.Main
+namespace File.Manager.BusinessLogic.Types
 {
-    public interface IMainWindowAccess
+    public enum DataTransferOperationType
     {
-        void FocusActivePane();
+        Copy = 1,
+        Move = 2
     }
 }

@@ -7,6 +7,7 @@
   <ItemGroup>
     <PackageReference Include="Autofac" Version="6.5.0" />
     <PackageReference Include="Gstc.Collections.ObservableLists" Version="2.0.0" />
+    <PackageReference Include="SmartFormat" Version="3.2.0" />
     <PackageReference Include="Spooksoft.VisualStateManager" Version="1.1.0" />
   </ItemGroup>
   <ItemGroup>

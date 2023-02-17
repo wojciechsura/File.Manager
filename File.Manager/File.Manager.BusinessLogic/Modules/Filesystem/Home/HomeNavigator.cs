@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using File.Manager.API.Exceptions.Filesystem;
+using File.Manager.API.Types;
 
 namespace File.Manager.BusinessLogic.Modules.Filesystem.Home
 {
@@ -89,6 +90,11 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Home
                 return items.FirstOrDefault(i => i.Module.Uid == homeData.ModuleUid);
 
             return null;
+        }
+
+        public override LocationCapabilities GetLocationCapabilities()
+        {
+            return (LocationCapabilities)0;
         }
 
         public override string Address => ROOT_ADDRESS;

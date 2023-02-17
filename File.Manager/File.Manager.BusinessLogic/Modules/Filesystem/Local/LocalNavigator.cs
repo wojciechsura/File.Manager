@@ -17,6 +17,7 @@ using System.Windows.Media;
 using System.Diagnostics;
 using File.Manager.API.Tools;
 using File.Manager.API.Exceptions.Filesystem;
+using File.Manager.API.Types;
 
 namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
 {
@@ -262,6 +263,21 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
             }
 
             return null;
+        }
+
+        public override LocationCapabilities GetLocationCapabilities()
+        {
+            if (address == ROOT_ADDRESS)
+            {
+                return (LocationCapabilities)0;
+            }
+            else
+            {
+                return LocationCapabilities.BufferedRead |
+                    LocationCapabilities.BufferedWrite |
+                    LocationCapabilities.CreateFolder |
+                    LocationCapabilities.Delete;
+            }
         }
 
         // Public properties --------------------------------------------------

@@ -32,23 +32,6 @@ namespace File.Manager.Controls
 
         // Private methods ----------------------------------------------------
 
-        private void FocusSelectedItem(ListView listView)
-        {
-            Dispatcher.BeginInvoke(() =>
-            {
-                if (listView.SelectedItem != null)
-                {
-                    var listViewItem = (ListViewItem)listView.ItemContainerGenerator.ContainerFromItem(listView.SelectedItem);
-
-                    if (listViewItem != null && !listViewItem.IsFocused)
-                    {
-                        listViewItem.Focus();
-                        listView.UpdateLayout();
-                    }
-                }
-            }, DispatcherPriority.Render);
-        }
-
         private void HandleDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             if (viewModel != null)
@@ -58,20 +41,6 @@ namespace File.Manager.Controls
 
             if (viewModel != null)
                 viewModel.Access = this;
-        }
-
-        private void HandleListViewGotFocus(object sender, RoutedEventArgs e)
-        {
-            if (e.OriginalSource is not ListViewItem)
-                FocusSelectedItem(sender as ListView);
-        }
-
-        private void HandleListViewItemSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            var listView = sender as ListView;
-
-            FocusSelectedItem(listView);
-            listView.ScrollIntoView(listView.SelectedItem);
         }
 
         private void HandlePanePreviewKeyDown(object sender, KeyEventArgs e)
@@ -105,6 +74,12 @@ namespace File.Manager.Controls
             };
 
             flList.Columns = columns;
+        }
+
+        private void HandlePaneGotFocus(object sender, RoutedEventArgs e)
+        {
+            if (flList.IsFocused)
+                flList.Focus();
         }
     }
 }

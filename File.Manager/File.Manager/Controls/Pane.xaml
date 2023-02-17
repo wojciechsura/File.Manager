@@ -9,7 +9,7 @@
              xmlns:c="clr-namespace:File.Manager.Controls.Files"             
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance Type=vm:PaneViewModel}"
-             d:DesignHeight="450" d:DesignWidth="800" PreviewKeyDown="HandlePanePreviewKeyDown">
+             d:DesignHeight="450" d:DesignWidth="800" PreviewKeyDown="HandlePanePreviewKeyDown" GotFocus="HandlePaneGotFocus">
     <UserControl.Resources>
         <DataTemplate x:Key="NameColumnTemplate" DataType="{x:Type vm:ItemViewModel}">
             <DockPanel>

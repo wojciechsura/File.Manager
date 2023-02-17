@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using File.Manager.API.Types;
 
 namespace File.Manager.API.Filesystem
 {
@@ -40,10 +41,12 @@ namespace File.Manager.API.Filesystem
 
         public abstract void Dispose();
 
+        public abstract LocationCapabilities GetLocationCapabilities();
+
         public void SetHandler(IFilesystemNavigatorHandler handler) 
         {
             if (handler == null)
-                throw new ArgumentNullException("value");
+                throw new ArgumentNullException(nameof(handler));
 
             if (this.handler != null)
                 throw new InvalidOperationException("Handler for navigator may be set only once!");
