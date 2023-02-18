@@ -117,43 +117,16 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="DestinationHeader" xml:space="preserve">
-    <value>Destination</value>
+  <data name="OverwritingOptions_Ask" xml:space="preserve">
+    <value>Ask for decision</value>
   </data>
-  <data name="Groupbox_Configuration_Title" xml:space="preserve">
-    <value>Configuration</value>
+  <data name="OverwritingOptions_Overwrite" xml:space="preserve">
+    <value>Overwrite without asking</value>
   </data>
-  <data name="Groupbox_Summary_Title" xml:space="preserve">
-    <value>Summary</value>
+  <data name="OverwritingOptions_Rename" xml:space="preserve">
+    <value>Rename copied file</value>
   </data>
-  <data name="Label_Destination" xml:space="preserve">
-    <value>Destination</value>
-  </data>
-  <data name="Label_FileMask" xml:space="preserve">
-    <value>File mask</value>
-  </data>
-  <data name="Label_OverwritingOptions" xml:space="preserve">
-    <value>Overwriting options</value>
-  </data>
-  <data name="Label_Source" xml:space="preserve">
-    <value>Source</value>
-  </data>
-  <data name="SourceHeader" xml:space="preserve">
-    <value>Source</value>
-  </data>
-  <data name="SummaryHeader_Copy" xml:space="preserve">
-    <value>{0:plural(en):Item|Items} to copy</value>
-  </data>
-  <data name="SummaryHeader_Move" xml:space="preserve">
-    <value>{0:plural(en):Item|Items} to move</value>
-  </data>
-  <data name="SummaryValue_Plural" xml:space="preserve">
-    <value>Selected {0:plural(en):{} item |{} items}</value>
-  </data>
-  <data name="Title_Copy" xml:space="preserve">
-    <value>Copy</value>
-  </data>
-  <data name="Title_Move" xml:space="preserve">
-    <value>Move</value>
+  <data name="OverwritingOptions_Skip" xml:space="preserve">
+    <value>Skip</value>
   </data>
 </root>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using File.Manager.BusinessLogic.Models.Dialogs.CopyMoveConfiguration;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,5 +12,6 @@ namespace File.Manager.BusinessLogic.Services.Dialogs
         void ShowExceptionDialog(Exception e);
         (bool result, string path) ShowOpenDialog(string filter = null, string title = null, string filename = null);
         (bool result, string path) ShowSaveDialog(string filter = null, string title = null, string filename = null);
+        (bool result, CopyMoveConfigurationResultModel model) ShowCopyMoveConfigurationDialog(CopyMoveConfigurationInputModel input);
     }
 }

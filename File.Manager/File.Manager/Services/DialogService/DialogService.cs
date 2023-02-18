@@ -1,5 +1,7 @@
-﻿using File.Manager.BusinessLogic.Services.Dialogs;
+﻿using File.Manager.BusinessLogic.Models.Dialogs.CopyMoveConfiguration;
+using File.Manager.BusinessLogic.Services.Dialogs;
 using File.Manager.Resources;
+using File.Manager.Windows;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -59,6 +61,15 @@ namespace File.Manager.Services.DialogService
         {
             var dialog = new ExceptionWindow(e);
             dialog.ShowDialog();
+        }
+
+        public (bool result, CopyMoveConfigurationResultModel model) ShowCopyMoveConfigurationDialog(CopyMoveConfigurationInputModel input)
+        {
+            var dialog = new CopyMoveConfigurationWindow(input);
+            if (dialog.ShowDialog() == true)
+                return (true, dialog.Result);
+            else
+                return (false, null);
         }
     }
 }

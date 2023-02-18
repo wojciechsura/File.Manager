@@ -7,12 +7,18 @@
         xmlns:res="clr-namespace:File.Manager.Resources.Windows.CopyMoveConfigurationWindow;assembly=File.Manager.Resources" 
         xmlns:sc="clr-namespace:Spooksoft.Wpf.Controls.Panels;assembly=Spooksoft.Wpf.Controls" 
         xmlns:vm="clr-namespace:File.Manager.BusinessLogic.ViewModels.CopyMoveConfiguration;assembly=File.Manager.BusinessLogic" 
+        xmlns:m="clr-namespace:File.Manager.Markup"
+        xmlns:t="clr-namespace:File.Manager.BusinessLogic.Types;assembly=File.Manager.BusinessLogic"
         d:DataContext="{d:DesignInstance Type=vm:CopyMoveConfigurationWindowViewModel}"
         mc:Ignorable="d"
-        Title="{Binding Title}" SizeToContent="WidthAndHeight" MinWidth="300">
+        Title="{Binding Title}" SizeToContent="WidthAndHeight" MinWidth="500">
     <Window.Resources>
-        <Style x:Key="HeaderLabel" TargetType="Label">
+        <Style x:Key="FirstHeaderLabel" TargetType="Label">
             <Setter Property="Margin" Value="{StaticResource DialogItemsMargin}" />
+        </Style>
+
+        <Style x:Key="NextHeaderLabel" TargetType="Label">
+            <Setter Property="Margin" Value="{StaticResource DialogItemsExceptTopMargin}" />
         </Style>
 
         <Style x:Key="ValueLabel" TargetType="Label">
@@ -23,14 +29,27 @@
     <StackPanel Orientation="Vertical">
         <GroupBox Header="{x:Static res:Strings.Groupbox_Summary_Title}" Margin="{StaticResource DialogItemsMargin}">
             <sc:EditorPanel>
-                <Label Style="{StaticResource HeaderLabel}" Content="{Binding SummaryHeader}" />
-                <Label Style="{StaticResource ValueLabel}" Content="{Binding SummaryValue}" />
+                <Label Style="{StaticResource FirstHeaderLabel}" Content="{Binding SummaryHeader}" />
+                <Label Style="{StaticResource ValueLabel}" Content="{Binding SummaryValue}" MaxWidth="450" />
 
-                <Label Style="{StaticResource HeaderLabel}" Content="{Binding SourceHeader}" />
-                <Label Style="{StaticResource ValueLabel}" />
+                <Label Style="{StaticResource NextHeaderLabel}" Content="{x:Static res:Strings.Label_Source}" />
+                <Label Style="{StaticResource ValueLabel}" Content="{Binding SourceAddress}" MaxWidth="450" />
 
-                <Label Style="{StaticResource HeaderLabel}" Content="{Binding DestinationHeader}" />
-                <Label Style="{StaticResource ValueLabel}" />
+                <Label Style="{StaticResource NextHeaderLabel}" Content="{x:Static res:Strings.Label_Destination}" />
+                <Label Style="{StaticResource ValueLabel}" Content="{Binding DestinationAddress}" MaxWidth="450" />
+            </sc:EditorPanel>
+        </GroupBox>
+
+        <GroupBox Header="{x:Static res:Strings.Groupbox_Configuration_Title}" Margin="{StaticResource DialogItemsExceptTopMargin}">
+            <sc:EditorPanel>
+                <Label Style="{StaticResource FirstHeaderLabel}" Content="{x:Static res:Strings.Label_FileMask}" />
+                <TextBox Width="200" Text="{Binding FileMask, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                         VerticalAlignment="Center" HorizontalAlignment="Left"/>
+
+                <Label Style="{StaticResource NextHeaderLabel}" Content="{x:Static res:Strings.Label_OverwritingOptions}" />
+                <ComboBox Width="200" ItemsSource="{Binding Source={m:EnumBindingSource EnumType={x:Type t:OverwritingOptions}}}"
+                          SelectedItem="{Binding OverwritingOptions, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                          VerticalAlignment="Center" HorizontalAlignment="Left"/>
             </sc:EditorPanel>
         </GroupBox>
     </StackPanel>

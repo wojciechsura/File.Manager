@@ -1,4 +1,6 @@
 ﻿using File.Manager.API.Types;
+using File.Manager.BusinessLogic.Models.Dialogs.CopyMoveConfiguration;
+using File.Manager.BusinessLogic.Services.Dialogs;
 using File.Manager.BusinessLogic.Services.Icons;
 using File.Manager.BusinessLogic.Services.Messaging;
 using File.Manager.BusinessLogic.Services.Modules;
@@ -19,6 +21,8 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
         // Private fields -----------------------------------------------------
 
         private readonly IMainWindowAccess access;
+        private readonly IDialogService dialogService;
+        private readonly IMessagingService messagingService;
 
         private PaneViewModel leftPane;
         private PaneViewModel rightPane;
@@ -33,7 +37,13 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
             if (!items.Any())
                 return;
 
-
+            var input = new CopyMoveConfigurationInputModel(Types.DataTransferOperationType.Copy,
+                activePane.Navigator.Address,
+                inactivePane.Navigator.Address,
+                items);
+            (bool result, CopyMoveConfigurationResultModel model) = dialogService.ShowCopyMoveConfigurationDialog(input);
+            if (!result)
+                return;
         }
 
         private void DoCopy()
@@ -110,9 +120,12 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
         public MainWindowViewModel(IMainWindowAccess access, 
             IModuleService moduleService, 
             IIconService iconService,
-            IMessagingService messagingService)
+            IMessagingService messagingService,
+            IDialogService dialogService)
         {
             this.access = access;
+            this.dialogService = dialogService;
+            this.messagingService = messagingService;
 
             leftPane = new PaneViewModel(this, moduleService, iconService, messagingService);
             rightPane = new PaneViewModel(this, moduleService, iconService, messagingService);

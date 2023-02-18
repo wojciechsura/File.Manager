@@ -1,4 +1,8 @@
-﻿using System;
+﻿using Autofac;
+using Autofac.Core;
+using File.Manager.BusinessLogic.Models.Dialogs.CopyMoveConfiguration;
+using File.Manager.BusinessLogic.ViewModels.CopyMoveConfiguration;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,11 +21,27 @@ namespace File.Manager.Windows
     /// <summary>
     /// Interaction logic for CopyMoveConfigurationWindow.xaml
     /// </summary>
-    public partial class CopyMoveConfigurationWindow : Window
+    public partial class CopyMoveConfigurationWindow : Window, ICopyMoveCOnfigurationWindowAccess
     {
-        public CopyMoveConfigurationWindow()
+        private readonly CopyMoveConfigurationWindowViewModel viewModel;
+
+        public CopyMoveConfigurationWindow(CopyMoveConfigurationInputModel input)
         {
             InitializeComponent();
+
+            var viewModel = Dependencies.Container.Instance.Resolve<CopyMoveConfigurationWindowViewModel>(new NamedParameter("input", input),
+                new NamedParameter("access", this));
+
+            this.viewModel = viewModel;
+            DataContext = viewModel;
         }
+
+        public void Close(bool result)
+        {
+            DialogResult = result;
+            Close();
+        }
+
+        public CopyMoveConfigurationResultModel Result => viewModel.Result;
     }
 }
