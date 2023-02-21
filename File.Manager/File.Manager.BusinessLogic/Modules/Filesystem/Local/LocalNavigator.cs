@@ -18,6 +18,7 @@ using System.Diagnostics;
 using File.Manager.API.Tools;
 using File.Manager.API.Exceptions.Filesystem;
 using File.Manager.API.Types;
+using File.Manager.API.Filesystem.Models.Plan;
 
 namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
 {
@@ -278,6 +279,14 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
                     LocationCapabilities.CreateFolder |
                     LocationCapabilities.Delete;
             }
+        }
+
+        public override IFilesystemOperator CreateOperatorForCurrentLocation()
+        {
+            if (address == ROOT_ADDRESS)
+                throw new InvalidOperationException("Cannot create operator for the root folder");
+            
+            return new LocalOperator(address);
         }
 
         // Public properties --------------------------------------------------

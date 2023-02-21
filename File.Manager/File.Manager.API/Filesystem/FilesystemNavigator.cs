@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using File.Manager.API.Types;
+using File.Manager.API.Filesystem.Models.Plan;
 
 namespace File.Manager.API.Filesystem
 {
@@ -42,6 +43,8 @@ namespace File.Manager.API.Filesystem
         public abstract void Dispose();
 
         public abstract LocationCapabilities GetLocationCapabilities();
+
+        public abstract IFilesystemOperator CreateOperatorForCurrentLocation();
 
         public void SetHandler(IFilesystemNavigatorHandler handler) 
         {

@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace File.Manager.BusinessLogic.Types
 {
     [TypeConverter(typeof(EnumDescriptionTypeConverter))]
-    public enum OverwritingOptions
+    public enum GenericProblemResolution
     {
         [LocalizedDescription(nameof(Strings.OverwritingOptions_Ask), typeof(Strings))]
         Ask,
@@ -20,6 +20,8 @@ namespace File.Manager.BusinessLogic.Types
         [LocalizedDescription(nameof(Strings.OverwritingOptions_Skip), typeof(Strings))]
         Skip,
         [LocalizedDescription(nameof(Strings.OverwritingOptions_Rename), typeof(Strings))]
-        Rename
+        Rename,
+        [LocalizedDescription(nameof(Strings.OverwritingOptions_Abort), typeof(Strings))]
+        Abort
     }
 }

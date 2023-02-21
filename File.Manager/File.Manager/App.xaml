@@ -1,7 +1,7 @@
 ﻿<Application x:Class="File.Manager.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:File.Manager" 
+             xmlns:local="clr-namespace:File.Manager" xmlns:conv="clr-namespace:File.Manager.Common.Wpf.Converters;assembly=File.Manager.Common.Wpf"
              StartupUri="Windows\MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
@@ -10,6 +10,8 @@
                 <ResourceDictionary Source="Theme\Win11Theme.xaml" />
                 <ResourceDictionary Source="Theme\Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
+            <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

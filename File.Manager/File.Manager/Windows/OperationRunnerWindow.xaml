@@ -1,0 +1,89 @@
+﻿<Window x:Class="File.Manager.Windows.OperationRunnerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:File.Manager.Windows" 
+        xmlns:vm="clr-namespace:File.Manager.BusinessLogic.ViewModels.Operations;assembly=File.Manager.BusinessLogic" 
+        xmlns:p="clr-namespace:Spooksoft.Wpf.Controls.Panels;assembly=Spooksoft.Wpf.Controls"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        xmlns:cres="clr-namespace:File.Manager.Resources.Common;assembly=File.Manager.Resources"
+        d:DataContext="{d:DesignInstance Type=vm:OperationRunnerViewModel}"
+        mc:Ignorable="d"
+        Title="{Binding Operation.Title}" SizeToContent="Height" Width="500"
+        Loaded="HandleWindowLoaded">
+    <StackPanel Orientation="Vertical" Margin="{StaticResource DialogWindowPadding}">
+
+        <Label HorizontalAlignment="Center" Margin="{StaticResource DialogItemsMargin}" Content="{Binding Operation.Title}" />
+
+        <ContentControl Content="{Binding Operation.Description}">
+            <ContentControl.Resources>
+
+                <DataTemplate DataType="{x:Type vm:CopyMoveDescriptionViewModel}">
+                    <p:EditorPanel>
+                        <Label Style="{StaticResource FirstHeaderLabel}" Content="#From" />
+                        <Label Style="{StaticResource FirstValueLabel}" Content="{Binding FromAddress}" />
+
+                        <Label Style="{StaticResource NextHeaderLabel}" Content="#To" />
+                        <Label Style="{StaticResource NextValueLabel}" Content="{Binding ToAddress}" />
+
+                        <Label Style="{StaticResource NextHeaderLabel}" Content="#State" />
+                        <Label Style="{StaticResource NextValueLabel}" Content="{Binding State}" />
+                    </p:EditorPanel>
+                </DataTemplate>
+
+                <DataTemplate DataType="{x:Type sys:String}">
+                    <Label Margin="{StaticResource DialogItemsMargin}" Content="{Binding}" />
+                </DataTemplate>
+                
+            </ContentControl.Resources>
+        </ContentControl>
+        
+        <!-- Overall progress bar -->
+
+        <StackPanel Orientation="Vertical">
+
+            <DockPanel Margin="{StaticResource DialogItemsExceptTopMargin}" 
+                       Visibility="{Binding Operation.OverallProgressVisible, Converter={StaticResource BoolToVisibilityConverter}}"
+                       HorizontalAlignment="Stretch">
+                <Label DockPanel.Dock="Top" Margin="{StaticResource DialogItemsMargin}" Content="{Binding Operation.OverallProgressDescription}" />
+
+                <Label DockPanel.Dock="Right" Width="100" HorizontalContentAlignment="Center">
+                    <TextBlock>
+                        <TextBlock.Inlines>
+                            <Run Text="{Binding Operation.OverallProgress, Mode=OneWay}" />
+                            <Run Text="%" />
+                        </TextBlock.Inlines>
+                    </TextBlock>
+                </Label>
+
+                <ProgressBar Value="{Binding Operation.OverallProgress}" />
+            </DockPanel>
+
+            <DockPanel Margin="{StaticResource DialogItemsExceptTopMargin}" 
+                       Visibility="{Binding Operation.DetailedProgressVisible, Converter={StaticResource BoolToVisibilityConverter}}"
+                       HorizontalAlignment="Stretch">
+
+                <Label DockPanel.Dock="Top" Margin="{StaticResource DialogItemsMargin}" Content="{Binding Operation.DetailedProgressDescription}" />
+
+                <Label DockPanel.Dock="Right" Width="100" HorizontalContentAlignment="Center">
+                    <TextBlock>
+                        <TextBlock.Inlines>
+                            <Run Text="{Binding Operation.DetailedProgress, Mode=OneWay}" />
+                            <Run Text="%" />
+                        </TextBlock.Inlines>
+                    </TextBlock>
+                </Label>
+
+                <ProgressBar Value="{Binding Operation.DetailedProgress}" />
+            </DockPanel>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Style="{StaticResource DialogButton}" Content="{x:Static cres:Strings.Cancel}" />
+            </StackPanel>
+            
+        </StackPanel>
+        
+    </StackPanel>
+    
+</Window>

@@ -7,15 +7,15 @@ using System.Threading.Tasks;
 
 namespace File.Manager.BusinessLogic.Models.Dialogs.CopyMoveConfiguration
 {
-    public class CopyMoveConfigurationResultModel
+    public class CopyMoveConfigurationModel
     {
-        public CopyMoveConfigurationResultModel(string fileMask, OverwritingOptions overwritingOptions)
+        public CopyMoveConfigurationModel(string fileMask, GenericProblemResolution overwritingOptions)
         {
             FileMask = fileMask;
-            OverwritingOptions = overwritingOptions;
+            OverwritingResolution = overwritingOptions;
         }
 
         public string FileMask { get; }
-        public OverwritingOptions OverwritingOptions { get; }
+        public GenericProblemResolution OverwritingResolution { get; }
     }
 }

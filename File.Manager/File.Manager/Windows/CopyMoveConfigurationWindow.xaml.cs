@@ -42,6 +42,6 @@ namespace File.Manager.Windows
             Close();
         }
 
-        public CopyMoveConfigurationResultModel Result => viewModel.Result;
+        public CopyMoveConfigurationModel Result => viewModel.Result;
     }
 }

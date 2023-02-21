@@ -10,7 +10,7 @@ namespace File.Manager.BusinessLogic.Models.Dialogs.CopyMoveConfiguration
 {
     public class CopyMoveConfigurationInputModel
     {
-        public CopyMoveConfigurationInputModel(DataTransferOperationType operationType, string sourceAddress, string destinationAddress, List<Item> selectedItems)
+        public CopyMoveConfigurationInputModel(DataTransferOperationType operationType, string sourceAddress, string destinationAddress, IReadOnlyList<Item> selectedItems)
         {
             OperationType = operationType;
             SourceAddress = sourceAddress;
@@ -21,6 +21,6 @@ namespace File.Manager.BusinessLogic.Models.Dialogs.CopyMoveConfiguration
         public DataTransferOperationType OperationType { get; }
         public string SourceAddress { get; }
         public string DestinationAddress { get; } 
-        public List<Item> SelectedItems { get; }
+        public IReadOnlyList<Item> SelectedItems { get; }
     }
 }

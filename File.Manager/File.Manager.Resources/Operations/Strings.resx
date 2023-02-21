@@ -117,19 +117,43 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Cancel" xml:space="preserve">
-    <value>Cancel</value>
+  <data name="CopyMove_Critical_CannotExitDestinationFolder" xml:space="preserve">
+    <value>Failed to return to parent folder from location {0}.</value>
   </data>
-  <data name="DefaultDialogTitle" xml:space="preserve">
-    <value>File.Manager</value>
+  <data name="CopyMove_Critical_CannotExitSourceFolder" xml:space="preserve">
+    <value>Failed to return to parent folder from location {0}.</value>
   </data>
-  <data name="DefaultFilter" xml:space="preserve">
-    <value>All files (*.*)|*.*</value>
+  <data name="CopyMove_Question_CannotOpenDestinationFile" xml:space="preserve">
+    <value>Cannot open destination file {2} in location {0}.</value>
   </data>
-  <data name="DefaultMessageboxTitle" xml:space="preserve">
-    <value>File.Manager</value>
+  <data name="CopyMove_Question_CannotOpenSourceFile" xml:space="preserve">
+    <value>Cannot open source file {2} in location {0}.</value>
   </data>
-  <data name="Ok" xml:space="preserve">
-    <value>Ok</value>
+  <data name="CopyMove_Question_DestinationFileAlreadyExists" xml:space="preserve">
+    <value>Destination file {2} already exists in location {1}.</value>
+  </data>
+  <data name="CopyMove_Question_DestinationFileIsReadOnly" xml:space="preserve">
+    <value>Destination file {2} is read only.</value>
+  </data>
+  <data name="CopyMove_Question_DestinationFileIsSystem" xml:space="preserve">
+    <value>Destination file {2} is a system file.</value>
+  </data>
+  <data name="CopyMove_Question_FailedToChangeFileAttributes" xml:space="preserve">
+    <value>Failed to change attributes of the destination file {2}.</value>
+  </data>
+  <data name="CopyMove_Question_FailedToCopyFile" xml:space="preserve">
+    <value>Failed to copy file {0} from {1} to {2}.</value>
+  </data>
+  <data name="CopyMove_Question_FailedToCreateDestinationFolder" xml:space="preserve">
+    <value>Failed to create folder {2} in location {1}.</value>
+  </data>
+  <data name="CopyMove_Question_FailedToEnterDestinationFolder" xml:space="preserve">
+    <value>Failed to open folder {2} in location {1}.</value>
+  </data>
+  <data name="CopyMove_Question_FailedToEnterSourceFolder" xml:space="preserve">
+    <value>Failed to open folde {2} in location {0}.</value>
+  </data>
+  <data name="CopyMove_Question_SourceFileDoesNotExist" xml:space="preserve">
+    <value>Source file {2} does not exist in location {0}.</value>
   </data>
 </root>

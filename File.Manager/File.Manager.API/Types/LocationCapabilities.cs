@@ -22,6 +22,8 @@ namespace File.Manager.API.Types
         /// <summary>Supports creating folders in the current location</summary>
         CreateFolder = 16,
         /// <summary>Supports deleting files and folders in the current location</summary>
-        Delete = 32
+        Delete = 32,
+        /// <summary>Supports planning copy/move/delete operations before processing</summary>        
+        Plan = 64
     }
 }

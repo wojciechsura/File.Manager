@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace File.Manager.Resources.Enums {
+namespace File.Manager.Resources.Windows.UserDecision {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace File.Manager.Resources.Enums {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("File.Manager.Resources.Enums.Strings", typeof(Strings).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("File.Manager.Resources.Windows.UserDecision.Strings", typeof(Strings).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,47 +61,11 @@ namespace File.Manager.Resources.Enums {
         }
         
         /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Abort.
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Choose problem resolution.
         /// </summary>
-        public static string OverwritingOptions_Abort {
+        public static string Title {
             get {
-                return ResourceManager.GetString("OverwritingOptions_Abort", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Ask for decision.
-        /// </summary>
-        public static string OverwritingOptions_Ask {
-            get {
-                return ResourceManager.GetString("OverwritingOptions_Ask", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Overwrite without asking.
-        /// </summary>
-        public static string OverwritingOptions_Overwrite {
-            get {
-                return ResourceManager.GetString("OverwritingOptions_Overwrite", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Rename copied file.
-        /// </summary>
-        public static string OverwritingOptions_Rename {
-            get {
-                return ResourceManager.GetString("OverwritingOptions_Rename", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Skip.
-        /// </summary>
-        public static string OverwritingOptions_Skip {
-            get {
-                return ResourceManager.GetString("OverwritingOptions_Skip", resourceCulture);
+                return ResourceManager.GetString("Title", resourceCulture);
             }
         }
     }

@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using File.Manager.API.Exceptions.Filesystem;
 using File.Manager.API.Types;
+using File.Manager.API.Filesystem.Models.Plan;
 
 namespace File.Manager.BusinessLogic.Modules.Filesystem.Home
 {
@@ -33,7 +34,7 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Home
             public FilesystemModule Module { get; }
         }
 
-        public HomeNavigator(IModuleService moduleService)            
+        public HomeNavigator(IModuleService moduleService)
         {
             this.moduleService = moduleService;
             items = new();
@@ -96,6 +97,9 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Home
         {
             return (LocationCapabilities)0;
         }
+
+        public override IFilesystemOperator CreateOperatorForCurrentLocation()
+            => throw new NotSupportedException("Creating operator for home module is not supported.");
 
         public override string Address => ROOT_ADDRESS;
 

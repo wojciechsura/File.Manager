@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:File.Manager.Windows"
         xmlns:res="clr-namespace:File.Manager.Resources.Windows.CopyMoveConfigurationWindow;assembly=File.Manager.Resources" 
+        xmlns:cres="clr-namespace:File.Manager.Resources.Common;assembly=File.Manager.Resources" 
         xmlns:sc="clr-namespace:Spooksoft.Wpf.Controls.Panels;assembly=Spooksoft.Wpf.Controls" 
         xmlns:vm="clr-namespace:File.Manager.BusinessLogic.ViewModels.CopyMoveConfiguration;assembly=File.Manager.BusinessLogic" 
         xmlns:m="clr-namespace:File.Manager.Markup"
@@ -12,31 +13,17 @@
         d:DataContext="{d:DesignInstance Type=vm:CopyMoveConfigurationWindowViewModel}"
         mc:Ignorable="d"
         Title="{Binding Title}" SizeToContent="WidthAndHeight" MinWidth="500">
-    <Window.Resources>
-        <Style x:Key="FirstHeaderLabel" TargetType="Label">
-            <Setter Property="Margin" Value="{StaticResource DialogItemsMargin}" />
-        </Style>
-
-        <Style x:Key="NextHeaderLabel" TargetType="Label">
-            <Setter Property="Margin" Value="{StaticResource DialogItemsExceptTopMargin}" />
-        </Style>
-
-        <Style x:Key="ValueLabel" TargetType="Label">
-            <Setter Property="Margin" Value="{StaticResource DialogItemsExceptLeftMargin}" />
-            <Setter Property="FontWeight" Value="Bold" />
-        </Style>
-    </Window.Resources>
     <StackPanel Orientation="Vertical">
         <GroupBox Header="{x:Static res:Strings.Groupbox_Summary_Title}" Margin="{StaticResource DialogItemsMargin}">
             <sc:EditorPanel>
                 <Label Style="{StaticResource FirstHeaderLabel}" Content="{Binding SummaryHeader}" />
-                <Label Style="{StaticResource ValueLabel}" Content="{Binding SummaryValue}" MaxWidth="450" />
+                <Label Style="{StaticResource FirstValueLabel}" Content="{Binding SummaryValue}" MaxWidth="450" />
 
                 <Label Style="{StaticResource NextHeaderLabel}" Content="{x:Static res:Strings.Label_Source}" />
-                <Label Style="{StaticResource ValueLabel}" Content="{Binding SourceAddress}" MaxWidth="450" />
+                <Label Style="{StaticResource NextValueLabel}" Content="{Binding SourceAddress}" MaxWidth="450" />
 
                 <Label Style="{StaticResource NextHeaderLabel}" Content="{x:Static res:Strings.Label_Destination}" />
-                <Label Style="{StaticResource ValueLabel}" Content="{Binding DestinationAddress}" MaxWidth="450" />
+                <Label Style="{StaticResource NextValueLabel}" Content="{Binding DestinationAddress}" MaxWidth="450" />
             </sc:EditorPanel>
         </GroupBox>
 
@@ -52,5 +39,10 @@
                           VerticalAlignment="Center" HorizontalAlignment="Left"/>
             </sc:EditorPanel>
         </GroupBox>
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Style="{StaticResource DialogButton}" Command="{Binding OkCommand}" Content="{x:Static cres:Strings.Ok}" />
+            <Button Style="{StaticResource DialogButton}" Command="{Binding CancelCommand}" Content="{x:Static cres:Strings.Cancel}" />
+        </StackPanel>
     </StackPanel>
 </Window>

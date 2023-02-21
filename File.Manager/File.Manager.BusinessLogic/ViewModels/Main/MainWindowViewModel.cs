@@ -1,11 +1,16 @@
-﻿using File.Manager.API.Types;
+﻿using File.Manager.API.Filesystem.Models.Items;
+using File.Manager.API.Types;
 using File.Manager.BusinessLogic.Models.Dialogs.CopyMoveConfiguration;
 using File.Manager.BusinessLogic.Services.Dialogs;
 using File.Manager.BusinessLogic.Services.Icons;
 using File.Manager.BusinessLogic.Services.Messaging;
 using File.Manager.BusinessLogic.Services.Modules;
+using File.Manager.BusinessLogic.Types;
 using File.Manager.BusinessLogic.ViewModels.Base;
+using File.Manager.BusinessLogic.ViewModels.Operations;
+using File.Manager.BusinessLogic.ViewModels.Operations.CopyMove;
 using File.Manager.BusinessLogic.ViewModels.Pane;
+using File.Manager.Common.Helpers;
 using Spooksoft.VisualStateManager.Commands;
 using System;
 using System.Collections.Generic;
@@ -31,19 +36,50 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
 
         // Private methods ----------------------------------------------------
 
-        private void DoBufferedCopy(PaneViewModel activePane, PaneViewModel inactivePane)
+        private (bool result, CopyMoveConfigurationModel model) ShowCopyMoveDialog(DataTransferOperationType operationType, 
+            IReadOnlyList<Item> items, 
+            string fromAddress, 
+            string toAddress)
+        {
+            if (!items.Any())
+                return (false, null);
+
+            var input = new CopyMoveConfigurationInputModel(operationType, fromAddress, toAddress, items);
+
+            return dialogService.ShowCopyMoveConfigurationDialog(input);            
+        }
+
+        private void DoBufferedCopy(PaneViewModel activePane, PaneViewModel inactivePane, bool withPlan)
         {
             var items = activePane.GetSelectedItems();
-            if (!items.Any())
-                return;
 
-            var input = new CopyMoveConfigurationInputModel(Types.DataTransferOperationType.Copy,
+            (bool result, CopyMoveConfigurationModel model) = ShowCopyMoveDialog(
+                DataTransferOperationType.Copy,
+                items,
                 activePane.Navigator.Address,
-                inactivePane.Navigator.Address,
-                items);
-            (bool result, CopyMoveConfigurationResultModel model) = dialogService.ShowCopyMoveConfigurationDialog(input);
+                inactivePane.Navigator.Address);
+
             if (!result)
                 return;
+
+            BaseOperationViewModel operation;
+
+            if (withPlan)
+            {
+                operation = new BufferedCopyMoveWithPlanOperationViewModel(DataTransferOperationType.Copy,
+                    activePane.Navigator.CreateOperatorForCurrentLocation(),
+                    inactivePane.Navigator.CreateOperatorForCurrentLocation(),
+                    items);
+            }
+            else
+            {
+                operation = new BufferedCopyMoveOperationViewModel(DataTransferOperationType.Copy,
+                    activePane.Navigator,
+                    inactivePane.Navigator,
+                    items);
+            }
+
+            dialogService.ShowOperation(operation);
         }
 
         private void DoCopy()
@@ -54,16 +90,13 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
             var activeCapabilities = activePane.Navigator.GetLocationCapabilities();
             var inactiveCapabilities = inactivePane.Navigator.GetLocationCapabilities();
 
-            LocationCapabilities requiredActiveCapabilities = LocationCapabilities.BufferedRead;
-            LocationCapabilities requiredInactiveCapabilities = LocationCapabilities.BufferedWrite | LocationCapabilities.CreateFolder;
-
-            // TODO direct copy
-
-            if ((activeCapabilities & requiredActiveCapabilities) == requiredActiveCapabilities &&
-                (inactiveCapabilities & requiredInactiveCapabilities) == requiredInactiveCapabilities)
+            if (activeCapabilities.HasFlag(LocationCapabilities.BufferedRead) &&
+                inactiveCapabilities.HasFlag(LocationCapabilities.BufferedWrite | LocationCapabilities.CreateFolder))
             {
-                DoBufferedCopy(activePane, inactivePane);
+                DoBufferedCopy(activePane, inactivePane, activeCapabilities.HasFlag(LocationCapabilities.Plan));
             }
+
+            // TODO direct
         }
 
         private void DoSwitchPanes()

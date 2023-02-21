@@ -24,14 +24,14 @@ namespace File.Manager.BusinessLogic.ViewModels.CopyMoveConfiguration
         private DataTransferOperationType operationType;
         private IReadOnlyList<Item> selectedItems;
 
-        private OverwritingOptions overwritingOptions;
+        private GenericProblemResolution overwritingOptions;
         private string fileMask;
 
         // Private methods ----------------------------------------------------
 
         private void DoOk()
         {
-            Result = new CopyMoveConfigurationResultModel(FileMask, OverwritingOptions);
+            Result = new CopyMoveConfigurationModel(FileMask, OverwritingOptions);
             access.Close(true);
         }
 
@@ -83,7 +83,7 @@ namespace File.Manager.BusinessLogic.ViewModels.CopyMoveConfiguration
 
         public string DestinationAddress { get; }
 
-        public OverwritingOptions OverwritingOptions
+        public GenericProblemResolution OverwritingOptions
         {
             get => overwritingOptions;
             set => Set(ref overwritingOptions, value);
@@ -99,6 +99,6 @@ namespace File.Manager.BusinessLogic.ViewModels.CopyMoveConfiguration
 
         public ICommand CancelCommand { get; }
 
-        public CopyMoveConfigurationResultModel Result { get; private set; }
+        public CopyMoveConfigurationModel Result { get; private set; }
     }
 }

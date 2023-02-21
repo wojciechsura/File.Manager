@@ -19,7 +19,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "File.Manager.API", "File.Ma
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "File.Manager.OsInterop", "File.Manager\File.Manager.OsInterop\File.Manager.OsInterop.csproj", "{070F284B-58D6-4DB8-A96F-F608A6CEFC42}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "File.Manager.Geometry", "File.Manager.Geometry\File.Manager.Geometry.csproj", "{6AAADBFC-AD62-4E93-8B6D-09C196D123E9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "File.Manager.Geometry", "File.Manager.Geometry\File.Manager.Geometry.csproj", "{6AAADBFC-AD62-4E93-8B6D-09C196D123E9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9666419A-6863-4373-8D01-8C14E03F0C8C}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

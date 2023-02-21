@@ -1,5 +1,7 @@
 ﻿using File.Manager.BusinessLogic.Models.Dialogs.CopyMoveConfiguration;
 using File.Manager.BusinessLogic.Services.Dialogs;
+using File.Manager.BusinessLogic.Types;
+using File.Manager.BusinessLogic.ViewModels.Operations;
 using File.Manager.Resources;
 using File.Manager.Windows;
 using Microsoft.Win32;
@@ -63,13 +65,28 @@ namespace File.Manager.Services.DialogService
             dialog.ShowDialog();
         }
 
-        public (bool result, CopyMoveConfigurationResultModel model) ShowCopyMoveConfigurationDialog(CopyMoveConfigurationInputModel input)
+        public (bool result, CopyMoveConfigurationModel model) ShowCopyMoveConfigurationDialog(CopyMoveConfigurationInputModel input)
         {
             var dialog = new CopyMoveConfigurationWindow(input);
             if (dialog.ShowDialog() == true)
                 return (true, dialog.Result);
             else
                 return (false, null);
+        }
+
+        public void ShowOperation(BaseOperationViewModel operation)
+        {
+            var dialog = new OperationRunnerWindow(operation);
+            dialog.ShowDialog();
+        }
+
+        public (bool result, SingleProblemResolution resolution) ShowUserDecisionDialog(SingleProblemResolution[] availableResolutions, string header)
+        {
+            var dialog = new UserDecisionDialog(availableResolutions, header);
+            if (dialog.ShowDialog() == true)
+                return (true, dialog.Result);
+            else
+                return (false, (SingleProblemResolution)0);
         }
     }
 }

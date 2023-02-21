@@ -117,19 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Cancel" xml:space="preserve">
-    <value>Cancel</value>
-  </data>
-  <data name="DefaultDialogTitle" xml:space="preserve">
-    <value>File.Manager</value>
-  </data>
-  <data name="DefaultFilter" xml:space="preserve">
-    <value>All files (*.*)|*.*</value>
-  </data>
-  <data name="DefaultMessageboxTitle" xml:space="preserve">
-    <value>File.Manager</value>
-  </data>
-  <data name="Ok" xml:space="preserve">
-    <value>Ok</value>
+  <data name="Title" xml:space="preserve">
+    <value>Choose problem resolution</value>
   </data>
 </root>
