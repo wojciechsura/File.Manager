@@ -153,6 +153,9 @@
   <data name="CopyMove_Question_FailedToEnterSourceFolder" xml:space="preserve">
     <value>Failed to open folde {2} in location {0}.</value>
   </data>
+  <data name="CopyMove_Question_FailedToRemoveSourceFile" xml:space="preserve">
+    <value>Failed to delete source file {0} from location {1}.</value>
+  </data>
   <data name="CopyMove_Question_SourceFileDoesNotExist" xml:space="preserve">
     <value>Source file {2} does not exist in location {0}.</value>
   </data>

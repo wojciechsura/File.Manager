@@ -143,7 +143,10 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
                 FailedToChangeFileAttributes,
                 [LocalizedDescription(nameof(Strings.CopyMove_Question_FailedToCopyFile), typeof(Strings))]
                 [AvailableResolutions(SingleProblemResolution.Skip, SingleProblemResolution.SkipAll, SingleProblemResolution.Abort)]
-                FailedToCopyFile
+                FailedToCopyFile,
+                [LocalizedDescription(nameof(Strings.CopyMove_Question_FailedToRemoveSourceFile), typeof(Strings))]
+                [AvailableResolutions(SingleProblemResolution.Skip, SingleProblemResolution.SkipAll, SingleProblemResolution.Abort)]
+                FailedToDeleteSourceFile
             }
 
             private readonly SemaphoreSlim userDecisionSemaphore;
@@ -447,6 +450,27 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
                     sourceStream = null;
                     destinationStream?.Dispose();
                     destinationStream = null;
+                }
+
+                if (input.OperationType == DataTransferOperationType.Move)
+                {
+                    if (!input.SourceOperator.DeleteFile(planFile.Name))
+                    {
+                        var resolution = GetResolutionFor(ProcessingProblemKind.FailedToDeleteSourceFile,
+                            input.SourceOperator.CurrentPath,
+                            input.DestinationOperator.CurrentPath,
+                            planFile.Name);
+
+                        switch (resolution)
+                        {
+                            case GenericProblemResolution.Skip:
+                                return null;
+                            case GenericProblemResolution.Abort:
+                                return new AbortedCopyMoveWorkerResult();
+                            default:
+                                throw new InvalidOperationException("Invalid resolution!");
+                        }
+                    }
                 }
 
                 return null;
