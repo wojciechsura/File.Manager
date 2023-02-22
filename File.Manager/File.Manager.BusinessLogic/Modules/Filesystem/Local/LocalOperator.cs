@@ -18,7 +18,7 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
         // Private fields -----------------------------------------------------
 
         private readonly string startPath;
-        private string currentPath;
+        private readonly string currentPath;
 
         // Private methods ----------------------------------------------------
 
@@ -117,12 +117,12 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
 
         }
 
-        public bool EnterFolder(string name)
+        public IFilesystemOperator EnterFolder(string name)
         {
             var targetPath = System.IO.Path.Combine(currentPath, name);
 
             if (!Directory.Exists(targetPath))
-                return false;
+                return null;
 
             try
             {
@@ -130,28 +130,10 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
             }
             catch
             {
-                return false;
+                return null;
             }
 
-            currentPath = targetPath;
-            return true;
-        }
-
-        public bool ExitFolder()
-        {
-            try
-            {
-                if (currentPath.ToLower() == startPath.ToLower())
-                    throw new InvalidOperationException("Operator cannot exit the start path!");
-
-                currentPath = Path.GetFullPath(Path.Combine(currentPath, ".."));
-            }
-            catch
-            {
-                return false;
-            }
-
-            return true;
+            return new LocalOperator(targetPath);
         }
 
         public bool FileExists(string name) 
@@ -185,9 +167,31 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
         public Stream OpenFileForWriting(string name)
             => new FileStream(Path.Combine(currentPath, name), FileMode.Open, FileAccess.Read);
 
-        public void ReturnToStartLocation()
+        public FileAttributes? GetFileAttributes(string targetName)
         {
-            currentPath = startPath;
+            try
+            {
+                var fi = new FileInfo(Path.Combine(currentPath, targetName));
+                return fi.Attributes;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public bool SetFileAttributes(string targetName, FileAttributes attributes)
+        {
+            try
+            {
+                var fi = new FileInfo(Path.Combine(currentPath, targetName));
+                fi.Attributes = attributes;
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         public string CurrentPath => currentPath;

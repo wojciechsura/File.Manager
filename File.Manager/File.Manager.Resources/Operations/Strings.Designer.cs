@@ -79,6 +79,24 @@ namespace File.Manager.Resources.Operations {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Copied files: {0} / {1} ({2}B / {3}B).
+        /// </summary>
+        public static string CopyMove_Info_TotalDescription {
+            get {
+                return ResourceManager.GetString("CopyMove_Info_TotalDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot get attributes of file {2} in location {1}..
+        /// </summary>
+        public static string CopyMove_Question_CannotGetFileAttributes {
+            get {
+                return ResourceManager.GetString("CopyMove_Question_CannotGetFileAttributes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot open destination file {2} in location {0}..
         /// </summary>
         public static string CopyMove_Question_CannotOpenDestinationFile {

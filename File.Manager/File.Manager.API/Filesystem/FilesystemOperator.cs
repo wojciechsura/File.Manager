@@ -24,9 +24,8 @@ namespace File.Manager.API.Filesystem
         bool DeleteFolder(string name);
 
         /// <summary>Enters folder with given name in current location</summary>
-        bool EnterFolder(string name);
-        /// <summary>Returns back to the parent folder</summary>
-        bool ExitFolder();
+        IFilesystemOperator EnterFolder(string name);
+
         /// <summary>Checks if given file exists</summary>
         bool FileExists(string name);
 
@@ -34,7 +33,7 @@ namespace File.Manager.API.Filesystem
         bool FolderExists(string name);
 
         /// <summary>Returns existing file's attributes</summary>
-        FileAttributes GetFileAttributes(string targetName);
+        FileAttributes? GetFileAttributes(string targetName);
 
         /// <summary>Lists contents of the current location</summary>
         IReadOnlyList<BaseOperatorItem> List();
@@ -45,9 +44,6 @@ namespace File.Manager.API.Filesystem
         /// <summary>Returns stream for new file for writing.</summary>
         Stream OpenFileForWriting(string name);
 
-        /// <summary>Returns to the location, where operator was created
-        /// (not necessarily the root folder for navigator!)</summary>
-        void ReturnToStartLocation();
         bool SetFileAttributes(string targetName, FileAttributes attributes);
 
         string CurrentPath { get; }
