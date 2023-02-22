@@ -1,4 +1,5 @@
 ﻿using File.Manager.BusinessLogic.Services.Dialogs;
+using File.Manager.BusinessLogic.Services.Messaging;
 using File.Manager.BusinessLogic.ViewModels.Base;
 using System;
 using System.Collections.Generic;
@@ -20,16 +21,27 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations
         private int detailedProgress;
         private string detailedProgressDescription;
         private bool detailedProgressVisible;
+        private bool isFinished;
         
         // Protected fields ---------------------------------------------------
         
         protected readonly IDialogService dialogService;
+        protected readonly IMessagingService messagingService;
+
+        // Protected methods --------------------------------------------------
+
+        protected void OnFinished()
+        {
+            IsFinished = true;
+            Finished?.Invoke(this, EventArgs.Empty);
+        }
 
         // Public methods -----------------------------------------------------
 
-        public BaseOperationViewModel(IDialogService dialogService)
+        public BaseOperationViewModel(IDialogService dialogService, IMessagingService messagingService)
         {
             this.dialogService = dialogService;
+            this.messagingService = messagingService;
         }
 
         public abstract void Run();
@@ -82,6 +94,12 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations
         {
             get => detailedProgressVisible; 
             set => Set(ref detailedProgressVisible, value);
+        }
+
+        public bool IsFinished
+        {
+            get => isFinished;
+            private set => Set(ref IsFinished, value);
         }
 
         public event EventHandler Finished;

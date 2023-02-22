@@ -5,6 +5,7 @@ using File.Manager.API.Filesystem.Models.Plan;
 using File.Manager.BusinessLogic.Attributes;
 using File.Manager.BusinessLogic.Models.Dialogs.CopyMoveConfiguration;
 using File.Manager.BusinessLogic.Services.Dialogs;
+using File.Manager.BusinessLogic.Services.Messaging;
 using File.Manager.BusinessLogic.Types;
 using File.Manager.Common.Helpers;
 using File.Manager.Resources.Operations;
@@ -57,6 +58,14 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
         private class AbortedCopyMoveWorkerResult : CopyMoveWorkerResult
         {
             public AbortedCopyMoveWorkerResult()
+            {
+
+            }
+        }
+
+        private class CancelledCopyMoveWorkerResult : CopyMoveWorkerResult
+        {
+            public CancelledCopyMoveWorkerResult()
             {
 
             }
@@ -492,6 +501,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
                     // Start copying
 
                     byte[] buffer = new byte[BUFFER_SIZE];
+                    bool cancelled = false;
 
                     try
                     {
@@ -500,6 +510,12 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
 
                         do
                         {
+                            if (CancellationPending)
+                            {
+                                cancelled = true;
+                                return new CancelledCopyMoveWorkerResult();
+                            }
+
                             bytesRead = sourceStream.Read(buffer, 0, buffer.Length);
                             if (bytesRead > 0)
                                 destinationStream.Write(buffer, 0, bytesRead);
@@ -544,6 +560,12 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
                     }
                     finally
                     {
+                        if (cancelled)
+                        {
+                            // Try to remove file, which was not copied
+                            destinationOperator.DeleteFile(targetName);
+                        }
+
                         sourceStream?.Dispose();
                         sourceStream = null;
                         destinationStream?.Dispose();
@@ -797,6 +819,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
         // Public methods -----------------------------------------------------
 
         public BufferedCopyMoveWithPlanOperationViewModel(IDialogService dialogService,
+            IMessagingService messagingService,
             DataTransferOperationType operationType,
             IFilesystemOperator sourceOperator,
             IFilesystemOperator destinationOperator,
@@ -819,7 +842,12 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
 
         private void HandleWorkerRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            throw new NotImplementedException();
+            if (e.Result is CriticalFailureCopyMoveWorkerResult critical)
+            {
+                messagingService.ShowError(critical.LocalizedMessage);
+            }
+
+            OnFinished();
         }
 
         public override void Run()
@@ -829,6 +857,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
                 destinationOperator,
                 configuration,
                 selectedItems);
+
             worker.RunWorkerAsync(input);
         }
     }
