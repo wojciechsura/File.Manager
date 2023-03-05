@@ -8,9 +8,11 @@
         xmlns:p="clr-namespace:Spooksoft.Wpf.Controls.Panels;assembly=Spooksoft.Wpf.Controls"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:cres="clr-namespace:File.Manager.Resources.Common;assembly=File.Manager.Resources"
+        xmlns:res="clr-namespace:File.Manager.Resources.Windows.CopyMoveProgressWindow;assembly=File.Manager.Resources"
         d:DataContext="{d:DesignInstance Type=vm:CopyMoveProgressWindowViewModel}"
         mc:Ignorable="d"
-        Title="{Binding Operation.Title}" SizeToContent="Height" Width="500"
+        Title="{Binding Operation.Title}" SizeToContent="Height" Width="600"
+        ResizeMode="NoResize"
         Loaded="HandleWindowLoaded">
     <Window.Resources>
         <Style TargetType="Label" x:Key="HeaderLabel">
@@ -28,14 +30,21 @@
             <StackPanel Orientation="Vertical">
 
                 <p:EditorPanel>
-                    <Label Style="{StaticResource HeaderLabel}" Content="#Operation" Margin="{StaticResource DialogItemsMargin}" />
-                    <Label Style="{StaticResource ValueLabel}" Content="{Binding Operation.Title}" Margin="{StaticResource DialogItemsMargin}" />
+                    <Label Style="{StaticResource HeaderLabel}" Content="{x:Static res:Strings.Label_Operation}" Margin="{StaticResource DialogItemsMargin}" />
+                    <Label Style="{StaticResource ValueLabel}" Margin="{StaticResource DialogItemsMargin}">
+                        <TextBlock Text="{Binding Operation.Title}" />
+                    </Label>
 
-                    <Label Style="{StaticResource HeaderLabel}" Content="#From" Margin="{StaticResource DialogItemsExceptTopMargin}" />
-                    <Label Style="{StaticResource ValueLabel}" Content="{Binding Operation.FromAddress}" Margin="{StaticResource DialogItemsExceptTopMargin}" />
+                    <Label Style="{StaticResource HeaderLabel}" Content="{x:Static res:Strings.Label_From}" Margin="{StaticResource DialogItemsExceptTopMargin}" />
+                    <Label Style="{StaticResource ValueLabel}" Margin="{StaticResource DialogItemsExceptTopMargin}">
+                        <TextBlock Text="{Binding Operation.FromAddress}" />
+                    </Label>
 
-                    <Label Style="{StaticResource HeaderLabel}" Content="#To" Margin="{StaticResource DialogItemsExceptTopMargin}" />
-                    <Label Style="{StaticResource ValueLabel}" Content="{Binding Operation.ToAddress}" Margin="{StaticResource DialogItemsExceptTopMargin}" />
+                    <Label Style="{StaticResource HeaderLabel}" Content="{x:Static res:Strings.Label_To}" Margin="{StaticResource DialogItemsExceptTopMargin}" />
+                    <Label Style="{StaticResource ValueLabel}" Margin="{StaticResource DialogItemsExceptTopMargin}">
+                        <TextBlock Text="{Binding Operation.ToAddress}" />
+                    </Label>
+
                 </p:EditorPanel>
 
                 <!-- Overall progress bar -->

@@ -5,9 +5,9 @@
         <ResourceDictionary Source="Dimensions.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
-    <Style TargetType="Button" x:Key="DialogButton">
+    <Style TargetType="Button" x:Key="DialogButton" BasedOn="{StaticResource {x:Type Button}}">
         <Setter Property="Width" Value="150" />
-        <Setter Property="Margin" Value="{StaticResource DialogItemsExceptLeftMargin}" />
+        <Setter Property="Margin" Value="{StaticResource DialogItemsExceptRightMargin}" />
     </Style>
 
     <Style x:Key="FirstHeaderLabel" TargetType="Label">

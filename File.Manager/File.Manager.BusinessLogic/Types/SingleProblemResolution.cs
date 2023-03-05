@@ -25,6 +25,10 @@ namespace File.Manager.BusinessLogic.Types
         Rename,
         [LocalizedDescription(nameof(Strings.SingleProblemResolution_RenameAll), typeof(Strings))]
         RenameAll,
+        [LocalizedDescription(nameof(Strings.SingleProblemResolution_Ignore), typeof(Strings))]
+        Ignore,
+        [LocalizedDescription(nameof(Strings.SingleProblemResolution_IgnoreAll), typeof(Strings))]
+        IgnoreAll,
         [LocalizedDescription(nameof(Strings.SingleProblemResolution_Abort), typeof(Strings))]
         Abort
     }

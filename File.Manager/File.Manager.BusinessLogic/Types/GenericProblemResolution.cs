@@ -21,6 +21,8 @@ namespace File.Manager.BusinessLogic.Types
         Skip,
         [LocalizedDescription(nameof(Strings.GenericProblemResolution_Rename), typeof(Strings))]
         Rename,
+        [LocalizedDescription(nameof(Strings.GenericProblemResolution_Rename), typeof(Strings))]
+        Ignore,
         [LocalizedDescription(nameof(Strings.GenericProblemResolution_Abort), typeof(Strings))]
         Abort
     }

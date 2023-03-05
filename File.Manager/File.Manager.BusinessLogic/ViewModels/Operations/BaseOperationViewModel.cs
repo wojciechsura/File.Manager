@@ -20,7 +20,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations
         private bool isFinished;
         
         // Protected fields ---------------------------------------------------
-        
+
         protected readonly IDialogService dialogService;
         protected readonly IMessagingService messagingService;
 

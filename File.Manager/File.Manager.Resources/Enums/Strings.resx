@@ -123,6 +123,12 @@
   <data name="GenericProblemResolution_Ask" xml:space="preserve">
     <value>Ask for decision</value>
   </data>
+  <data name="GenericProblemResolution_Ignore" xml:space="preserve">
+    <value>Ignore</value>
+  </data>
+  <data name="GenericProblemResolution_IgnoreAll" xml:space="preserve">
+    <value>Ignore all</value>
+  </data>
   <data name="GenericProblemResolution_Overwrite" xml:space="preserve">
     <value>Overwrite without asking</value>
   </data>
@@ -134,6 +140,12 @@
   </data>
   <data name="SingleProblemResolution_Abort" xml:space="preserve">
     <value>Abort</value>
+  </data>
+  <data name="SingleProblemResolution_Ignore" xml:space="preserve">
+    <value>Ignore</value>
+  </data>
+  <data name="SingleProblemResolution_IgnoreAll" xml:space="preserve">
+    <value>Ignore all</value>
   </data>
   <data name="SingleProblemResolution_Overwrite" xml:space="preserve">
     <value>Overwrite</value>

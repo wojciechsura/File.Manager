@@ -178,12 +178,18 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
                 [LocalizedDescription(nameof(Strings.CopyMove_Question_FailedToRemoveSourceFile), typeof(Strings))]
                 [AvailableResolutions(SingleProblemResolution.Skip, SingleProblemResolution.SkipAll, SingleProblemResolution.Abort)]
                 FailedToDeleteSourceFile,
-                [LocalizedDescription(nameof(Strings.CopyMove_Question_CannotGetFileAttributes), typeof(Strings))]
+                [LocalizedDescription(nameof(Strings.CopyMove_Question_CannotGetTargetFileAttributes), typeof(Strings))]
                 [AvailableResolutions(SingleProblemResolution.Skip, SingleProblemResolution.SkipAll, SingleProblemResolution.Abort)]
-                CannotGetFileAttributes
+                CannotGetTargetFileAttributes,
+                [LocalizedDescription(nameof(Strings.CopyMove_Question_CannotGetSourceFileAttributes), typeof(Strings))]
+                [AvailableResolutions(SingleProblemResolution.Skip, SingleProblemResolution.SkipAll, SingleProblemResolution.Abort)]
+                CannotGetSourceFileAttributes,
+                [LocalizedDescription(nameof(Strings.CopyMove_Question_CannotSetTargetFileAttributes), typeof(Strings))]
+                [AvailableResolutions(SingleProblemResolution.Ignore, SingleProblemResolution.IgnoreAll, SingleProblemResolution.Abort)]
+                CannotSetTargetFileAttributes
             }
 
-            private class CopyMoveWorkerContext
+            private sealed class CopyMoveWorkerContext
             {
                 public CopyMoveWorkerContext(long totalSize, int totalFiles)
                 {
@@ -201,7 +207,8 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
 
             private readonly SemaphoreSlim userDecisionSemaphore;
             private readonly byte[] buffer = new byte[BUFFER_SIZE];
-            private Dictionary<ProcessingProblemKind, GenericProblemResolution> problemResolutions = new();
+            private readonly Dictionary<ProcessingProblemKind, GenericProblemResolution> problemResolutions = new();
+            private DateTime startTime;
 
             // Private methods ------------------------------------------------
 
@@ -240,6 +247,11 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
                     case SingleProblemResolution.RenameAll:
                         problemResolutions[problemKind] = GenericProblemResolution.Rename;
                         return GenericProblemResolution.Rename;
+                    case SingleProblemResolution.IgnoreAll:
+                        problemResolutions[problemKind] = GenericProblemResolution.Ignore;
+                        return GenericProblemResolution.Ignore;
+                    case SingleProblemResolution.Ignore:
+                        return GenericProblemResolution.Ignore;
                     case SingleProblemResolution.Abort:
                         return GenericProblemResolution.Abort;                            
                     default:
@@ -328,7 +340,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
 
                     if (attributes == null)
                     {
-                        var resolution = GetResolutionFor(ProcessingProblemKind.CannotGetFileAttributes,
+                        var resolution = GetResolutionFor(ProcessingProblemKind.CannotGetTargetFileAttributes,
                             sourceOperator.CurrentPath,
                             destinationOperator.CurrentPath,
                             targetName);
@@ -404,7 +416,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
 
                     if (attributes == null)
                     {
-                        var resolution = GetResolutionFor(ProcessingProblemKind.CannotGetFileAttributes,
+                        var resolution = GetResolutionFor(ProcessingProblemKind.CannotGetTargetFileAttributes,
                             sourceOperator.CurrentPath,
                             destinationOperator.CurrentPath,
                             targetName);
@@ -463,6 +475,52 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
                             default:
                                 throw new InvalidOperationException("Invalid resolution!");
                         }
+                    }
+                }
+
+                return (false, null);
+            }
+
+            private (bool exit, CopyMoveWorkerResult result) CopyAttributes(PlanFile planFile,
+                IFilesystemOperator sourceOperator,
+                IFilesystemOperator destinationOperator,
+                string targetName)
+            {
+                var attributes = sourceOperator.GetFileAttributes(planFile.Name);
+
+                if (attributes == null)
+                {
+                    var resolution = GetResolutionFor(ProcessingProblemKind.CannotGetSourceFileAttributes,
+                        sourceOperator.CurrentPath,
+                        destinationOperator.CurrentPath,
+                        planFile.Name);
+
+                    switch (resolution)
+                    {
+                        case GenericProblemResolution.Skip:
+                            return (true, null);
+                        case GenericProblemResolution.Abort:
+                            return (true, new AbortedCopyMoveWorkerResult());
+                        default:
+                            throw new InvalidOperationException("Invalid resolution!");
+                    }
+                }
+
+                if (!destinationOperator.SetFileAttributes(targetName, attributes.Value))
+                {
+                    var resolution = GetResolutionFor(ProcessingProblemKind.CannotSetTargetFileAttributes,
+                        sourceOperator.CurrentPath,
+                        destinationOperator.CurrentPath,
+                        targetName);
+
+                    switch (resolution)
+                    {
+                        case GenericProblemResolution.Ignore:
+                            return (false, null);
+                        case GenericProblemResolution.Abort:
+                            return (true, new AbortedCopyMoveWorkerResult());
+                        default:
+                            throw new InvalidOperationException("Invalid resolution!");
                     }
                 }
 
@@ -565,17 +623,45 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
                         return (true, new CancelledCopyMoveWorkerResult());
                     }
 
+                    // Copying
+
                     bytesRead = sourceStream.Read(buffer, 0, buffer.Length);
                     if (bytesRead > 0)
                         destinationStream.Write(buffer, 0, bytesRead);
 
                     bytesCopied += bytesRead;
 
-                    string totalDescription = String.Format(Strings.CopyMove_Info_TotalDescription,
+                    // Elapsed
+
+                    TimeSpan elapsed = DateTime.Now - startTime;
+                    string elapsedString = elapsed.Days > 0 ? elapsed.ToString("d'd'\\, hh\\:mm\\:ss") : elapsed.ToString("hh\\:mm\\:ss");
+
+                    // Estimated left
+
+                    long totalBytesCopied = context.CopiedSize + bytesCopied;
+                    var millisecondsLeft = totalBytesCopied switch
+                    {
+                        > 0 => (long)elapsed.TotalMilliseconds * (context.TotalSize - (context.CopiedSize + totalBytesCopied)) / totalBytesCopied,
+                        _ => 0,
+                    };
+
+                    TimeSpan left = TimeSpan.FromMilliseconds(millisecondsLeft);
+                    string leftString = left.Days > 0 ? left.ToString("d'd'\\, hh\\:mm\\:ss") : left.ToString("hh\\:mm\\:ss");
+
+                    // Transfer speed
+
+                    string transfer = (long)elapsed.TotalSeconds > 0 ? $" ({SizeTools.BytesToHumanReadable(totalBytesCopied / (long)elapsed.TotalSeconds)}ps)" : "";
+
+                    // Progress description to display
+
+                    string totalDescription = string.Format(Strings.CopyMove_Info_TotalDescription,
                         context.CopiedFiles,
                         context.TotalFiles,
                         SizeTools.BytesToHumanReadable(context.CopiedSize + bytesCopied),
-                        SizeTools.BytesToHumanReadable(context.TotalSize));
+                        SizeTools.BytesToHumanReadable(context.TotalSize),
+                        elapsedString,
+                        leftString,
+                        transfer);
 
                     ReportProgress(0, new CopyMoveProgress((int)((context.CopiedSize + bytesCopied) * 100 / context.TotalSize),
                         totalDescription,
@@ -583,6 +669,8 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
                         planFile.Name));
                 }
                 while (bytesRead > 0);
+
+
 
                 return (false, null);
             }
@@ -728,6 +816,10 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
                         if (exit)
                             return result;
 
+                        (exit, result) = CopyAttributes(planFile, sourceOperator, destinationOperator, targetName);
+                        if (exit)
+                            return result;
+
                         if (operationType == DataTransferOperationType.Move)
                         {
                             (exit, result) = DeleteSourceFile(planFile, sourceOperator, destinationOperator);
@@ -776,17 +868,6 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
                 {
                     context.CopiedSize += planFile.Size;
                     context.CopiedFiles++;
-
-                    string totalDescription = String.Format(Strings.CopyMove_Info_TotalDescription,
-                        context.CopiedFiles,
-                        context.TotalFiles,
-                        context.CopiedSize,
-                        context.TotalSize);
-
-                    ReportProgress(0, new CopyMoveProgress((int)(context.CopiedSize * 100 / context.TotalSize),
-                        totalDescription,
-                        100,
-                        string.Empty));
                 }
 
                 return null;
@@ -882,6 +963,8 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
 
             protected override void OnDoWork(DoWorkEventArgs e)
             {
+                startTime = DateTime.Now;
+
                 var input = (CopyMoveWorkerInput)e.Argument;
 
                 // 1. Plan

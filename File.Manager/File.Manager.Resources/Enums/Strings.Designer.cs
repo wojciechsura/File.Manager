@@ -79,6 +79,24 @@ namespace File.Manager.Resources.Enums {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Ignore.
+        /// </summary>
+        public static string GenericProblemResolution_Ignore {
+            get {
+                return ResourceManager.GetString("GenericProblemResolution_Ignore", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Ignore all.
+        /// </summary>
+        public static string GenericProblemResolution_IgnoreAll {
+            get {
+                return ResourceManager.GetString("GenericProblemResolution_IgnoreAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Overwrite without asking.
         /// </summary>
         public static string GenericProblemResolution_Overwrite {
@@ -111,6 +129,24 @@ namespace File.Manager.Resources.Enums {
         public static string SingleProblemResolution_Abort {
             get {
                 return ResourceManager.GetString("SingleProblemResolution_Abort", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Ignore.
+        /// </summary>
+        public static string SingleProblemResolution_Ignore {
+            get {
+                return ResourceManager.GetString("SingleProblemResolution_Ignore", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Ignore all.
+        /// </summary>
+        public static string SingleProblemResolution_IgnoreAll {
+            get {
+                return ResourceManager.GetString("SingleProblemResolution_IgnoreAll", resourceCulture);
             }
         }
         

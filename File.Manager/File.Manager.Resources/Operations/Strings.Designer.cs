@@ -79,7 +79,7 @@ namespace File.Manager.Resources.Operations {
         }
         
         /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Copied files: {0} / {1} ({2} / {3}).
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Copied files: {0} / {1} ({2} / {3}). Elapsed: {4}, left: {5}{6}.
         /// </summary>
         public static string CopyMove_Info_TotalDescription {
             get {
@@ -88,11 +88,20 @@ namespace File.Manager.Resources.Operations {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot get attributes of file {2} in location {0}..
+        /// </summary>
+        public static string CopyMove_Question_CannotGetSourceFileAttributes {
+            get {
+                return ResourceManager.GetString("CopyMove_Question_CannotGetSourceFileAttributes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot get attributes of file {2} in location {1}..
         /// </summary>
-        public static string CopyMove_Question_CannotGetFileAttributes {
+        public static string CopyMove_Question_CannotGetTargetFileAttributes {
             get {
-                return ResourceManager.GetString("CopyMove_Question_CannotGetFileAttributes", resourceCulture);
+                return ResourceManager.GetString("CopyMove_Question_CannotGetTargetFileAttributes", resourceCulture);
             }
         }
         
@@ -111,6 +120,15 @@ namespace File.Manager.Resources.Operations {
         public static string CopyMove_Question_CannotOpenSourceFile {
             get {
                 return ResourceManager.GetString("CopyMove_Question_CannotOpenSourceFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot set attributes of file {2} in location {1}..
+        /// </summary>
+        public static string CopyMove_Question_CannotSetTargetFileAttributes {
+            get {
+                return ResourceManager.GetString("CopyMove_Question_CannotSetTargetFileAttributes", resourceCulture);
             }
         }
         
