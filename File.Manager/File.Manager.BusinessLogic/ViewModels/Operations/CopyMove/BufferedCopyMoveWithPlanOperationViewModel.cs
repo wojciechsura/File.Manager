@@ -2,6 +2,7 @@
 using File.Manager.API.Filesystem;
 using File.Manager.API.Filesystem.Models.Items;
 using File.Manager.API.Filesystem.Models.Plan;
+using File.Manager.API.Tools;
 using File.Manager.BusinessLogic.Attributes;
 using File.Manager.BusinessLogic.Models.Dialogs.CopyMoveConfiguration;
 using File.Manager.BusinessLogic.Services.Dialogs;
@@ -573,8 +574,8 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
                     string totalDescription = String.Format(Strings.CopyMove_Info_TotalDescription,
                         context.CopiedFiles,
                         context.TotalFiles,
-                        context.CopiedSize + bytesCopied,
-                        context.TotalSize);
+                        SizeTools.BytesToHumanReadable(context.CopiedSize + bytesCopied),
+                        SizeTools.BytesToHumanReadable(context.TotalSize));
 
                     ReportProgress(0, new CopyMoveProgress((int)((context.CopiedSize + bytesCopied) * 100 / context.TotalSize),
                         totalDescription,
@@ -983,14 +984,15 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
 
         public override void Run()
         {
-            /*
-            Description = new CopyMoveDescriptionViewModel
+            Title = operationType switch
             {
-                FromAddress = sourceOperator.CurrentPath,
-                ToAddress = destinationOperator.CurrentPath,
-                State = "Copying files"
+                DataTransferOperationType.Copy => Strings.CopyMove_Title_CopyingFiles,
+                DataTransferOperationType.Move => Strings.CopyMove_Title_MovingFiles,
+                _ => throw new InvalidOperationException("Unsupported DataTransferOperationType!")
             };
-            */
+
+            FromAddress = sourceOperator.CurrentPath;
+            ToAddress = destinationOperator.CurrentPath;
 
             ProgressIndeterminate = false;
 

@@ -12,6 +12,8 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
     {
         private int fileProgress;
         private string fileProgressDescription;
+        private string fromAddress;
+        private string toAddress;
 
         public BaseCopyMoveOperationViewModel(IDialogService dialogService, IMessagingService messagingService)
             : base(dialogService, messagingService)
@@ -29,6 +31,18 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
         {
             get => fileProgressDescription;
             set => Set(ref fileProgressDescription, value);
+        }
+
+        public string FromAddress
+        {
+            get => fromAddress; 
+            set => Set(ref fromAddress, value);
+        }
+
+        public string ToAddress
+        {
+            get => toAddress;
+            set => Set(ref toAddress, value);
         }
     }
 }

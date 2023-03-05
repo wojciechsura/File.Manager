@@ -79,7 +79,7 @@ namespace File.Manager.Resources.Operations {
         }
         
         /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Copied files: {0} / {1} ({2}B / {3}B).
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Copied files: {0} / {1} ({2} / {3}).
         /// </summary>
         public static string CopyMove_Info_TotalDescription {
             get {
@@ -201,6 +201,24 @@ namespace File.Manager.Resources.Operations {
         public static string CopyMove_Question_SourceFileDoesNotExist {
             get {
                 return ResourceManager.GetString("CopyMove_Question_SourceFileDoesNotExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Copying files.
+        /// </summary>
+        public static string CopyMove_Title_CopyingFiles {
+            get {
+                return ResourceManager.GetString("CopyMove_Title_CopyingFiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Moving files.
+        /// </summary>
+        public static string CopyMove_Title_MovingFiles {
+            get {
+                return ResourceManager.GetString("CopyMove_Title_MovingFiles", resourceCulture);
             }
         }
     }
