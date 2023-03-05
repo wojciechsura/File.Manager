@@ -16,6 +16,7 @@
 
         <Label HorizontalAlignment="Center" Margin="{StaticResource DialogItemsMargin}" Content="{Binding Operation.Title}" />
 
+        <!--
         <ContentControl Content="{Binding Operation.Description}">
             <ContentControl.Resources>
 
@@ -38,6 +39,7 @@
                 
             </ContentControl.Resources>
         </ContentControl>
+        -->
         
         <!-- Overall progress bar -->
 

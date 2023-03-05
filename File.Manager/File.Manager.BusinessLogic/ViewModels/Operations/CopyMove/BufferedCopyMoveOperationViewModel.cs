@@ -1,5 +1,7 @@
 ﻿using File.Manager.API.Filesystem;
 using File.Manager.API.Filesystem.Models.Items;
+using File.Manager.BusinessLogic.Services.Dialogs;
+using File.Manager.BusinessLogic.Services.Messaging;
 using File.Manager.BusinessLogic.Types;
 using System;
 using System.Collections.Generic;
@@ -11,10 +13,13 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
 {
     public class BufferedCopyMoveOperationViewModel : BaseOperationViewModel
     {
-        public BufferedCopyMoveOperationViewModel(DataTransferOperationType copy,
+        public BufferedCopyMoveOperationViewModel(IDialogService dialogService,
+            IMessagingService messagingService,
+            DataTransferOperationType copy,
             IFilesystemOperator sourceNavigaor,
             IFilesystemOperator destinationNavigator, 
             List<Item> items)
+            : base(dialogService, messagingService)
         {
             throw new NotImplementedException();
         }

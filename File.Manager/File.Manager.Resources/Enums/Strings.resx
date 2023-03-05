@@ -117,19 +117,40 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="OverwritingOptions_Abort" xml:space="preserve">
+  <data name="GenericProblemResolution_Abort" xml:space="preserve">
     <value>Abort</value>
   </data>
-  <data name="OverwritingOptions_Ask" xml:space="preserve">
+  <data name="GenericProblemResolution_Ask" xml:space="preserve">
     <value>Ask for decision</value>
   </data>
-  <data name="OverwritingOptions_Overwrite" xml:space="preserve">
+  <data name="GenericProblemResolution_Overwrite" xml:space="preserve">
     <value>Overwrite without asking</value>
   </data>
-  <data name="OverwritingOptions_Rename" xml:space="preserve">
+  <data name="GenericProblemResolution_Rename" xml:space="preserve">
     <value>Rename copied file</value>
   </data>
-  <data name="OverwritingOptions_Skip" xml:space="preserve">
+  <data name="GenericProblemResolution_Skip" xml:space="preserve">
     <value>Skip</value>
+  </data>
+  <data name="SingleProblemResolution_Abort" xml:space="preserve">
+    <value>Abort</value>
+  </data>
+  <data name="SingleProblemResolution_Overwrite" xml:space="preserve">
+    <value>Overwrite</value>
+  </data>
+  <data name="SingleProblemResolution_OverwriteAll" xml:space="preserve">
+    <value>Overwrite all</value>
+  </data>
+  <data name="SingleProblemResolution_Rename" xml:space="preserve">
+    <value>Rename</value>
+  </data>
+  <data name="SingleProblemResolution_RenameAll" xml:space="preserve">
+    <value>Rename all</value>
+  </data>
+  <data name="SingleProblemResolution_Skip" xml:space="preserve">
+    <value>Skip</value>
+  </data>
+  <data name="SingleProblemResolution_SkipAll" xml:space="preserve">
+    <value>Skip all</value>
   </data>
 </root>

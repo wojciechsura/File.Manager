@@ -99,7 +99,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations
         public bool IsFinished
         {
             get => isFinished;
-            private set => Set(ref IsFinished, value);
+            private set => Set(ref isFinished, value);
         }
 
         public event EventHandler Finished;

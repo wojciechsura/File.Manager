@@ -6,12 +6,13 @@
         xmlns:local="clr-namespace:File.Manager.Windows" 
         xmlns:vm="clr-namespace:File.Manager.BusinessLogic.ViewModels.UserDecision;assembly=File.Manager.BusinessLogic" 
         xmlns:t="clr-namespace:File.Manager.BusinessLogic.Types;assembly=File.Manager.BusinessLogic"
-        xmlns:res="clr-namespace:File.Manager.Resources.Windows.UserDecision;assembly.File.Manager.Resources"
+        xmlns:res="clr-namespace:File.Manager.Resources.Windows.UserDecision;assembly=File.Manager.Resources"
         d:DataContext="{d:DesignInstance Type=vm:UserDecisionDialogViewModel}"
         mc:Ignorable="d"
         Title="{x:Static res:Strings.Title}" SizeToContent="Height" Width="400">
     <StackPanel Orientation="Vertical" Margin="{StaticResource DialogWindowPadding}">
         <Label HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Content="{Binding Header}" />
+        
         <ItemsControl ItemsSource="{Binding AvailableResolutions}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -20,9 +21,9 @@
             </ItemsControl.ItemsPanel>
 
             <ItemsControl.ItemTemplate>
-                <DataTemplate DataType="{x:Type t:UserProblemResolution}">
+                <DataTemplate DataType="{x:Type t:SingleProblemResolution}">
                     <Button Style="{StaticResource DialogButton}" Content="{Binding}"
-                            Command="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=DataContext.SelectResolutionCommand}"
+                            Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}}, Path=DataContext.SelectResolutionCommand}"
                             CommandParameter="{Binding}" />
                 </DataTemplate>
             </ItemsControl.ItemTemplate>

@@ -34,7 +34,7 @@
                          VerticalAlignment="Center" HorizontalAlignment="Left"/>
 
                 <Label Style="{StaticResource NextHeaderLabel}" Content="{x:Static res:Strings.Label_OverwritingOptions}" />
-                <ComboBox Width="200" ItemsSource="{Binding Source={m:EnumBindingSource EnumType={x:Type t:OverwritingOptions}}}"
+                <ComboBox Width="200" ItemsSource="{Binding Source={m:EnumBindingSource EnumType={x:Type t:GenericProblemResolution}}}"
                           SelectedItem="{Binding OverwritingOptions, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                           VerticalAlignment="Center" HorizontalAlignment="Left"/>
             </sc:EditorPanel>

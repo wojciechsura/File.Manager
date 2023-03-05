@@ -31,7 +31,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
 
         // Input
 
-        private class CopyMoveWorkerInput
+        private sealed class CopyMoveWorkerInput
         {
             public CopyMoveWorkerInput(DataTransferOperationType operationType, IFilesystemOperator sourceOperator, IFilesystemOperator destinationOperator, CopyMoveConfigurationModel configuration, IReadOnlyList<Item> selectedItems)
             {
@@ -56,7 +56,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
 
         }
 
-        private class AbortedCopyMoveWorkerResult : CopyMoveWorkerResult
+        private sealed class AbortedCopyMoveWorkerResult : CopyMoveWorkerResult
         {
             public AbortedCopyMoveWorkerResult()
             {
@@ -64,7 +64,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
             }
         }
 
-        private class CancelledCopyMoveWorkerResult : CopyMoveWorkerResult
+        private sealed class CancelledCopyMoveWorkerResult : CopyMoveWorkerResult
         {
             public CancelledCopyMoveWorkerResult()
             {
@@ -72,7 +72,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
             }
         }
 
-        private class CriticalFailureCopyMoveWorkerResult : CopyMoveWorkerResult
+        private sealed class CriticalFailureCopyMoveWorkerResult : CopyMoveWorkerResult
         {
             public CriticalFailureCopyMoveWorkerResult(string localizedMessage)
             {
@@ -82,7 +82,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
             public string LocalizedMessage { get; }
         }
 
-        private class SuccessCopyMoveWorkerResult : CopyMoveWorkerResult
+        private sealed class SuccessCopyMoveWorkerResult : CopyMoveWorkerResult
         {
             public SuccessCopyMoveWorkerResult()
             {
@@ -122,7 +122,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
 
         // Worker
 
-        private class CopyMoveWorker : BackgroundWorker
+        private sealed class CopyMoveWorker : BackgroundWorker
         {
             // Private constants ----------------------------------------------
 
@@ -578,7 +578,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
 
                     ReportProgress(0, new CopyMoveProgress((int)((context.CopiedSize + bytesCopied) * 100 / context.TotalSize),
                         totalDescription,
-                        100,
+                        (int)(bytesCopied * 100 / planFile.Size),
                         planFile.Name));
                 }
                 while (bytesRead > 0);
@@ -817,9 +817,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
                 if (exit)
                     return result;
 
-                ProcessItems(context, planFolder, operationType, sourceFolderOperator, destinationFolderOperator);
-
-                return null;
+                return ProcessItems(context, planFolder, operationType, sourceFolderOperator, destinationFolderOperator);
             }
 
             private CopyMoveWorkerResult ProcessItems(CopyMoveWorkerContext context, 
@@ -958,7 +956,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
             IFilesystemOperator destinationOperator,
             CopyMoveConfigurationModel configuration,
             IReadOnlyList<Item> selectedItems)
-            : base(dialogService)
+            : base(dialogService, messagingService)
         {
             this.operationType = operationType;
             this.sourceOperator = sourceOperator;
@@ -985,6 +983,16 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
 
         public override void Run()
         {
+            Description = new CopyMoveDescriptionViewModel
+            {
+                FromAddress = sourceOperator.CurrentPath,
+                ToAddress = destinationOperator.CurrentPath,
+                State = "Copying files"
+            };
+
+            OverallProgressVisible = true;
+            DetailedProgressVisible = true;
+
             var input = new CopyMoveWorkerInput(operationType,
                 sourceOperator,
                 destinationOperator,

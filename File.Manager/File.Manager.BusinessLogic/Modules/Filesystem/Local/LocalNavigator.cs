@@ -277,7 +277,8 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
                 return LocationCapabilities.BufferedRead |
                     LocationCapabilities.BufferedWrite |
                     LocationCapabilities.CreateFolder |
-                    LocationCapabilities.Delete;
+                    LocationCapabilities.Delete |
+                    LocationCapabilities.Plan;
             }
         }
 

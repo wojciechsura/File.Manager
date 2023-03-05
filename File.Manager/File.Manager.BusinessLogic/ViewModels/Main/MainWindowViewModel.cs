@@ -66,16 +66,21 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
 
             if (withPlan)
             {
-                operation = new BufferedCopyMoveWithPlanOperationViewModel(DataTransferOperationType.Copy,
+                operation = new BufferedCopyMoveWithPlanOperationViewModel(dialogService,
+                    messagingService,
+                    DataTransferOperationType.Copy,
                     activePane.Navigator.CreateOperatorForCurrentLocation(),
                     inactivePane.Navigator.CreateOperatorForCurrentLocation(),
+                    model,
                     items);
             }
             else
             {
-                operation = new BufferedCopyMoveOperationViewModel(DataTransferOperationType.Copy,
-                    activePane.Navigator,
-                    inactivePane.Navigator,
+                operation = new BufferedCopyMoveOperationViewModel(dialogService,
+                    messagingService,
+                    DataTransferOperationType.Copy,
+                    activePane.Navigator.CreateOperatorForCurrentLocation(),
+                    inactivePane.Navigator.CreateOperatorForCurrentLocation(),
                     items);
             }
 

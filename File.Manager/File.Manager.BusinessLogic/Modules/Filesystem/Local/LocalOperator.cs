@@ -33,12 +33,20 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
                 if (selectedItems != null && selectedItems.FirstOrDefault(i => i is FolderItem folderItem && folderItem.Name.ToLowerInvariant() == directory.Name.ToLowerInvariant()) == null)
                     continue;
 
-                var directoryItems = CreatePlanForFolderRecursive(Path.Combine(address, directory.Name), fileMaskOverride, null);
-                var directoryItem = new PlanFolder(directory.Name, directoryItems);
-                result.Add(directoryItem);
+                try
+                {
+                    var directoryItems = CreatePlanForFolderRecursive(Path.Combine(address, directory.Name), fileMaskOverride, null);
+                    var directoryItem = new PlanFolder(directory.Name, directoryItems);
+                    result.Add(directoryItem);
+                }
+                catch
+                {
+                    // Intentionally left empty (folder won't be taken into account in the plan)
+                    // TODO Ask user?
+                }
             }
 
-            var files = string.IsNullOrEmpty(fileMaskOverride) ? info.GetFiles(fileMaskOverride) : info.GetFiles();
+            var files = string.IsNullOrEmpty(fileMaskOverride) ? info.GetFiles() : info.GetFiles(fileMaskOverride);
 
             foreach (var file in files)
             {
@@ -136,18 +144,18 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
             return new LocalOperator(targetPath);
         }
 
-        public bool FileExists(string name) 
-            => System.IO.File.Exists(Path.Combine(currentPath, name));        
+        public bool FileExists(string name)
+            => System.IO.File.Exists(Path.Combine(currentPath, name));
 
         public bool FolderExists(string name)
-            => Directory.Exists(Path.Combine(currentPath, name));        
+            => Directory.Exists(Path.Combine(currentPath, name));
 
         public IReadOnlyList<BaseOperatorItem> List()
         {
             var result = new List<BaseOperatorItem>();
 
             var info = new DirectoryInfo(currentPath);
-            
+
             result.AddRange(info.GetDirectories()
                 .Select(directory => new OperatorFolderItem(directory.Name)));
 
@@ -162,10 +170,28 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
         }
 
         public Stream OpenFileForReading(string name)
-            => new FileStream(Path.Combine(currentPath, name), FileMode.Open, FileAccess.Read);
+        {
+            try
+            {
+                return new FileStream(Path.Combine(currentPath, name), FileMode.Open, FileAccess.Read);
+            }
+            catch
+            {
+                return null;
+            }
+        }
 
         public Stream OpenFileForWriting(string name)
-            => new FileStream(Path.Combine(currentPath, name), FileMode.Open, FileAccess.Read);
+        {
+            try
+            {
+                return new FileStream(Path.Combine(currentPath, name), FileMode.Create, FileAccess.Write);
+            }
+            catch
+            {
+                return null;    
+            }
+        }
 
         public FileAttributes? GetFileAttributes(string targetName)
         {
