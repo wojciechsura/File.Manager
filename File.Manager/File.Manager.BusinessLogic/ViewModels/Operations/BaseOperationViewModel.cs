@@ -14,13 +14,9 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations
         // Private fields -----------------------------------------------------
 
         private string title;
-        private object description;
-        private int overallProgress;
-        private string overallProgressDescription;
-        private bool overallProgressVisible;
-        private int detailedProgress;
-        private string detailedProgressDescription;
-        private bool detailedProgressVisible;
+        private int progress;
+        private string progressDescription;
+        private bool progressIndeterminate;
         private bool isFinished;
         
         // Protected fields ---------------------------------------------------
@@ -54,46 +50,22 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations
             set => Set(ref title, value);
         }
 
-        public object Description
+        public int Progress
         {
-            get => description;
-            set => Set(ref description, value);
+            get => progress;
+            set => Set(ref progress, value);
         }
 
-        public int OverallProgress
+        public string ProgressDescription
         {
-            get => overallProgress;
-            set => Set(ref overallProgress, value);
+            get => progressDescription;
+            set => Set(ref progressDescription, value);
         }
 
-        public string OverallProgressDescription
+        public bool ProgressIndeterminate
         {
-            get => overallProgressDescription;
-            set => Set(ref overallProgressDescription, value);
-        }
-
-        public bool OverallProgressVisible
-        {
-            get => overallProgressVisible; 
-            set => Set(ref overallProgressVisible, value);
-        }
-
-        public int DetailedProgress
-        {
-            get => detailedProgress;
-            set => Set(ref detailedProgress, value);
-        }
-
-        public string DetailedProgressDescription
-        {
-            get => detailedProgressDescription;
-            set => Set(ref detailedProgressDescription, value);
-        }
-
-        public bool DetailedProgressVisible
-        {
-            get => detailedProgressVisible; 
-            set => Set(ref detailedProgressVisible, value);
+            get => progressIndeterminate;
+            set => Set(ref progressIndeterminate, value);
         }
 
         public bool IsFinished

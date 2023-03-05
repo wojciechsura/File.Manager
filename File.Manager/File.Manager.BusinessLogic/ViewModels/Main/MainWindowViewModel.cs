@@ -62,7 +62,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
             if (!result)
                 return;
 
-            BaseOperationViewModel operation;
+            BaseCopyMoveOperationViewModel operation;
 
             if (withPlan)
             {
@@ -84,21 +84,21 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
                     items);
             }
 
-            dialogService.ShowOperation(operation);
+            dialogService.ShowCopyMoveProgress(operation);
         }
 
         private void DoCopy()
         {
-            var activePane = ActivePane;
-            var inactivePane = InactivePane;
+            var copyFromPane = ActivePane;
+            var copyToPane = InactivePane;
 
-            var activeCapabilities = activePane.Navigator.GetLocationCapabilities();
-            var inactiveCapabilities = inactivePane.Navigator.GetLocationCapabilities();
+            var copyFromCapabilities = copyFromPane.Navigator.GetLocationCapabilities();
+            var copyToCapabilities = copyToPane.Navigator.GetLocationCapabilities();
 
-            if (activeCapabilities.HasFlag(LocationCapabilities.BufferedRead) &&
-                inactiveCapabilities.HasFlag(LocationCapabilities.BufferedWrite | LocationCapabilities.CreateFolder))
+            if (copyFromCapabilities.HasFlag(LocationCapabilities.BufferedRead) &&
+                copyToCapabilities.HasFlag(LocationCapabilities.BufferedWrite | LocationCapabilities.CreateFolder))
             {
-                DoBufferedCopy(activePane, inactivePane, activeCapabilities.HasFlag(LocationCapabilities.Plan));
+                DoBufferedCopy(copyFromPane, copyToPane, copyFromCapabilities.HasFlag(LocationCapabilities.Plan));
             }
 
             // TODO direct

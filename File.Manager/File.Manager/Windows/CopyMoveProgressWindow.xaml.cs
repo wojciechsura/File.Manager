@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using File.Manager.BusinessLogic.ViewModels.Operations;
+using File.Manager.BusinessLogic.ViewModels.Operations.CopyMove;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,20 +20,20 @@ namespace File.Manager.Windows
     /// <summary>
     /// Logika interakcji dla klasy OperationRunnerWindows.xaml
     /// </summary>
-    public partial class OperationRunnerWindow : Window, IOperationRunnerWindowAccess
+    public partial class CopyMoveProgressWindow : Window, ICopyMoveProgressWindowAccess
     {
-        private readonly OperationRunnerViewModel viewModel;
+        private readonly CopyMoveProgressWindowViewModel viewModel;
 
-        void IOperationRunnerWindowAccess.Close()
+        void ICopyMoveProgressWindowAccess.Close()
         {
             Close();
         }
 
-        public OperationRunnerWindow(BaseOperationViewModel operation)
+        public CopyMoveProgressWindow(BaseCopyMoveOperationViewModel operation)
         {
             InitializeComponent();
 
-            viewModel = Dependencies.Container.Instance.Resolve<OperationRunnerViewModel>(new NamedParameter("operation", operation),
+            viewModel = Dependencies.Container.Instance.Resolve<CopyMoveProgressWindowViewModel>(new NamedParameter("operation", operation),
                 new NamedParameter("access", this));
             DataContext = viewModel;
         }

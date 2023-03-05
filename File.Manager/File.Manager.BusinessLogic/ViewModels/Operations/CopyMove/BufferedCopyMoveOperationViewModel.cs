@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
 {
-    public class BufferedCopyMoveOperationViewModel : BaseOperationViewModel
+    public class BufferedCopyMoveOperationViewModel : BaseCopyMoveOperationViewModel
     {
         public BufferedCopyMoveOperationViewModel(IDialogService dialogService,
             IMessagingService messagingService,
@@ -26,6 +26,8 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
 
         public override void Run()
         {
+            ProgressIndeterminate = true;
+
             throw new NotImplementedException();
         }
     }

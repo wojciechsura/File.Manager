@@ -25,7 +25,7 @@ using System.Windows.Documents;
 
 namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
 {
-    public class BufferedCopyMoveWithPlanOperationViewModel : BaseOperationViewModel
+    public class BufferedCopyMoveWithPlanOperationViewModel : BaseCopyMoveOperationViewModel
     {
         // Private types ------------------------------------------------------
 
@@ -106,18 +106,18 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
 
         public class CopyMoveProgress
         {
-            public CopyMoveProgress(int overallProgress, string overallDescription, int detailedProgress, string detailedDescription)
+            public CopyMoveProgress(int progress, string description, int fileProgress, string fileDescription)
             {
-                OverallProgress = overallProgress;
-                OverallDescription = overallDescription;
-                DetailedProgress = detailedProgress;
-                DetailedDescription = detailedDescription;
+                Progress = progress;
+                Description = description;
+                FileProgress = fileProgress;
+                FileDescription = fileDescription;
             }
 
-            public int OverallProgress { get; }
-            public string OverallDescription { get; }
-            public int DetailedProgress { get; }
-            public string DetailedDescription { get; }
+            public int Progress { get; }
+            public string Description { get; }
+            public int FileProgress { get; }
+            public string FileDescription { get; }
         }
 
         // Worker
@@ -940,10 +940,10 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
             }
             else if (e.UserState is CopyMoveProgress progress)
             {
-                OverallProgress = progress.OverallProgress;
-                OverallProgressDescription = progress.OverallDescription;
-                DetailedProgress = progress.DetailedProgress;
-                DetailedProgressDescription = progress.DetailedDescription;
+                Progress = progress.Progress;
+                ProgressDescription = progress.Description;
+                FileProgress = progress.FileProgress;
+                FileProgressDescription = progress.FileDescription;
             }
         }
 
@@ -983,15 +983,16 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
 
         public override void Run()
         {
+            /*
             Description = new CopyMoveDescriptionViewModel
             {
                 FromAddress = sourceOperator.CurrentPath,
                 ToAddress = destinationOperator.CurrentPath,
                 State = "Copying files"
             };
+            */
 
-            OverallProgressVisible = true;
-            DetailedProgressVisible = true;
+            ProgressIndeterminate = false;
 
             var input = new CopyMoveWorkerInput(operationType,
                 sourceOperator,

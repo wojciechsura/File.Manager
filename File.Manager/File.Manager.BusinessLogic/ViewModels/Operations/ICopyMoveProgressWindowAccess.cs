@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace File.Manager.BusinessLogic.ViewModels.Operations
 {
-    public interface IOperationRunnerWindowAccess
+    public interface ICopyMoveProgressWindowAccess
     {
         void Close();
     }

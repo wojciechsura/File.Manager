@@ -2,6 +2,7 @@
 using File.Manager.BusinessLogic.Services.Dialogs;
 using File.Manager.BusinessLogic.Types;
 using File.Manager.BusinessLogic.ViewModels.Operations;
+using File.Manager.BusinessLogic.ViewModels.Operations.CopyMove;
 using File.Manager.Resources;
 using File.Manager.Windows;
 using Microsoft.Win32;
@@ -74,9 +75,9 @@ namespace File.Manager.Services.DialogService
                 return (false, null);
         }
 
-        public void ShowOperation(BaseOperationViewModel operation)
+        public void ShowCopyMoveProgress(BaseCopyMoveOperationViewModel operation)
         {
-            var dialog = new OperationRunnerWindow(operation);
+            var dialog = new CopyMoveProgressWindow(operation);
             dialog.ShowDialog();
         }
 

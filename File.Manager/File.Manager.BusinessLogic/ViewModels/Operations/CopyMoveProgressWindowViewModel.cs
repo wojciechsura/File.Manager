@@ -1,4 +1,5 @@
 ﻿using File.Manager.BusinessLogic.ViewModels.Base;
+using File.Manager.BusinessLogic.ViewModels.Operations.CopyMove;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -9,17 +10,17 @@ using System.Xml.Serialization;
 
 namespace File.Manager.BusinessLogic.ViewModels.Operations
 {
-    public class OperationRunnerViewModel : BaseViewModel
+    public class CopyMoveProgressWindowViewModel : BaseViewModel
     {
-        private readonly IOperationRunnerWindowAccess access;
-        private BaseOperationViewModel operation;
+        private readonly ICopyMoveProgressWindowAccess access;
+        private readonly BaseCopyMoveOperationViewModel operation;
 
         private void HandleOperationFinished(object sender, EventArgs args)
         {
             access.Close();
         }
 
-        public OperationRunnerViewModel(BaseOperationViewModel operation, IOperationRunnerWindowAccess access)
+        public CopyMoveProgressWindowViewModel(BaseCopyMoveOperationViewModel operation, ICopyMoveProgressWindowAccess access)
         {
             this.operation = operation ?? throw new ArgumentNullException(nameof(operation));
             this.access = access;
