@@ -19,26 +19,31 @@
     <DockPanel>
 
         <f:Ribbon DockPanel.Dock="Top">
-
+            <f:RibbonTabItem Header="{x:Static res:Strings.Ribbon_Tab_Home}">
+                <f:RibbonGroupBox Header="{x:Static res:Strings.Ribbon_Group_Actions}">
+                    <f:Button Header="{x:Static res:Strings.Ribbon_Button_View}" 
+                              LargeIcon="pack://application:,,,/File.Manager;component/Resources/Images/View32.png"
+                              Icon="pack://application:,,,/File.Manager;component/Resources/Images/View16.png"/>
+                    <f:Button Header="{x:Static res:Strings.Ribbon_Button_Edit}" 
+                              LargeIcon="pack://application:,,,/File.Manager;component/Resources/Images/Edit32.png"
+                              Icon="pack://application:,,,/File.Manager;component/Resources/Images/Edit16.png"/>
+                    <f:Button Header="{x:Static res:Strings.Ribbon_Button_Copy}" 
+                              Command="{Binding CopyCommand}"
+                              LargeIcon="pack://application:,,,/File.Manager;component/Resources/Images/Copy32.png"
+                              Icon="pack://application:,,,/File.Manager;component/Resources/Images/Copy16.png"/>
+                    <f:Button Header="{x:Static res:Strings.Ribbon_Button_Move}" 
+                              Command="{Binding MoveCommand}"
+                              LargeIcon="pack://application:,,,/File.Manager;component/Resources/Images/Move32.png"
+                              Icon="pack://application:,,,/File.Manager;component/Resources/Images/Move16.png"/>
+                    <f:Button Header="{x:Static res:Strings.Ribbon_Button_NewFolder}" 
+                              LargeIcon="pack://application:,,,/File.Manager;component/Resources/Images/NewFolder32.png"
+                              Icon="pack://application:,,,/File.Manager;component/Resources/Images/NewFolder16.png"/>
+                    <f:Button Header="{x:Static res:Strings.Ribbon_Button_Delete}" 
+                              LargeIcon="pack://application:,,,/File.Manager;component/Resources/Images/Delete32.png"
+                              Icon="pack://application:,,,/File.Manager;component/Resources/Images/Delete16.png"/>
+                </f:RibbonGroupBox>
+            </f:RibbonTabItem>
         </f:Ribbon>
-
-        <Grid DockPanel.Dock="Bottom">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1*" />
-                <ColumnDefinition Width="1*" />
-                <ColumnDefinition Width="1*" />
-                <ColumnDefinition Width="1*" />
-                <ColumnDefinition Width="1*" />
-                <ColumnDefinition Width="1*" />
-            </Grid.ColumnDefinitions>
-
-            <Button Grid.Column="0" Margin="{StaticResource DialogItemsMargin}">F3 View</Button>
-            <Button Grid.Column="1" Margin="{StaticResource DialogItemsExceptLeftMargin}">F4 Edit</Button>
-            <Button Grid.Column="2" Margin="{StaticResource DialogItemsExceptLeftMargin}" Command="{Binding CopyCommand}">F5 Copy</Button>
-            <Button Grid.Column="3" Margin="{StaticResource DialogItemsExceptLeftMargin}">F6 Move</Button>
-            <Button Grid.Column="4" Margin="{StaticResource DialogItemsExceptLeftMargin}">F7 New folder</Button>
-            <Button Grid.Column="5" Margin="{StaticResource DialogItemsExceptLeftMargin}">F8 Delete</Button>
-        </Grid>
 
         <Grid>
             <Grid.ColumnDefinitions>

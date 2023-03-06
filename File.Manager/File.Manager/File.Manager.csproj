@@ -10,6 +10,34 @@
     <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Resources\Images\Copy16.png" />
+    <None Remove="Resources\Images\Copy32.png" />
+    <None Remove="Resources\Images\Delete16.png" />
+    <None Remove="Resources\Images\Delete32.png" />
+    <None Remove="Resources\Images\Edit16.png" />
+    <None Remove="Resources\Images\Edit32.png" />
+    <None Remove="Resources\Images\Move16.png" />
+    <None Remove="Resources\Images\Move32.png" />
+    <None Remove="Resources\Images\NewFolder16.png" />
+    <None Remove="Resources\Images\NewFolder32.png" />
+    <None Remove="Resources\Images\View16.png" />
+    <None Remove="Resources\Images\View32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\Copy16.png" />
+    <Resource Include="Resources\Images\Copy32.png" />
+    <Resource Include="Resources\Images\Delete16.png" />
+    <Resource Include="Resources\Images\Delete32.png" />
+    <Resource Include="Resources\Images\Edit16.png" />
+    <Resource Include="Resources\Images\Edit32.png" />
+    <Resource Include="Resources\Images\Move16.png" />
+    <Resource Include="Resources\Images\Move32.png" />
+    <Resource Include="Resources\Images\NewFolder16.png" />
+    <Resource Include="Resources\Images\NewFolder32.png" />
+    <Resource Include="Resources\Images\View16.png" />
+    <Resource Include="Resources\Images\View32.png" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="..\..\.editorconfig" Link=".editorconfig" />
   </ItemGroup>
   <ItemGroup>
@@ -17,7 +45,7 @@
     <PackageReference Include="Fluent.Ribbon" Version="9.0.4" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
-    <PackageReference Include="Spooksoft.Wpf.Controls" Version="1.0.0" />
+    <PackageReference Include="Spooksoft.Wpf.Controls" Version="1.0.2" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
   </ItemGroup>
   <ItemGroup>

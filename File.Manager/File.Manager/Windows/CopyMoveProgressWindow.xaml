@@ -9,6 +9,7 @@
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:cres="clr-namespace:File.Manager.Resources.Common;assembly=File.Manager.Resources"
         xmlns:res="clr-namespace:File.Manager.Resources.Windows.CopyMoveProgressWindow;assembly=File.Manager.Resources"
+        xmlns:pc="clr-namespace:System.Windows;assembly=PresentationCore"
         d:DataContext="{d:DesignInstance Type=vm:CopyMoveProgressWindowViewModel}"
         mc:Ignorable="d"
         Title="{Binding Operation.Title}" SizeToContent="Height" Width="600"
@@ -52,7 +53,8 @@
                 <DockPanel Margin="{StaticResource DialogItemsExceptTopMargin}" HorizontalAlignment="Stretch">
                     <Label DockPanel.Dock="Top" Margin="{StaticResource DialogItemsMargin}" Content="{Binding Operation.ProgressDescription}" />
 
-                    <Label Margin="{StaticResource DialogItemsRightMargin}" DockPanel.Dock="Right" Width="40" HorizontalContentAlignment="Center">
+                    <Label Margin="{StaticResource DialogItemsRightMargin}" DockPanel.Dock="Right" Width="40" HorizontalContentAlignment="Center"
+                           Visibility="{Binding Operation.ProgressIndeterminate, Converter={StaticResource InverseBoolToVisibilityConverter}, ConverterParameter={x:Static pc:Visibility.Hidden}}">
                         <TextBlock>
                             <TextBlock.Inlines>
                                 <Run Text="{Binding Operation.Progress, Mode=OneWay}" />

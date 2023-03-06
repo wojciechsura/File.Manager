@@ -61,6 +61,78 @@ namespace File.Manager.Resources.Windows.MainWindow {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Copy F5.
+        /// </summary>
+        public static string Ribbon_Button_Copy {
+            get {
+                return ResourceManager.GetString("Ribbon_Button_Copy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Delete F8.
+        /// </summary>
+        public static string Ribbon_Button_Delete {
+            get {
+                return ResourceManager.GetString("Ribbon_Button_Delete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Edit F4.
+        /// </summary>
+        public static string Ribbon_Button_Edit {
+            get {
+                return ResourceManager.GetString("Ribbon_Button_Edit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Move F6.
+        /// </summary>
+        public static string Ribbon_Button_Move {
+            get {
+                return ResourceManager.GetString("Ribbon_Button_Move", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu New Folder F7.
+        /// </summary>
+        public static string Ribbon_Button_NewFolder {
+            get {
+                return ResourceManager.GetString("Ribbon_Button_NewFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu View F3.
+        /// </summary>
+        public static string Ribbon_Button_View {
+            get {
+                return ResourceManager.GetString("Ribbon_Button_View", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Actions.
+        /// </summary>
+        public static string Ribbon_Group_Actions {
+            get {
+                return ResourceManager.GetString("Ribbon_Group_Actions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Home.
+        /// </summary>
+        public static string Ribbon_Tab_Home {
+            get {
+                return ResourceManager.GetString("Ribbon_Tab_Home", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu File.Manager.
         /// </summary>
         public static string Window_Title {

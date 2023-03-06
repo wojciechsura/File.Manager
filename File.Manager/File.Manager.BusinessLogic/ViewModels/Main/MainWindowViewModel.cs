@@ -49,12 +49,12 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
             return dialogService.ShowCopyMoveConfigurationDialog(input);            
         }
 
-        private void DoBufferedCopy(PaneViewModel activePane, PaneViewModel inactivePane, bool withPlan)
+        private void DoBufferedCopyMove(PaneViewModel activePane, PaneViewModel inactivePane, bool withPlan, DataTransferOperationType operationType)
         {
             var items = activePane.GetSelectedItems();
 
             (bool result, CopyMoveConfigurationModel model) = ShowCopyMoveDialog(
-                DataTransferOperationType.Copy,
+                operationType,
                 items,
                 activePane.Navigator.Address,
                 inactivePane.Navigator.Address);
@@ -68,7 +68,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
             {
                 operation = new BufferedCopyMoveWithPlanOperationViewModel(dialogService,
                     messagingService,
-                    DataTransferOperationType.Copy,
+                    operationType,
                     activePane.Navigator.CreateOperatorForCurrentLocation(),
                     inactivePane.Navigator.CreateOperatorForCurrentLocation(),
                     model,
@@ -78,7 +78,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
             {
                 operation = new BufferedCopyMoveOperationViewModel(dialogService,
                     messagingService,
-                    DataTransferOperationType.Copy,
+                    operationType,
                     activePane.Navigator.CreateOperatorForCurrentLocation(),
                     inactivePane.Navigator.CreateOperatorForCurrentLocation(),
                     model,
@@ -88,7 +88,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
             dialogService.ShowCopyMoveProgress(operation);
         }
 
-        private void DoCopy()
+        private void DoCopyMove(DataTransferOperationType operationType)
         {
             var copyFromPane = ActivePane;
             var copyToPane = InactivePane;
@@ -99,7 +99,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
             if (copyFromCapabilities.HasFlag(LocationCapabilities.BufferedRead) &&
                 copyToCapabilities.HasFlag(LocationCapabilities.BufferedWrite | LocationCapabilities.CreateFolder))
             {
-                DoBufferedCopy(copyFromPane, copyToPane, copyFromCapabilities.HasFlag(LocationCapabilities.Plan));
+                DoBufferedCopyMove(copyFromPane, copyToPane, copyFromCapabilities.HasFlag(LocationCapabilities.Plan), operationType);
             }
 
             // TODO direct
@@ -170,7 +170,8 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
             rightPane = new PaneViewModel(this, moduleService, iconService, messagingService);
 
             SwitchPanesCommand = new AppCommand(obj => DoSwitchPanes());
-            CopyCommand = new AppCommand(obj => DoCopy());
+            CopyCommand = new AppCommand(obj => DoCopyMove(DataTransferOperationType.Copy));
+            MoveCommand = new AppCommand(obj => DoCopyMove(DataTransferOperationType.Move));
 
             activePane = leftPane;
         }
@@ -201,5 +202,6 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
         public ICommand SwitchPanesCommand { get; }
 
         public ICommand CopyCommand { get; }
+        public ICommand MoveCommand { get; }
     }
 }

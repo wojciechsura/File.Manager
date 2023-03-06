@@ -17,13 +17,19 @@
         <GroupBox Header="{x:Static res:Strings.Groupbox_Summary_Title}" Margin="{StaticResource DialogItemsMargin}">
             <sc:EditorPanel>
                 <Label Style="{StaticResource FirstHeaderLabel}" Content="{Binding SummaryHeader}" />
-                <Label Style="{StaticResource FirstValueLabel}" Content="{Binding SummaryValue}" MaxWidth="450" />
+                <Label Style="{StaticResource FirstValueLabel}" MaxWidth="450">
+                    <TextBlock Text="{Binding SummaryValue}" />
+                </Label>
 
                 <Label Style="{StaticResource NextHeaderLabel}" Content="{x:Static res:Strings.Label_Source}" />
-                <Label Style="{StaticResource NextValueLabel}" Content="{Binding SourceAddress}" MaxWidth="450" />
+                <Label Style="{StaticResource NextValueLabel}" MaxWidth="450">
+                    <TextBlock Text="{Binding SourceAddress}" />
+                </Label>
 
                 <Label Style="{StaticResource NextHeaderLabel}" Content="{x:Static res:Strings.Label_Destination}" />
-                <Label Style="{StaticResource NextValueLabel}" Content="{Binding DestinationAddress}" MaxWidth="450" />
+                <Label Style="{StaticResource NextValueLabel}" MaxWidth="450">
+                    <TextBlock Text="{Binding DestinationAddress}" />
+                </Label>
             </sc:EditorPanel>
         </GroupBox>
 
