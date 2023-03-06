@@ -1,6 +1,6 @@
-﻿using File.Manager.API.Filesystem.Models.Items;
-using File.Manager.API.Filesystem.Models.Operator;
-using File.Manager.API.Filesystem.Models.Plan;
+﻿using File.Manager.API.Filesystem.Models.Items.Listing;
+using File.Manager.API.Filesystem.Models.Items.Operator;
+using File.Manager.API.Filesystem.Models.Items.Plan;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,7 +12,7 @@ namespace File.Manager.API.Filesystem
 {
     public interface IFilesystemOperator : IDisposable
     {
-        OperationPlan BuildOperationPlanFromSelection(IReadOnlyList<Item> selectedItems, string fileMaskOverride);
+        OperationPlan BuildOperationPlanFromSelection(IReadOnlyList<Item>? selectedItems, string? fileMaskOverride);
 
         /// <summary>Creates folder with given name if one does not exist.</summary>
         bool CreateFolder(string name);
@@ -36,7 +36,7 @@ namespace File.Manager.API.Filesystem
         FileAttributes? GetFileAttributes(string targetName);
 
         /// <summary>Lists contents of the current location</summary>
-        IReadOnlyList<BaseOperatorItem> List();
+        IReadOnlyList<BaseOperatorItem> List(IReadOnlyList<Item>? selectedItems, string? fileMaskOverride);
 
         /// <summary>Returns stream for existing file allowing reading.</summary>
         Stream OpenFileForReading(string name);

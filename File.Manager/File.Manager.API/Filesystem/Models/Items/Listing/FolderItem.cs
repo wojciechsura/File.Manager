@@ -5,21 +5,21 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
 
-namespace File.Manager.API.Filesystem.Models.Items
+namespace File.Manager.API.Filesystem.Models.Items.Listing
 {
     /// <summary>
-    /// Represents a file-like item (executable, copyable, viewable,
-    /// editable etc.)
+    /// Represents a folder-like item (one, which when
+    /// executed, should result in location change)
     /// </summary>
-    public class FileItem : Item
+    public class FolderItem : Item
     {
-        public FileItem(string name) 
+        public FolderItem(string name)
             : base(name)
         {
 
         }
 
-        public FileItem(string name, ImageSource smallIcon, ImageSource largeIcon)
+        public FolderItem(string name, ImageSource smallIcon, ImageSource largeIcon)
             : this(name)
         {
             SmallIcon = smallIcon;

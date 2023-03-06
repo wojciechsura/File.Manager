@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows.Navigation;
 
-namespace File.Manager.API.Filesystem.Models.Items
+namespace File.Manager.API.Filesystem.Models.Items.Listing
 {
     /// <summary>
     /// Base class for items provided to File.Manager by the Navigator
@@ -26,7 +26,7 @@ namespace File.Manager.API.Filesystem.Models.Items
 
         private T TryGet<T>(string key)
         {
-            return attributes.ContainsKey(key) ? (T)attributes[key]! : default(T)!;
+            return attributes.ContainsKey(key) ? (T)attributes[key]! : default!;
         }
 
         private void Set(string key, object? value)
@@ -66,11 +66,11 @@ namespace File.Manager.API.Filesystem.Models.Items
         private protected Item(string name)
         {
             attributes = new();
-            attributes[NameKey] = name;    
+            attributes[NameKey] = name;
         }
 
         public string Name => TryGet<string>(NameKey)!;
-        
+
         public ImageSource? SmallIcon
         {
             get => TryGet<ImageSource?>(SmallIconKey);
@@ -116,7 +116,7 @@ namespace File.Manager.API.Filesystem.Models.Items
         public object? this[string key]
         {
             get => attributes.ContainsKey(key) ? attributes[key] : null;
-            set 
+            set
             {
                 if (key == NameKey)
                     throw new InvalidOperationException("Name of the item is read-only!");

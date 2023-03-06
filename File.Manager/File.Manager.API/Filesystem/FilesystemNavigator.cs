@@ -1,5 +1,4 @@
 ﻿using File.Manager.API.Filesystem.Models;
-using File.Manager.API.Filesystem.Models.Items;
 using File.Manager.API.Filesystem.Models.Navigation;
 using File.Manager.API.Filesystem.Models.Focus;
 using System;
@@ -9,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using File.Manager.API.Types;
-using File.Manager.API.Filesystem.Models.Plan;
+using File.Manager.API.Filesystem.Models.Items.Listing;
 
 namespace File.Manager.API.Filesystem
 {

@@ -1,5 +1,4 @@
 ﻿using File.Manager.API.Filesystem;
-using File.Manager.API.Filesystem.Models.Items;
 using File.Manager.API.Filesystem.Models.Navigation;
 using File.Manager.API.Filesystem.Models.Focus;
 using File.Manager.BusinessLogic.Services.Modules;
@@ -10,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using File.Manager.API.Exceptions.Filesystem;
 using File.Manager.API.Types;
-using File.Manager.API.Filesystem.Models.Plan;
+using File.Manager.API.Filesystem.Models.Items.Listing;
 
 namespace File.Manager.BusinessLogic.Modules.Filesystem.Home
 {

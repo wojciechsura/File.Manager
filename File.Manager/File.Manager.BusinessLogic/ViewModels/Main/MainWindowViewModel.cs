@@ -1,4 +1,4 @@
-﻿using File.Manager.API.Filesystem.Models.Items;
+﻿using File.Manager.API.Filesystem.Models.Items.Listing;
 using File.Manager.API.Types;
 using File.Manager.BusinessLogic.Models.Dialogs.CopyMoveConfiguration;
 using File.Manager.BusinessLogic.Services.Dialogs;
@@ -81,6 +81,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
                     DataTransferOperationType.Copy,
                     activePane.Navigator.CreateOperatorForCurrentLocation(),
                     inactivePane.Navigator.CreateOperatorForCurrentLocation(),
+                    model,
                     items);
             }
 

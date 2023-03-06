@@ -4,22 +4,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace File.Manager.API.Filesystem.Models.Plan
+namespace File.Manager.API.Filesystem.Models.Items.Operator
 {
-    public class PlanFile : BasePlanItem
+    public sealed class OperatorFileItem : BaseOperatorItem, IFileInfo
     {
-        public PlanFile(string name, long size, bool isReadOnly, bool isHidden, bool isSystem)
+        public OperatorFileItem(string name, long size, bool isReadOnly, bool isSystem, bool isHidden)
             : base(name)
         {
             Size = size;
             IsReadOnly = isReadOnly;
-            IsHidden = isHidden;
             IsSystem = isSystem;
+            IsHidden = isHidden;
         }
 
         public long Size { get; }
         public bool IsReadOnly { get; }
-        public bool IsHidden { get; }
         public bool IsSystem { get; }
+        public bool IsHidden { get; }
     }
 }

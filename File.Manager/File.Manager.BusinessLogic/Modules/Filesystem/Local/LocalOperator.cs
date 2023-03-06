@@ -1,7 +1,7 @@
 ﻿using File.Manager.API.Filesystem;
-using File.Manager.API.Filesystem.Models.Items;
-using File.Manager.API.Filesystem.Models.Operator;
-using File.Manager.API.Filesystem.Models.Plan;
+using File.Manager.API.Filesystem.Models.Items.Listing;
+using File.Manager.API.Filesystem.Models.Items.Operator;
+using File.Manager.API.Filesystem.Models.Items.Plan;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -53,12 +53,20 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
                 if (selectedItems != null && selectedItems.FirstOrDefault(i => i is FileItem fileItem && fileItem.Name.ToLowerInvariant() == file.Name.ToLowerInvariant()) == null)
                     continue;
 
-                var fileItem = new PlanFile(file.Name,
-                    file.Length,
-                    file.Attributes.HasFlag(FileAttributes.ReadOnly),
-                    file.Attributes.HasFlag(FileAttributes.Hidden),
-                    file.Attributes.HasFlag(FileAttributes.System));
-                result.Add(fileItem);
+                try
+                {
+                    var fileItem = new PlanFile(file.Name,
+                        file.Length,
+                        file.Attributes.HasFlag(FileAttributes.ReadOnly),
+                        file.Attributes.HasFlag(FileAttributes.Hidden),
+                        file.Attributes.HasFlag(FileAttributes.System));
+                    result.Add(fileItem);
+                }
+                catch
+                {
+                    // Intentionally left empty (folder won't be taken into account in the plan)
+                    // TODO Ask user?
+                }
             }
 
             return result;
@@ -72,7 +80,7 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
             this.currentPath = startPath;
         }
 
-        public OperationPlan BuildOperationPlanFromSelection(IReadOnlyList<Item> selectedItems, string fileMaskOverride)
+        public OperationPlan BuildOperationPlanFromSelection(IReadOnlyList<Item>? selectedItems, string? fileMaskOverride)
         {
             var items = CreatePlanForFolderRecursive(startPath, fileMaskOverride, selectedItems);
             return new OperationPlan(items);
@@ -218,6 +226,56 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
             {
                 return false;
             }
+        }
+
+        public IReadOnlyList<BaseOperatorItem> List(IReadOnlyList<Item> selectedItems, string fileMaskOverride)
+        {
+            var result = new List<BaseOperatorItem>();
+
+            var info = new DirectoryInfo(startPath);
+
+            foreach (var directory in info.GetDirectories())
+            {
+                if (selectedItems != null && selectedItems.FirstOrDefault(i => i is FolderItem folderItem && folderItem.Name.ToLowerInvariant() == directory.Name.ToLowerInvariant()) == null)
+                    continue;
+
+                try
+                {
+                    var directoryItem = new OperatorFolderItem(directory.Name);
+                    result.Add(directoryItem);
+                }
+                catch
+                {
+                    // Intentionally left empty (folder won't be taken into account in the plan)
+                    // TODO Ask user?
+                }
+            }
+
+            var files = string.IsNullOrEmpty(fileMaskOverride) ? info.GetFiles() : info.GetFiles(fileMaskOverride);
+
+            foreach (var file in files)
+            {
+                if (selectedItems != null && selectedItems.FirstOrDefault(i => i is FileItem fileItem && fileItem.Name.ToLowerInvariant() == file.Name.ToLowerInvariant()) == null)
+                    continue;
+
+                try
+                {
+                    var fileItem = new OperatorFileItem(file.Name,
+                        file.Length,
+                        file.Attributes.HasFlag(FileAttributes.ReadOnly),
+                        file.Attributes.HasFlag(FileAttributes.Hidden),
+                        file.Attributes.HasFlag(FileAttributes.System));
+                    result.Add(fileItem);
+                }
+                catch
+                {
+                    // Intentionally left empty (file won't be taken into account in the plan)
+                    // TODO Ask user?
+                }
+            }
+
+            return result;
+
         }
 
         public string CurrentPath => currentPath;

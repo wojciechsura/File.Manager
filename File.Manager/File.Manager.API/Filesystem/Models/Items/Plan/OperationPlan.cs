@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace File.Manager.API.Filesystem.Models.Plan
+namespace File.Manager.API.Filesystem.Models.Items.Plan
 {
     public class OperationPlan : IReadOnlyList<BasePlanItem>
     {

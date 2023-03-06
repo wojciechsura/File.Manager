@@ -5,13 +5,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace File.Manager.API.Filesystem.Models.Plan
+namespace File.Manager.API.Filesystem.Models.Items.Plan
 {
-    public class PlanFolder : BasePlanItem, IReadOnlyList<BasePlanItem>
+    public class PlanFolder : BasePlanItem, IFolderInfo, 
+        IReadOnlyList<BasePlanItem>
     {
         private readonly List<BasePlanItem> items;
 
-        public PlanFolder(string name, List<BasePlanItem> items) 
+        public PlanFolder(string name, List<BasePlanItem> items)
             : base(name)
         {
             this.items = items;

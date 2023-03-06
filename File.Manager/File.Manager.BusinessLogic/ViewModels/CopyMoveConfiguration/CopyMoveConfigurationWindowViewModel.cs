@@ -6,12 +6,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
 using File.Manager.Resources.Windows.CopyMoveConfigurationWindow;
-using File.Manager.API.Filesystem.Models.Items;
 using SmartFormat;
 using File.Manager.BusinessLogic.Models.Dialogs.CopyMoveConfiguration;
 using File.Manager.BusinessLogic.ViewModels.Base;
 using System.Windows.Input;
 using Spooksoft.VisualStateManager.Commands;
+using File.Manager.API.Filesystem.Models.Items.Listing;
 
 namespace File.Manager.BusinessLogic.ViewModels.CopyMoveConfiguration
 {

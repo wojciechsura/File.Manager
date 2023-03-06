@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace File.Manager.API.Filesystem.Models.Operator
+namespace File.Manager.API.Filesystem.Models.Items.Operator
 {
-    public sealed class OperatorFolderItem : BaseOperatorItem
+    public sealed class OperatorFolderItem : BaseOperatorItem, IFolderInfo
     {
-        public OperatorFolderItem(string name) 
+        public OperatorFolderItem(string name)
             : base(name)
         {
 

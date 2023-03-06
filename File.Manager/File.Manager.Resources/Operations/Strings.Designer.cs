@@ -79,6 +79,15 @@ namespace File.Manager.Resources.Operations {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Copied files: {0} ({1}). Elapsed: {2}{3}.
+        /// </summary>
+        public static string CopyMove_Info_PartialDescription {
+            get {
+                return ResourceManager.GetString("CopyMove_Info_PartialDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Copied files: {0} / {1} ({2} / {3}). Elapsed: {4}, left: {5}{6}.
         /// </summary>
         public static string CopyMove_Info_TotalDescription {
@@ -102,6 +111,15 @@ namespace File.Manager.Resources.Operations {
         public static string CopyMove_Question_CannotGetTargetFileAttributes {
             get {
                 return ResourceManager.GetString("CopyMove_Question_CannotGetTargetFileAttributes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot list source folder contents: {0}.
+        /// </summary>
+        public static string CopyMove_Question_CannotListSourceFolder {
+            get {
+                return ResourceManager.GetString("CopyMove_Question_CannotListSourceFolder", resourceCulture);
             }
         }
         

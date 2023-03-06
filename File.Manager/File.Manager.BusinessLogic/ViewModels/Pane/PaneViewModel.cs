@@ -1,5 +1,4 @@
 ﻿using File.Manager.API.Filesystem;
-using File.Manager.API.Filesystem.Models.Items;
 using File.Manager.API.Filesystem.Models.Navigation;
 using File.Manager.API.Filesystem.Models.Focus;
 using File.Manager.BusinessLogic.Modules.Filesystem.Home;
@@ -22,6 +21,7 @@ using System.Windows.Data;
 using System.ComponentModel;
 using File.Manager.BusinessLogic.Models.Files;
 using Gstc.Collections.ObservableLists;
+using File.Manager.API.Filesystem.Models.Items.Listing;
 
 namespace File.Manager.BusinessLogic.ViewModels.Pane
 {

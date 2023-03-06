@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace File.Manager.API.Filesystem.Models.Plan
+namespace File.Manager.API.Filesystem.Models.Items.Operator
 {
-    public abstract class BasePlanItem
+    public abstract class BaseOperatorItem : IBaseItemInfo
     {
-        public BasePlanItem(string name)
+        protected BaseOperatorItem(string name)
         {
             Name = name;
         }

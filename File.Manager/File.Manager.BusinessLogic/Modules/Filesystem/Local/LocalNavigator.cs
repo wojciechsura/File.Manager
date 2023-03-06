@@ -1,6 +1,5 @@
 ﻿using File.Manager.API;
 using File.Manager.API.Filesystem;
-using File.Manager.API.Filesystem.Models.Items;
 using File.Manager.API.Filesystem.Models.Navigation;
 using File.Manager.API.Filesystem.Models.Focus;
 using File.Manager.BusinessLogic.Modules.Filesystem.Home;
@@ -18,7 +17,7 @@ using System.Diagnostics;
 using File.Manager.API.Tools;
 using File.Manager.API.Exceptions.Filesystem;
 using File.Manager.API.Types;
-using File.Manager.API.Filesystem.Models.Plan;
+using File.Manager.API.Filesystem.Models.Items.Listing;
 
 namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
 {
@@ -277,8 +276,7 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
                 return LocationCapabilities.BufferedRead |
                     LocationCapabilities.BufferedWrite |
                     LocationCapabilities.CreateFolder |
-                    LocationCapabilities.Delete |
-                    LocationCapabilities.Plan;
+                    LocationCapabilities.Delete; // | LocationCapabilities.Plan;
             }
         }
 
