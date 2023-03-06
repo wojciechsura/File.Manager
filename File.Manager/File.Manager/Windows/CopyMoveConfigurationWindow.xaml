@@ -30,19 +30,24 @@
                 <Label Style="{StaticResource NextValueLabel}" MaxWidth="450">
                     <TextBlock Text="{Binding DestinationAddress}" />
                 </Label>
+
+                <Label Style="{StaticResource NextHeaderLabel}" Content="{x:Static res:Strings.Label_TargetFilename}" />
+                <TextBox Text="{Binding TargetFilename, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         HorizontalAlignment="Stretch"
+                         Margin="{StaticResource DialogItemsExceptTopMargin}" />
             </sc:EditorPanel>
         </GroupBox>
 
         <GroupBox Header="{x:Static res:Strings.Groupbox_Configuration_Title}" Margin="{StaticResource DialogItemsExceptTopMargin}">
             <sc:EditorPanel>
                 <Label Style="{StaticResource FirstHeaderLabel}" Content="{x:Static res:Strings.Label_FileMask}" />
-                <TextBox Width="200" Text="{Binding FileMask, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                         VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                <TextBox Text="{Binding FileMask, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                         VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
 
                 <Label Style="{StaticResource NextHeaderLabel}" Content="{x:Static res:Strings.Label_OverwritingOptions}" />
-                <ComboBox Width="200" ItemsSource="{Binding Source={m:EnumBindingSource EnumType={x:Type t:GenericProblemResolution}}}"
+                <ComboBox ItemsSource="{Binding Source={m:EnumBindingSource EnumType={x:Type t:GenericProblemResolution}}}"
                           SelectedItem="{Binding OverwritingOptions, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                          VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                          VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
             </sc:EditorPanel>
         </GroupBox>
 

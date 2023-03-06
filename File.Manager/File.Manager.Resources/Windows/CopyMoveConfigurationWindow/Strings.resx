@@ -130,13 +130,16 @@
     <value>Destination</value>
   </data>
   <data name="Label_FileMask" xml:space="preserve">
-    <value>File mask</value>
+    <value>Filter files by mask</value>
   </data>
   <data name="Label_OverwritingOptions" xml:space="preserve">
     <value>Overwriting options</value>
   </data>
   <data name="Label_Source" xml:space="preserve">
     <value>Source</value>
+  </data>
+  <data name="Label_TargetFilename" xml:space="preserve">
+    <value>Target filename</value>
   </data>
   <data name="SourceHeader" xml:space="preserve">
     <value>Source</value>

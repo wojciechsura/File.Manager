@@ -257,5 +257,14 @@ namespace File.Manager.Resources.Operations {
                 return ResourceManager.GetString("CopyMove_Title_MovingFiles", resourceCulture);
             }
         }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu You can&apos;t copy items to the same location!.
+        /// </summary>
+        public static string CopyMove_Warning_CannotCopyItemsToTheSameLocation {
+            get {
+                return ResourceManager.GetString("CopyMove_Warning_CannotCopyItemsToTheSameLocation", resourceCulture);
+            }
+        }
     }
 }

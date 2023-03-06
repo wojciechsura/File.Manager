@@ -18,6 +18,8 @@ using System.IO;
 using File.Manager.API.Filesystem.Models.Items;
 using File.Manager.API.Filesystem.Models.Items.Plan;
 using File.Manager.API.Filesystem.Models.Items.Operator;
+using File.Manager.API.Filesystem.Models.Items.Listing;
+using File.Manager.BusinessLogic.Models.Dialogs.CopyMoveConfiguration;
 
 namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
 {
@@ -900,13 +902,39 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
         private string fromAddress;
         private string toAddress;
 
+        // Protected fields ---------------------------------------------------
+
+        protected readonly IFilesystemOperator sourceOperator;
+        protected readonly IFilesystemOperator destinationOperator;
+        protected readonly DataTransferOperationType operationType;
+        protected readonly IReadOnlyList<Item> selectedItems;
+        protected readonly CopyMoveConfigurationModel configuration;
+
         // Public methods -----------------------------------------------------
 
         public BaseCopyMoveOperationViewModel(IDialogService dialogService, 
-            IMessagingService messagingService)
+            IMessagingService messagingService,
+            IFilesystemOperator sourceOperator,
+            IFilesystemOperator destinationOperator,
+            IReadOnlyList<Item> selectedItems,
+            CopyMoveConfigurationModel configuration,
+            DataTransferOperationType operationType)
             : base(dialogService, messagingService)
         {
+            this.sourceOperator = sourceOperator;
+            this.destinationOperator = destinationOperator;
+            this.selectedItems = selectedItems;
+            this.configuration = configuration;
+            this.operationType = operationType;
+        }
 
+        public override void Run()
+        {
+            if (sourceOperator.CurrentPath == destinationOperator.CurrentPath)
+            {
+                messagingService.Warn(Strings.CopyMove_Warning_CannotCopyItemsToTheSameLocation);
+                return;
+            }
         }
 
         // Public properties --------------------------------------------------

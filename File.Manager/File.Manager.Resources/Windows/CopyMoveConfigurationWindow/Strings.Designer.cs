@@ -97,7 +97,7 @@ namespace File.Manager.Resources.Windows.CopyMoveConfigurationWindow {
         }
         
         /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu File mask.
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Filter files by mask.
         /// </summary>
         public static string Label_FileMask {
             get {
@@ -120,6 +120,15 @@ namespace File.Manager.Resources.Windows.CopyMoveConfigurationWindow {
         public static string Label_Source {
             get {
                 return ResourceManager.GetString("Label_Source", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Target filename.
+        /// </summary>
+        public static string Label_TargetFilename {
+            get {
+                return ResourceManager.GetString("Label_TargetFilename", resourceCulture);
             }
         }
         

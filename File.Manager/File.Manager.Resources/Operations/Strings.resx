@@ -183,4 +183,7 @@
   <data name="CopyMove_Title_MovingFiles" xml:space="preserve">
     <value>Moving files</value>
   </data>
+  <data name="CopyMove_Warning_CannotCopyItemsToTheSameLocation" xml:space="preserve">
+    <value>You can't copy items to the same location!</value>
+  </data>
 </root>

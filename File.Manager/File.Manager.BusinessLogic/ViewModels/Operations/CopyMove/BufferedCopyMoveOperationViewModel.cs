@@ -179,12 +179,6 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
 
         // Private fields -----------------------------------------------------
 
-        private DataTransferOperationType operationType;
-        private IFilesystemOperator sourceOperator;
-        private IFilesystemOperator destinationOperator;
-        private IReadOnlyList<Item> selectedItems;
-        private CopyMoveConfigurationModel configuration;
-
         private readonly CopyMoveWorker worker;
 
         // Private methods ----------------------------------------------------
@@ -219,14 +213,14 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
             IFilesystemOperator destinationOperator,
             CopyMoveConfigurationModel configuration,
             IReadOnlyList<Item> selectedItems)
-            : base(dialogService, messagingService)
+            : base(dialogService, 
+                  messagingService, 
+                  sourceOperator, 
+                  destinationOperator,
+                  selectedItems,
+                  configuration,
+                  operationType)
         {
-            this.operationType = operationType;
-            this.sourceOperator = sourceOperator;
-            this.destinationOperator = destinationOperator;
-            this.configuration = configuration;
-            this.selectedItems = selectedItems;
-
             this.worker = new CopyMoveWorker();
             worker.WorkerReportsProgress = true;
             worker.WorkerSupportsCancellation = true;
@@ -246,6 +240,8 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
 
         public override void Run()
         {
+            base.Run();
+
             Title = operationType switch
             {
                 DataTransferOperationType.Copy => Strings.CopyMove_Title_CopyingFiles,

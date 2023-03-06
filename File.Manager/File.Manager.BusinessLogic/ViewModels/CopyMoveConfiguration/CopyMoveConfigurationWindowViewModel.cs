@@ -12,6 +12,7 @@ using File.Manager.BusinessLogic.ViewModels.Base;
 using System.Windows.Input;
 using Spooksoft.VisualStateManager.Commands;
 using File.Manager.API.Filesystem.Models.Items.Listing;
+using Spooksoft.VisualStateManager.Conditions;
 
 namespace File.Manager.BusinessLogic.ViewModels.CopyMoveConfiguration
 {
@@ -26,6 +27,7 @@ namespace File.Manager.BusinessLogic.ViewModels.CopyMoveConfiguration
 
         private GenericProblemResolution overwritingOptions;
         private string fileMask;
+        private string targetFilename;
 
         // Private methods ----------------------------------------------------
 
@@ -41,6 +43,18 @@ namespace File.Manager.BusinessLogic.ViewModels.CopyMoveConfiguration
             access.Close(false);
         }
 
+        private bool ValidateTargetFilename(string targetFilename)
+        {
+            if (string.IsNullOrWhiteSpace(targetFilename))
+                return false;
+
+            var invalidChars = System.IO.Path.GetInvalidFileNameChars()
+                .Except(new[] { '*', '?' })
+                .ToArray();
+
+            return !targetFilename.Any(c => invalidChars.Contains(c));
+        }
+
         // Public methods -----------------------------------------------------
 
         public CopyMoveConfigurationWindowViewModel(CopyMoveConfigurationInputModel input, ICopyMoveCOnfigurationWindowAccess access)
@@ -51,8 +65,11 @@ namespace File.Manager.BusinessLogic.ViewModels.CopyMoveConfiguration
             this.selectedItems = input.SelectedItems;
             this.SourceAddress = input.SourceAddress;
             this.DestinationAddress = input.DestinationAddress;
+            targetFilename = "*.*";
 
-            OkCommand = new AppCommand(obj => DoOk());
+            var targetFilenameValidCondition = new ChainedLambdaCondition<CopyMoveConfigurationWindowViewModel>(this, vm => ValidateTargetFilename(vm.targetFilename), false);
+
+            OkCommand = new AppCommand(obj => DoOk(), targetFilenameValidCondition);
             CancelCommand = new AppCommand(obj => DoCancel());
         }
 
@@ -93,6 +110,12 @@ namespace File.Manager.BusinessLogic.ViewModels.CopyMoveConfiguration
         {
             get => fileMask;
             set => Set(ref fileMask, value);
+        }
+
+        public string TargetFilename
+        {
+            get => targetFilename;
+            set => Set(ref targetFilename, value);
         }
 
         public ICommand OkCommand { get; }
