@@ -126,4 +126,7 @@
   <data name="Label_To" xml:space="preserve">
     <value>To</value>
   </data>
+  <data name="Question_CancelOperationInProgress" xml:space="preserve">
+    <value>Do you want to cancel the operation?</value>
+  </data>
 </root>

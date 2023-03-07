@@ -42,6 +42,8 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations
 
         public abstract void Run();
 
+        public abstract void Cancel();
+
         // Public properties --------------------------------------------------
 
         public string Title

@@ -86,5 +86,14 @@ namespace File.Manager.Resources.Windows.CopyMoveProgressWindow {
                 return ResourceManager.GetString("Label_To", resourceCulture);
             }
         }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Do you want to cancel the operation?.
+        /// </summary>
+        public static string Question_CancelOperationInProgress {
+            get {
+                return ResourceManager.GetString("Question_CancelOperationInProgress", resourceCulture);
+            }
+        }
     }
 }

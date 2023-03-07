@@ -171,16 +171,16 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
                     }
                     finally
                     {
+                        sourceStream?.Dispose();
+                        sourceStream = null;
+                        destinationStream?.Dispose();
+                        destinationStream = null;
+
                         if (cancelled)
                         {
                             // Try to remove file, which was not copied
                             destinationOperator.DeleteFile(targetName);
                         }
-
-                        sourceStream?.Dispose();
-                        sourceStream = null;
-                        destinationStream?.Dispose();
-                        destinationStream = null;
                     }
                 }
                 finally
@@ -421,6 +421,11 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
             }
 
             OnFinished();
+        }
+
+        public override void Cancel()
+        {
+            worker.CancelAsync();
         }
 
         public override void Run()

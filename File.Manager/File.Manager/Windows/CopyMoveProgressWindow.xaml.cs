@@ -42,5 +42,14 @@ namespace File.Manager.Windows
         {
             viewModel.NotifyLoaded();
         }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (!viewModel.IsFinished)
+            {
+                viewModel.NotifyCloseBeforeFinish();
+                e.Cancel = true;
+            }
+        }
     }
 }

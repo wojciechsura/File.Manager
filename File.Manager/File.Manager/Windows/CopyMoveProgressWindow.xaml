@@ -14,7 +14,7 @@
         mc:Ignorable="d"
         Title="{Binding Operation.Title}" SizeToContent="Height" Width="600"
         ResizeMode="NoResize"
-        Loaded="HandleWindowLoaded">
+        Loaded="HandleWindowLoaded" Closing="Window_Closing">
     <Window.Resources>
         <Style TargetType="Label" x:Key="HeaderLabel">
             
@@ -87,7 +87,8 @@
         </GroupBox>
 
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Style="{StaticResource DialogButton}" Content="{x:Static cres:Strings.Cancel}" />
+            <Button Style="{StaticResource DialogButton}" Content="{x:Static cres:Strings.Cancel}" 
+                    Command="{Binding CancelCommand}"/>
         </StackPanel>
 
     </StackPanel>

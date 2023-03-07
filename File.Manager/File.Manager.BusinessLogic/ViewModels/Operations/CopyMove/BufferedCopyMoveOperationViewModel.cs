@@ -240,6 +240,11 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
             OnFinished();
         }
 
+        public override void Cancel()
+        {
+            worker.CancelAsync();
+        }
+
         public override void Run()
         {
             base.Run();
