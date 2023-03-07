@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace File.Manager.BusinessLogic.Types
 {
     [TypeConverter(typeof(EnumDescriptionTypeConverter))]
-    public enum GenericProblemResolution
+    public enum GenericCopyMoveProblemResolution
     {
         [LocalizedDescription(nameof(Strings.GenericProblemResolution_Ask), typeof(Strings))]
         Ask,

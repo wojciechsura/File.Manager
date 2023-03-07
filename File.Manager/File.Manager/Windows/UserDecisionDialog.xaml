@@ -21,7 +21,7 @@
             </ItemsControl.ItemsPanel>
 
             <ItemsControl.ItemTemplate>
-                <DataTemplate DataType="{x:Type t:SingleProblemResolution}">
+                <DataTemplate DataType="{x:Type t:SingleCopyMoveProblemResolution}">
                     <Button Style="{StaticResource DialogButton}" Content="{Binding}"
                             Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}}, Path=DataContext.SelectResolutionCommand}"
                             CommandParameter="{Binding}" />

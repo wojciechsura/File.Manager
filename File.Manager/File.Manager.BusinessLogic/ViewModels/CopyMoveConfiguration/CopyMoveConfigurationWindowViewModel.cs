@@ -27,7 +27,7 @@ namespace File.Manager.BusinessLogic.ViewModels.CopyMoveConfiguration
         private DataTransferOperationType operationType;
         private IReadOnlyList<Item> selectedItems;
 
-        private GenericProblemResolution overwritingOptions;
+        private GenericCopyMoveProblemResolution overwritingOptions;
         private string fileMask;
         private bool renameFiles;
         private bool renameRecursive;
@@ -117,7 +117,7 @@ namespace File.Manager.BusinessLogic.ViewModels.CopyMoveConfiguration
 
         public string DestinationAddress { get; }
 
-        public GenericProblemResolution OverwritingOptions
+        public GenericCopyMoveProblemResolution OverwritingOptions
         {
             get => overwritingOptions;
             set => Set(ref overwritingOptions, value);

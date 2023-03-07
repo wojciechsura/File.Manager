@@ -11,7 +11,7 @@ namespace File.Manager.BusinessLogic.Models.Dialogs.CopyMoveConfiguration
     public class CopyMoveConfigurationModel
     {
         public CopyMoveConfigurationModel(string fileMask, 
-            GenericProblemResolution overwritingOptions,
+            GenericCopyMoveProblemResolution overwritingOptions,
             bool renameFiles,
             bool renameRecursive,
             string renameFrom,
@@ -26,7 +26,7 @@ namespace File.Manager.BusinessLogic.Models.Dialogs.CopyMoveConfiguration
         }
 
         public string FileMask { get; }
-        public GenericProblemResolution OverwritingResolution { get; }
+        public GenericCopyMoveProblemResolution OverwritingResolution { get; }
         public bool RenameFiles { get; }
         public bool RenameRecursive { get; }
         public Regex RenameFrom { get; }

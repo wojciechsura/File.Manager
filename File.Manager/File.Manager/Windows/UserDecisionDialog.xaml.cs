@@ -24,7 +24,7 @@ namespace File.Manager.Windows
     {
         private readonly UserDecisionDialogViewModel viewModel;
 
-        public UserDecisionDialog(SingleProblemResolution[] availableResolutions, string header)
+        public UserDecisionDialog(SingleCopyMoveProblemResolution[] availableResolutions, string header)
         {
             InitializeComponent();
 
@@ -40,6 +40,6 @@ namespace File.Manager.Windows
             Close();
         }
 
-        public SingleProblemResolution Result => viewModel.Result;
+        public SingleCopyMoveProblemResolution Result => viewModel.Result;
     }
 }

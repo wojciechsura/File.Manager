@@ -63,144 +63,216 @@ namespace File.Manager.Resources.Enums {
         /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Abort.
         /// </summary>
-        public static string GenericProblemResolution_Abort {
+        public static string GenericCopyMoveProblemResolution_Abort {
             get {
-                return ResourceManager.GetString("GenericProblemResolution_Abort", resourceCulture);
+                return ResourceManager.GetString("GenericCopyMoveProblemResolution_Abort", resourceCulture);
             }
         }
         
         /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Ask for decision.
         /// </summary>
-        public static string GenericProblemResolution_Ask {
+        public static string GenericCopyMoveProblemResolution_Ask {
             get {
-                return ResourceManager.GetString("GenericProblemResolution_Ask", resourceCulture);
+                return ResourceManager.GetString("GenericCopyMoveProblemResolution_Ask", resourceCulture);
             }
         }
         
         /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Ignore.
         /// </summary>
-        public static string GenericProblemResolution_Ignore {
+        public static string GenericCopyMoveProblemResolution_Ignore {
             get {
-                return ResourceManager.GetString("GenericProblemResolution_Ignore", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Ignore all.
-        /// </summary>
-        public static string GenericProblemResolution_IgnoreAll {
-            get {
-                return ResourceManager.GetString("GenericProblemResolution_IgnoreAll", resourceCulture);
+                return ResourceManager.GetString("GenericCopyMoveProblemResolution_Ignore", resourceCulture);
             }
         }
         
         /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Overwrite without asking.
         /// </summary>
-        public static string GenericProblemResolution_Overwrite {
+        public static string GenericCopyMoveProblemResolution_Overwrite {
             get {
-                return ResourceManager.GetString("GenericProblemResolution_Overwrite", resourceCulture);
+                return ResourceManager.GetString("GenericCopyMoveProblemResolution_Overwrite", resourceCulture);
             }
         }
         
         /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Rename copied file.
         /// </summary>
-        public static string GenericProblemResolution_Rename {
+        public static string GenericCopyMoveProblemResolution_Rename {
             get {
-                return ResourceManager.GetString("GenericProblemResolution_Rename", resourceCulture);
+                return ResourceManager.GetString("GenericCopyMoveProblemResolution_Rename", resourceCulture);
             }
         }
         
         /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Skip.
         /// </summary>
-        public static string GenericProblemResolution_Skip {
+        public static string GenericCopyMoveProblemResolution_Skip {
             get {
-                return ResourceManager.GetString("GenericProblemResolution_Skip", resourceCulture);
+                return ResourceManager.GetString("GenericCopyMoveProblemResolution_Skip", resourceCulture);
             }
         }
         
         /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Abort.
         /// </summary>
-        public static string SingleProblemResolution_Abort {
+        public static string GenericDeleteProblemResolution_Abort {
             get {
-                return ResourceManager.GetString("SingleProblemResolution_Abort", resourceCulture);
+                return ResourceManager.GetString("GenericDeleteProblemResolution_Abort", resourceCulture);
             }
         }
         
         /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Ignore.
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Ask.
         /// </summary>
-        public static string SingleProblemResolution_Ignore {
+        public static string GenericDeleteProblemResolution_Ask {
             get {
-                return ResourceManager.GetString("SingleProblemResolution_Ignore", resourceCulture);
+                return ResourceManager.GetString("GenericDeleteProblemResolution_Ask", resourceCulture);
             }
         }
         
         /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Ignore all.
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Delete.
         /// </summary>
-        public static string SingleProblemResolution_IgnoreAll {
+        public static string GenericDeleteProblemResolution_Delete {
             get {
-                return ResourceManager.GetString("SingleProblemResolution_IgnoreAll", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Overwrite.
-        /// </summary>
-        public static string SingleProblemResolution_Overwrite {
-            get {
-                return ResourceManager.GetString("SingleProblemResolution_Overwrite", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Overwrite all.
-        /// </summary>
-        public static string SingleProblemResolution_OverwriteAll {
-            get {
-                return ResourceManager.GetString("SingleProblemResolution_OverwriteAll", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Rename.
-        /// </summary>
-        public static string SingleProblemResolution_Rename {
-            get {
-                return ResourceManager.GetString("SingleProblemResolution_Rename", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Rename all.
-        /// </summary>
-        public static string SingleProblemResolution_RenameAll {
-            get {
-                return ResourceManager.GetString("SingleProblemResolution_RenameAll", resourceCulture);
+                return ResourceManager.GetString("GenericDeleteProblemResolution_Delete", resourceCulture);
             }
         }
         
         /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Skip.
         /// </summary>
-        public static string SingleProblemResolution_Skip {
+        public static string GenericDeleteProblemResolution_Skip {
             get {
-                return ResourceManager.GetString("SingleProblemResolution_Skip", resourceCulture);
+                return ResourceManager.GetString("GenericDeleteProblemResolution_Skip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Abort.
+        /// </summary>
+        public static string SingleCopyMoveProblemResolution_Abort {
+            get {
+                return ResourceManager.GetString("SingleCopyMoveProblemResolution_Abort", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Ignore.
+        /// </summary>
+        public static string SingleCopyMoveProblemResolution_Ignore {
+            get {
+                return ResourceManager.GetString("SingleCopyMoveProblemResolution_Ignore", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Ignore all.
+        /// </summary>
+        public static string SingleCopyMoveProblemResolution_IgnoreAll {
+            get {
+                return ResourceManager.GetString("SingleCopyMoveProblemResolution_IgnoreAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Overwrite.
+        /// </summary>
+        public static string SingleCopyMoveProblemResolution_Overwrite {
+            get {
+                return ResourceManager.GetString("SingleCopyMoveProblemResolution_Overwrite", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Overwrite all.
+        /// </summary>
+        public static string SingleCopyMoveProblemResolution_OverwriteAll {
+            get {
+                return ResourceManager.GetString("SingleCopyMoveProblemResolution_OverwriteAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Rename.
+        /// </summary>
+        public static string SingleCopyMoveProblemResolution_Rename {
+            get {
+                return ResourceManager.GetString("SingleCopyMoveProblemResolution_Rename", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Rename all.
+        /// </summary>
+        public static string SingleCopyMoveProblemResolution_RenameAll {
+            get {
+                return ResourceManager.GetString("SingleCopyMoveProblemResolution_RenameAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Skip.
+        /// </summary>
+        public static string SingleCopyMoveProblemResolution_Skip {
+            get {
+                return ResourceManager.GetString("SingleCopyMoveProblemResolution_Skip", resourceCulture);
             }
         }
         
         /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Skip all.
         /// </summary>
-        public static string SingleProblemResolution_SkipAll {
+        public static string SingleCopyMoveProblemResolution_SkipAll {
             get {
-                return ResourceManager.GetString("SingleProblemResolution_SkipAll", resourceCulture);
+                return ResourceManager.GetString("SingleCopyMoveProblemResolution_SkipAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Abort.
+        /// </summary>
+        public static string SingleDeleteProblemResolution_Abort {
+            get {
+                return ResourceManager.GetString("SingleDeleteProblemResolution_Abort", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Delete.
+        /// </summary>
+        public static string SingleDeleteProblemResolution_Delete {
+            get {
+                return ResourceManager.GetString("SingleDeleteProblemResolution_Delete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Delete all.
+        /// </summary>
+        public static string SingleDeleteProblemResolution_DeleteAll {
+            get {
+                return ResourceManager.GetString("SingleDeleteProblemResolution_DeleteAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Skip.
+        /// </summary>
+        public static string SingleDeleteProblemResolution_Skip {
+            get {
+                return ResourceManager.GetString("SingleDeleteProblemResolution_Skip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Skip all.
+        /// </summary>
+        public static string SingleDeleteProblemResolution_SkipAll {
+            get {
+                return ResourceManager.GetString("SingleDeleteProblemResolution_SkipAll", resourceCulture);
             }
         }
     }

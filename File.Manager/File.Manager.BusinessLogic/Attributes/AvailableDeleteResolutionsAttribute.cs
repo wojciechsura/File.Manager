@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 namespace File.Manager.BusinessLogic.Attributes
 {
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
-    public class AvailableCopyMoveResolutionsAttribute : Attribute
+    public class AvailableDeleteResolutionsAttribute : Attribute
     {
-        public AvailableCopyMoveResolutionsAttribute(params SingleCopyMoveProblemResolution[] availableResolutions)
+        public AvailableDeleteResolutionsAttribute(params SingleDeleteProblemResolution[] availableResolutions)
         {
             AvailableResolutions = availableResolutions;
         }
 
-        public SingleCopyMoveProblemResolution[] AvailableResolutions { get; }
+        public SingleDeleteProblemResolution[] AvailableResolutions { get; }
     }
 }

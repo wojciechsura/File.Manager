@@ -128,16 +128,16 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
                 items = sourceFolderOperator.List(null, context.Configuration.FileMask);
                 if (items == null)
                 {
-                    var resolution = GetResolutionFor(ProcessingProblemKind.CannotListFolderContents,
+                    var resolution = GetResolutionFor(CopyMoveProblemKind.CannotListFolderContents,
                         sourceFolderOperator.CurrentPath,
                         destinationFolderOperator.CurrentPath,
                         folderInfo.Name);
 
                     switch (resolution)
                     {
-                        case GenericProblemResolution.Skip:
+                        case GenericCopyMoveProblemResolution.Skip:
                             return (true, null);
-                        case GenericProblemResolution.Abort:
+                        case GenericCopyMoveProblemResolution.Abort:
                             return (true, new AbortedCopyMoveWorkerResult());
                         default:
                             throw new InvalidOperationException("Invalid resolution!");
@@ -189,11 +189,11 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
         {
             if (e.UserState is UserQuestionRequestProgress userQuestion)
             {
-                (bool result, SingleProblemResolution resolution) = dialogService.ShowUserDecisionDialog(userQuestion.AvailableResolutions, userQuestion.Header);
+                (bool result, SingleCopyMoveProblemResolution resolution) = dialogService.ShowUserDecisionDialog(userQuestion.AvailableResolutions, userQuestion.Header);
                 if (result)
                     worker.UserDecision = resolution;
                 else
-                    worker.UserDecision = SingleProblemResolution.Abort;
+                    worker.UserDecision = SingleCopyMoveProblemResolution.Abort;
 
                 worker.UserDecisionSemaphore.Release();
             }

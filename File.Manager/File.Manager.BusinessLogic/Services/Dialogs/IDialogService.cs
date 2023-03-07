@@ -17,6 +17,6 @@ namespace File.Manager.BusinessLogic.Services.Dialogs
         (bool result, string path) ShowSaveDialog(string filter = null, string title = null, string filename = null);
         (bool result, CopyMoveConfigurationModel model) ShowCopyMoveConfigurationDialog(CopyMoveConfigurationInputModel input);
         void ShowCopyMoveProgress(BaseCopyMoveOperationViewModel operation);
-        (bool result, SingleProblemResolution resolution) ShowUserDecisionDialog(SingleProblemResolution[] availableResolutions, string header);
+        (bool result, SingleCopyMoveProblemResolution resolution) ShowUserDecisionDialog(SingleCopyMoveProblemResolution[] availableResolutions, string header);
     }
 }

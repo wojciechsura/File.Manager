@@ -198,11 +198,11 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
         {
             if (e.UserState is UserQuestionRequestProgress userQuestion)
             {
-                (bool result, SingleProblemResolution resolution) = dialogService.ShowUserDecisionDialog(userQuestion.AvailableResolutions, userQuestion.Header);
+                (bool result, SingleCopyMoveProblemResolution resolution) = dialogService.ShowUserDecisionDialog(userQuestion.AvailableResolutions, userQuestion.Header);
                 if (result)
                     worker.UserDecision = resolution;
                 else
-                    worker.UserDecision = SingleProblemResolution.Abort;
+                    worker.UserDecision = SingleCopyMoveProblemResolution.Abort;
 
                 worker.UserDecisionSemaphore.Release();
             }

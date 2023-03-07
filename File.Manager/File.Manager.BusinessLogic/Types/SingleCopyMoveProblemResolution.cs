@@ -11,7 +11,7 @@ using System.ComponentModel;
 namespace File.Manager.BusinessLogic.Types
 {
     [TypeConverter(typeof(EnumDescriptionTypeConverter))]
-    public enum SingleProblemResolution
+    public enum SingleCopyMoveProblemResolution
     {
         [LocalizedDescription(nameof(Strings.SingleProblemResolution_Skip), typeof(Strings))]
         Skip = 1,

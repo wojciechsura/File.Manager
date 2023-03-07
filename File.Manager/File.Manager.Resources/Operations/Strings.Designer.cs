@@ -61,24 +61,6 @@ namespace File.Manager.Resources.Operations {
         }
         
         /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Failed to return to parent folder from location {0}..
-        /// </summary>
-        public static string CopyMove_Critical_CannotExitDestinationFolder {
-            get {
-                return ResourceManager.GetString("CopyMove_Critical_CannotExitDestinationFolder", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Failed to return to parent folder from location {0}..
-        /// </summary>
-        public static string CopyMove_Critical_CannotExitSourceFolder {
-            get {
-                return ResourceManager.GetString("CopyMove_Critical_CannotExitSourceFolder", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Copied files: {0} ({1}). Elapsed: {2}{3}.
         /// </summary>
         public static string CopyMove_Info_PartialDescription {
@@ -142,7 +124,7 @@ namespace File.Manager.Resources.Operations {
         }
         
         /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot set attributes of file {2} in location {1}..
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot set attributes for file {2} in location {1}..
         /// </summary>
         public static string CopyMove_Question_CannotSetTargetFileAttributes {
             get {
@@ -282,6 +264,78 @@ namespace File.Manager.Resources.Operations {
         public static string CopyMove_Title_MovingFiles {
             get {
                 return ResourceManager.GetString("CopyMove_Title_MovingFiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot delete file {1} in location {0}..
+        /// </summary>
+        public static string Delete_Question_CannotDeleteFile {
+            get {
+                return ResourceManager.GetString("Delete_Question_CannotDeleteFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot delete folder {1} in location {0}..
+        /// </summary>
+        public static string Delete_Question_CannotDeleteFolder {
+            get {
+                return ResourceManager.GetString("Delete_Question_CannotDeleteFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot open folder {1} in location {0}..
+        /// </summary>
+        public static string Delete_Question_CannotEnterFolder {
+            get {
+                return ResourceManager.GetString("Delete_Question_CannotEnterFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot get attributes of file {1} in location {0}..
+        /// </summary>
+        public static string Delete_Question_CannotGetFileAttributes {
+            get {
+                return ResourceManager.GetString("Delete_Question_CannotGetFileAttributes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot set attributes of file {1} in location {0}..
+        /// </summary>
+        public static string Delete_Question_CannotSetFileAttributes {
+            get {
+                return ResourceManager.GetString("Delete_Question_CannotSetFileAttributes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu File {1} in location {0} is hidden..
+        /// </summary>
+        public static string Delete_Question_DeletedFileIsHidden {
+            get {
+                return ResourceManager.GetString("Delete_Question_DeletedFileIsHidden", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu File {1} in location {0} is read only..
+        /// </summary>
+        public static string Delete_Question_DeletedFileIsReadOnly {
+            get {
+                return ResourceManager.GetString("Delete_Question_DeletedFileIsReadOnly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu File {1} in location {0} is system..
+        /// </summary>
+        public static string Delete_Question_DeletedFileIsSystem {
+            get {
+                return ResourceManager.GetString("Delete_Question_DeletedFileIsSystem", resourceCulture);
             }
         }
     }

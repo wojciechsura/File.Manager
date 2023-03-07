@@ -117,12 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="CopyMove_Critical_CannotExitDestinationFolder" xml:space="preserve">
-    <value>Failed to return to parent folder from location {0}.</value>
-  </data>
-  <data name="CopyMove_Critical_CannotExitSourceFolder" xml:space="preserve">
-    <value>Failed to return to parent folder from location {0}.</value>
-  </data>
   <data name="CopyMove_Info_PartialDescription" xml:space="preserve">
     <value>Copied files: {0} ({1}). Elapsed: {2}{3}</value>
   </data>
@@ -145,7 +139,7 @@
     <value>Cannot open source file {2} in location {0}.</value>
   </data>
   <data name="CopyMove_Question_CannotSetTargetFileAttributes" xml:space="preserve">
-    <value>Cannot set attributes of file {2} in location {1}.</value>
+    <value>Cannot set attributes for file {2} in location {1}.</value>
   </data>
   <data name="CopyMove_Question_DestinationFileAlreadyExists" xml:space="preserve">
     <value>Destination file {2} already exists in location {1}.</value>
@@ -191,5 +185,29 @@
   </data>
   <data name="CopyMove_Title_MovingFiles" xml:space="preserve">
     <value>Moving files</value>
+  </data>
+  <data name="Delete_Question_CannotDeleteFile" xml:space="preserve">
+    <value>Cannot delete file {1} in location {0}.</value>
+  </data>
+  <data name="Delete_Question_CannotDeleteFolder" xml:space="preserve">
+    <value>Cannot delete folder {1} in location {0}.</value>
+  </data>
+  <data name="Delete_Question_CannotEnterFolder" xml:space="preserve">
+    <value>Cannot open folder {1} in location {0}.</value>
+  </data>
+  <data name="Delete_Question_CannotGetFileAttributes" xml:space="preserve">
+    <value>Cannot get attributes of file {1} in location {0}.</value>
+  </data>
+  <data name="Delete_Question_CannotSetFileAttributes" xml:space="preserve">
+    <value>Cannot set attributes of file {1} in location {0}.</value>
+  </data>
+  <data name="Delete_Question_DeletedFileIsHidden" xml:space="preserve">
+    <value>File {1} in location {0} is hidden.</value>
+  </data>
+  <data name="Delete_Question_DeletedFileIsReadOnly" xml:space="preserve">
+    <value>File {1} in location {0} is read only.</value>
+  </data>
+  <data name="Delete_Question_DeletedFileIsSystem" xml:space="preserve">
+    <value>File {1} in location {0} is system.</value>
   </data>
 </root>

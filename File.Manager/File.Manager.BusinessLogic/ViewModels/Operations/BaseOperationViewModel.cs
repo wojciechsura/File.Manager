@@ -1,4 +1,5 @@
-﻿using File.Manager.BusinessLogic.Services.Dialogs;
+﻿using File.Manager.API.Filesystem.Models.Items.Plan;
+using File.Manager.BusinessLogic.Services.Dialogs;
 using File.Manager.BusinessLogic.Services.Messaging;
 using File.Manager.BusinessLogic.ViewModels.Base;
 using System;
@@ -30,6 +31,36 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations
         {
             IsFinished = true;
             Finished?.Invoke(this, EventArgs.Empty);
+        }
+
+        protected (long totalSize, int totalFiles) EvaluatePlanTotalsRecursive(IReadOnlyList<BasePlanItem> items)
+        {
+            long totalSize = 0;
+            int totalFiles = 0;
+
+            foreach (var item in items)
+            {
+                switch (item)
+                {
+                    case PlanFile planFile:
+                        {
+                            totalSize += planFile.Size;
+                            totalFiles++;
+                            break;
+                        }
+                    case PlanFolder planFolder:
+                        {
+                            (long folderSize, int folderFiles) = EvaluatePlanTotalsRecursive(planFolder);
+                            totalSize += folderSize;
+                            totalFiles += folderFiles;
+                            break;
+                        }
+                    default:
+                        throw new InvalidOperationException("Unsupported plan item!");
+                }
+            }
+
+            return (totalSize, totalFiles);
         }
 
         // Public methods -----------------------------------------------------

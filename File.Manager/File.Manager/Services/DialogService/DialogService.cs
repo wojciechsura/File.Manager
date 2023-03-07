@@ -81,13 +81,13 @@ namespace File.Manager.Services.DialogService
             dialog.ShowDialog();
         }
 
-        public (bool result, SingleProblemResolution resolution) ShowUserDecisionDialog(SingleProblemResolution[] availableResolutions, string header)
+        public (bool result, SingleCopyMoveProblemResolution resolution) ShowUserDecisionDialog(SingleCopyMoveProblemResolution[] availableResolutions, string header)
         {
             var dialog = new UserDecisionDialog(availableResolutions, header);
             if (dialog.ShowDialog() == true)
                 return (true, dialog.Result);
             else
-                return (false, (SingleProblemResolution)0);
+                return (false, (SingleCopyMoveProblemResolution)0);
         }
     }
 }
