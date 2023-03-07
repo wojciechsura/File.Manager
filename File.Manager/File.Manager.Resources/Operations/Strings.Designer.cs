@@ -232,6 +232,24 @@ namespace File.Manager.Resources.Operations {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu You try to copy or move a file into itself..
+        /// </summary>
+        public static string CopyMove_Question_FileCopiedIntoItself {
+            get {
+                return ResourceManager.GetString("CopyMove_Question_FileCopiedIntoItself", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu You try to copy or move a folder into itself..
+        /// </summary>
+        public static string CopyMove_Question_FolderCopiedIntoItself {
+            get {
+                return ResourceManager.GetString("CopyMove_Question_FolderCopiedIntoItself", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Renamed file name {2} is invalid..
         /// </summary>
         public static string CopyMove_Question_InvalidRenamedFilename {
@@ -264,15 +282,6 @@ namespace File.Manager.Resources.Operations {
         public static string CopyMove_Title_MovingFiles {
             get {
                 return ResourceManager.GetString("CopyMove_Title_MovingFiles", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu You can&apos;t copy items to the same location!.
-        /// </summary>
-        public static string CopyMove_Warning_CannotCopyItemsToTheSameLocation {
-            get {
-                return ResourceManager.GetString("CopyMove_Warning_CannotCopyItemsToTheSameLocation", resourceCulture);
             }
         }
     }

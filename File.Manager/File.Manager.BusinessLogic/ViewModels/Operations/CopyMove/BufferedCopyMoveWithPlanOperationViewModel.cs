@@ -73,180 +73,6 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
             // Private fields -------------------------------------------------
 
             private DateTime startTime;
-            private CopyMoveConfigurationModel configuration;
-
-            // Private methods ------------------------------------------------
-
-            private CopyMoveWorkerResult ProcessFile(CopyMoveWorkerContext context,
-                PlanFile planFile,
-                DataTransferOperationType operationType,
-                IFilesystemOperator sourceOperator,
-                IFilesystemOperator destinationOperator)
-            {
-                try
-                {
-                    bool exit;
-                    CopyMoveWorkerResult result;
-
-                    // Check if source file exists
-
-                    (exit, result) = EnsureSourceFileExists(planFile, sourceOperator, destinationOperator);
-                    if (exit)
-                        return result;
-
-                    // Ask about overwriting existing file
-
-                    string targetName = planFile.Name;
-                    (exit, result) = EnsureDestinationFileDoesNotExist(planFile, sourceOperator, destinationOperator, ref targetName);
-                    if (exit)
-                        return result;
-
-                    // Ask about overwriting readonly file
-
-                    (exit, result) = CheckForOverwritingReadOnlyFile(planFile, sourceOperator, destinationOperator, ref targetName);
-                    if (exit)
-                        return result;
-
-                    // Ask about overwriting system file
-
-                    (exit, result) = CheckForOverwritingSystemFile(planFile, sourceOperator, destinationOperator, ref targetName);
-
-                    // Get the source stream
-
-                    Stream sourceStream = null;
-                    (exit, result) = OpenSourceFile(planFile, sourceOperator, destinationOperator, ref sourceStream);
-                    if (exit)
-                        return result;
-
-                    // Get the destination stream
-
-                    Stream destinationStream = null;
-                    (exit, result) = OpenDestinationFile(planFile, sourceOperator, destinationOperator, targetName, ref destinationStream);
-                    if (exit)
-                        return result;
-
-                    // Start copying
-                    
-                    bool cancelled = false;
-
-                    try
-                    {
-                        (exit, result) = CopyFile(context, planFile, sourceStream, destinationStream, buffer, ref cancelled);
-                        if (exit)
-                            return result;
-
-                        (exit, result) = CopyAttributes(planFile, sourceOperator, destinationOperator, targetName);
-                        if (exit)
-                            return result;
-
-                        if (operationType == DataTransferOperationType.Move)
-                        {
-                            (exit, result) = DeleteSourceFile(planFile, sourceOperator, destinationOperator);
-                            if (exit)
-                                return result;
-                        }
-                    }
-                    catch
-                    {
-                        destinationStream?.Dispose();
-                        destinationStream = null;
-
-                        // Try to delete partially-copied file
-                        destinationOperator.DeleteFile(targetName);
-
-                        var resolution = GetResolutionFor(ProcessingProblemKind.FailedToCopyFile,
-                            sourceOperator.CurrentPath,
-                            destinationOperator.CurrentPath,
-                            planFile.Name);
-
-                        switch (resolution)
-                        {
-                            case GenericProblemResolution.Skip:
-                                return null;
-                            case GenericProblemResolution.Abort:
-                                return new AbortedCopyMoveWorkerResult();
-                            default:
-                                throw new InvalidOperationException("Invalid resolution!");
-                        }
-                    }
-                    finally
-                    {
-                        sourceStream?.Dispose();
-                        sourceStream = null;
-                        destinationStream?.Dispose();
-                        destinationStream = null;
-
-                        if (cancelled)
-                        {
-                            // Try to remove file, which was not copied
-                            destinationOperator.DeleteFile(targetName);
-                        }
-                    }
-                }
-                finally
-                {
-                    context.CopiedSize += planFile.Size;
-                    context.CopiedFiles++;
-                }
-
-                return null;
-            }
-
-            private CopyMoveWorkerResult ProcessFolder(CopyMoveWorkerContext context, 
-                PlanFolder planFolder,
-                DataTransferOperationType operationType,
-                IFilesystemOperator sourceOperator,
-                IFilesystemOperator destinationOperator)
-            {
-                bool exit;
-                CopyMoveWorkerResult result;
-
-                // Create folder in remote location
-                (exit, result) = CreateDestinationFolder(planFolder, sourceOperator, destinationOperator);
-                if (exit)
-                    return result;
-
-                IFilesystemOperator sourceFolderOperator = null;
-
-                (exit, result) = EnterSourceFolder(planFolder, sourceOperator, destinationOperator, ref sourceFolderOperator);
-                if (exit)
-                    return result;
-
-                IFilesystemOperator destinationFolderOperator = null;
-
-                (exit, result) = EnterDestinationFolder(planFolder, sourceOperator, destinationOperator, ref destinationFolderOperator);
-                if (exit)
-                    return result;
-
-                return ProcessItems(context, planFolder, operationType, sourceFolderOperator, destinationFolderOperator);
-            }
-
-            private CopyMoveWorkerResult ProcessItems(CopyMoveWorkerContext context, 
-                IReadOnlyList<BasePlanItem> items, 
-                DataTransferOperationType operationType, 
-                IFilesystemOperator sourceOperator, 
-                IFilesystemOperator destinationOperator)
-            {
-                foreach (var item in items)
-                {
-                    if (item is PlanFolder planFolder)
-                    {
-                        var result = ProcessFolder(context, planFolder, operationType, sourceOperator, destinationOperator);
-                        if (result != null)
-                            return result;
-                    }
-                    else if (item is PlanFile planFile)
-                    {
-                        var result = ProcessFile(context,planFile, operationType, sourceOperator, destinationOperator);
-                        if (result != null)
-                            return result;
-                    }
-                    else
-                        throw new InvalidOperationException("Invalid plan item!");
-                }
-
-                return null;
-            }
 
             // Protected methods ----------------------------------------------
 
@@ -333,7 +159,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
                 startTime = DateTime.Now;
 
                 var input = (CopyMoveWorkerInput)e.Argument;
-                configuration = input.Configuration;
+                var configuration = input.Configuration;
 
                 // 1. Plan
 
@@ -346,7 +172,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
 
                 // 3. Copying/moving files
 
-                var result = ProcessItems(context, plan, input.OperationType, input.SourceOperator, input.DestinationOperator);
+                var result = ProcessItems(context, plan, input.OperationType, input.SourceOperator, input.DestinationOperator, true);
                 
                 if (result != null)
                     e.Result = result;
@@ -430,8 +256,6 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
 
         public override void Run()
         {
-            base.Run();
-
             Title = operationType switch
             {
                 DataTransferOperationType.Copy => Strings.CopyMove_Title_CopyingFiles,

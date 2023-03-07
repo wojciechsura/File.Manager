@@ -55,7 +55,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations
             operation.Run();
         }
 
-        public void NotifyCloseBeforeFinish()
+        public void NotifyUserRequestedClose()
         {
             if (CancelCommand.CanExecute(null))
             {
@@ -77,6 +77,6 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations
             set => Set(ref isCancelling, value);
         }
 
-        public bool IsFinished => Operation.IsFinished;
+        public bool CanClose => Operation.IsFinished;
     }
 }

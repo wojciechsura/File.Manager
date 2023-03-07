@@ -247,8 +247,6 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
 
         public override void Run()
         {
-            base.Run();
-
             Title = operationType switch
             {
                 DataTransferOperationType.Copy => Strings.CopyMove_Title_CopyingFiles,

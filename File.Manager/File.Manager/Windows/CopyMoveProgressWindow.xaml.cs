@@ -45,9 +45,9 @@ namespace File.Manager.Windows
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (!viewModel.IsFinished)
+            if (!viewModel.CanClose)
             {
-                viewModel.NotifyCloseBeforeFinish();
+                viewModel.NotifyUserRequestedClose();
                 e.Cancel = true;
             }
         }
