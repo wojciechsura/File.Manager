@@ -14,17 +14,27 @@
         <Setter Property="Margin" Value="{StaticResource DialogItemsMargin}" />
     </Style>
 
-    <Style x:Key="NextHeaderLabel" TargetType="Label">
-        <Setter Property="Margin" Value="{StaticResource DialogItemsExceptTopMargin}" />
-    </Style>
-
     <Style x:Key="FirstValueLabel" TargetType="Label">
         <Setter Property="Margin" Value="{StaticResource DialogItemsMargin}" />
         <Setter Property="FontWeight" Value="Bold" />
+    </Style>
+
+    <Style x:Key="NextHeaderLabel" TargetType="Label">
+        <Setter Property="Margin" Value="{StaticResource DialogItemsExceptTopMargin}" />
     </Style>
 
     <Style x:Key="NextValueLabel" TargetType="Label">
         <Setter Property="Margin" Value="{StaticResource DialogItemsExceptTopMargin}" />
         <Setter Property="FontWeight" Value="Bold" />
     </Style>
+
+    <Style x:Key="NextSubHeaderLabel" TargetType="Label">
+        <Setter Property="Margin" Value="{StaticResource EditorPanelSubHeaderMargin}" />
+    </Style>
+
+    <Style x:Key="NextSubValueLabel" TargetType="Label">
+        <Setter Property="Margin" Value="{StaticResource DialogItemsExceptTopMargin}" />
+        <Setter Property="FontWeight" Value="Bold" />
+    </Style>
+
 </ResourceDictionary>

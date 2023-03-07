@@ -30,24 +30,45 @@
                 <Label Style="{StaticResource NextValueLabel}" MaxWidth="450">
                     <TextBlock Text="{Binding DestinationAddress}" />
                 </Label>
-
-                <Label Style="{StaticResource NextHeaderLabel}" Content="{x:Static res:Strings.Label_TargetFilename}" />
-                <TextBox Text="{Binding TargetFilename, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                         HorizontalAlignment="Stretch"
-                         Margin="{StaticResource DialogItemsExceptTopMargin}" />
             </sc:EditorPanel>
         </GroupBox>
 
         <GroupBox Header="{x:Static res:Strings.Groupbox_Configuration_Title}" Margin="{StaticResource DialogItemsExceptTopMargin}">
             <sc:EditorPanel>
                 <Label Style="{StaticResource FirstHeaderLabel}" Content="{x:Static res:Strings.Label_FileMask}" />
-                <TextBox Text="{Binding FileMask, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                <TextBox Margin="{StaticResource DialogItemsMargin}" 
+                         Text="{Binding FileMask, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                          VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
 
                 <Label Style="{StaticResource NextHeaderLabel}" Content="{x:Static res:Strings.Label_OverwritingOptions}" />
-                <ComboBox ItemsSource="{Binding Source={m:EnumBindingSource EnumType={x:Type t:GenericProblemResolution}}}"
+                <ComboBox Margin="{StaticResource DialogItemsExceptTopMargin}"
+                          ItemsSource="{Binding Source={m:EnumBindingSource EnumType={x:Type t:GenericProblemResolution}}}"
                           SelectedItem="{Binding OverwritingOptions, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                           VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+
+                <Label Style="{StaticResource NextHeaderLabel}" Content="#Rename files" />
+                <CheckBox Margin="{StaticResource DialogItemsExceptTopMargin}" 
+                          IsChecked="{Binding RenameFiles, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                          VerticalAlignment="Center"/>
+
+                <Label Style="{StaticResource NextSubHeaderLabel}" Content="#Rename regex" 
+                       Visibility="{Binding RenameFiles, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                <TextBox Margin="{StaticResource DialogItemsExceptTopMargin}" 
+                         Text="{Binding RenameFrom, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         VerticalAlignment="Center" 
+                         Visibility="{Binding RenameFiles, Converter={StaticResource BoolToVisibilityConverter}}"/>
+
+                <Label Style="{StaticResource NextSubHeaderLabel}" Content="#Rename to" 
+                       Visibility="{Binding RenameFiles, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                <TextBox Margin="{StaticResource DialogItemsExceptTopMargin}" Text="{Binding RenameTo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         VerticalAlignment="Center" 
+                         Visibility="{Binding RenameFiles, Converter={StaticResource BoolToVisibilityConverter}}"/>
+
+                <Label Style="{StaticResource NextSubHeaderLabel}" Content="#Recursively" 
+                       Visibility="{Binding RenameFiles, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                <CheckBox Margin="{StaticResource DialogItemsExceptTopMargin}" IsChecked="{Binding RenameRecursive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                          VerticalAlignment="Center"
+                          Visibility="{Binding RenameFiles, Converter={StaticResource BoolToVisibilityConverter}}"/>
             </sc:EditorPanel>
         </GroupBox>
 

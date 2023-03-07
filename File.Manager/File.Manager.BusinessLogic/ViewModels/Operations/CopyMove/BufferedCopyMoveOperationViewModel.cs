@@ -48,7 +48,9 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
 
         private sealed class CopyMoveWorkerContext : BaseCopyMoveWorkerContext
         {
-
+            public CopyMoveWorkerContext(CopyMoveConfigurationModel configuration) : base(configuration)
+            {
+            }
         }
 
         private sealed class CopyMoveWorker : BaseCopyMoveWorker<CopyMoveWorkerContext>
@@ -60,7 +62,6 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
             // Private fields -------------------------------------------------
 
             private DateTime startTime;
-            private CopyMoveConfigurationModel configuration;
 
             // Protected methods ----------------------------------------------
 
@@ -118,12 +119,13 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
                 return (false, null);
             }
 
-            protected override (bool exit, CopyMoveWorkerResult result) RetrieveFolderContents(IFolderInfo folderInfo,
+            protected override (bool exit, CopyMoveWorkerResult result) RetrieveFolderContents(CopyMoveWorkerContext context,
+                IFolderInfo folderInfo,
                 IFilesystemOperator sourceFolderOperator,
                 IFilesystemOperator destinationFolderOperator,
                 ref IReadOnlyList<IBaseItemInfo> items)
             {
-                items = sourceFolderOperator.List(null, configuration.FileMask);
+                items = sourceFolderOperator.List(null, context.Configuration.FileMask);
                 if (items == null)
                 {
                     var resolution = GetResolutionFor(ProcessingProblemKind.CannotListFolderContents,
@@ -151,17 +153,17 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
                 startTime = DateTime.Now;
 
                 var input = (CopyMoveWorkerInput)e.Argument;
-                configuration = input.Configuration;
 
                 var items = input.SourceOperator.List(input.SelectedItems, input.Configuration.FileMask);
 
-                var context = new CopyMoveWorkerContext();
+                var context = new CopyMoveWorkerContext(input.Configuration);
 
                 var result = ProcessItems(context, 
                     items, 
                     input.OperationType, 
                     input.SourceOperator, 
-                    input.DestinationOperator);
+                    input.DestinationOperator,
+                    true);
 
                 if (result != null)
                     e.Result = result;

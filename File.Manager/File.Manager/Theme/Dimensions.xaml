@@ -32,7 +32,9 @@
     <Thickness x:Key="DialogItemsMargin" Left="4" Top="4" Right="4" Bottom="4" />
 
     <Thickness x:Key="DefaultMargin">4</Thickness>
-
+       
     <Thickness x:Key="HalfMargin" Left="3" Right="3" Top="3" Bottom="3" />
-    
+
+    <Thickness x:Key="EditorPanelSubHeaderMargin" Left="16" Top="0" Right="4" Bottom="4" />
+
 </ResourceDictionary>

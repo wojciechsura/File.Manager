@@ -232,6 +232,15 @@ namespace File.Manager.Resources.Operations {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Renamed file name {2} is invalid..
+        /// </summary>
+        public static string CopyMove_Question_InvalidRenamedFilename {
+            get {
+                return ResourceManager.GetString("CopyMove_Question_InvalidRenamedFilename", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Source file {2} does not exist in location {0}..
         /// </summary>
         public static string CopyMove_Question_SourceFileDoesNotExist {

@@ -20,6 +20,7 @@ using File.Manager.API.Filesystem.Models.Items.Plan;
 using File.Manager.API.Filesystem.Models.Items.Operator;
 using File.Manager.API.Filesystem.Models.Items.Listing;
 using File.Manager.BusinessLogic.Models.Dialogs.CopyMoveConfiguration;
+using System.Windows.Markup;
 
 namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
 {
@@ -102,8 +103,14 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
 
         protected abstract class BaseCopyMoveWorkerContext
         {
+            protected BaseCopyMoveWorkerContext(CopyMoveConfigurationModel configuration)
+            {
+                Configuration = configuration;
+            }
+
             public long CopiedSize { get; set; }
             public int CopiedFiles { get; set; }
+            public CopyMoveConfigurationModel Configuration { get; }
         }
 
         protected abstract class BaseCopyMoveWorker<TContext> : BackgroundWorker
@@ -173,7 +180,10 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
                 CannotSetTargetFileAttributes,
                 [LocalizedDescription(nameof(Strings.CopyMove_Question_CannotListSourceFolder), typeof(Strings))]
                 [AvailableResolutions(SingleProblemResolution.Ignore, SingleProblemResolution.IgnoreAll, SingleProblemResolution.Abort)]
-                CannotListFolderContents
+                CannotListFolderContents,
+                [LocalizedDescription(nameof(Strings.CopyMove_Question_InvalidRenamedFilename), typeof(Strings))]
+                [AvailableResolutions(SingleProblemResolution.Skip, SingleProblemResolution.SkipAll, SingleProblemResolution.Ignore, SingleProblemResolution.IgnoreAll, SingleProblemResolution.Abort)]
+                InvalidRenamedFilename
             }
 
             // Private fields -------------------------------------------------
@@ -184,12 +194,14 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
             // Protected fields -----------------------------------------------
 
             protected readonly byte[] buffer = new byte[BUFFER_SIZE];
+            protected readonly char[] invalidChars;
 
             // Protected methods ----------------------------------------------
             
             protected BaseCopyMoveWorker()
             {
                 userDecisionSemaphore = new SemaphoreSlim(0, 1);
+                invalidChars = System.IO.Path.GetInvalidFileNameChars();
             }
 
             protected abstract (bool exit, CopyMoveWorkerResult result) CopyFile(TContext context,
@@ -199,7 +211,8 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
                 byte[] buffer,
                 ref bool cancelled);
 
-            protected abstract (bool exit, CopyMoveWorkerResult result) RetrieveFolderContents(IFolderInfo folderInfo,
+            protected abstract (bool exit, CopyMoveWorkerResult result) RetrieveFolderContents(TContext context,
+                IFolderInfo folderInfo,
                 IFilesystemOperator sourceFolderOperator,
                 IFilesystemOperator destinationFolderOperator,
                 ref IReadOnlyList<IBaseItemInfo> items);
@@ -682,6 +695,45 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
                 return (false, null);
             }
 
+            private (bool exit, CopyMoveWorkerResult result) RenameTargetFile(TContext context, 
+                IFilesystemOperator sourceOperator, 
+                IFilesystemOperator destinationOperator, 
+                ref string targetName)
+            {
+                if (context.Configuration.RenameFrom.IsMatch(targetName))
+                {
+                    var newName = context.Configuration.RenameFrom.Replace(targetName, context.Configuration.RenameTo);
+
+                    // New name may be invalid                    
+                    if (string.IsNullOrEmpty(newName) || newName.Any(c => invalidChars.Contains(c)))
+                    {
+                        var resolution = GetResolutionFor(ProcessingProblemKind.InvalidRenamedFilename,
+                        sourceOperator.CurrentPath,
+                        destinationOperator.CurrentPath,
+                        newName);
+
+                        switch (resolution)
+                        {
+                            case GenericProblemResolution.Skip:
+                                return (true, null);
+                            case GenericProblemResolution.Ignore:
+                                // Name won't be changed
+                                break;
+                            case GenericProblemResolution.Abort:
+                                return (true, new AbortedCopyMoveWorkerResult());
+                            default:
+                                throw new InvalidOperationException("Invalid problem resolution!");
+                        }
+                    }
+                    else
+                    {
+                        targetName = newName;
+                    }                    
+                }
+
+                return (false, null);
+            }
+
             protected (long totalSize, int totalFiles) EvaluatePlanTotalsRecursive(IReadOnlyList<BasePlanItem> items)
             {
                 long totalSize = 0;
@@ -716,19 +768,20 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
                 IReadOnlyList<IBaseItemInfo> items,
                 DataTransferOperationType operationType,
                 IFilesystemOperator sourceOperator,
-                IFilesystemOperator destinationOperator)
+                IFilesystemOperator destinationOperator,
+                bool isRoot)
             {
                 foreach (var item in items)
                 {
                     if (item is IFolderInfo planFolder)
                     {
-                        var result = ProcessFolder(context, planFolder, operationType, sourceOperator, destinationOperator);
+                        var result = ProcessFolder(context, planFolder, operationType, sourceOperator, destinationOperator, isRoot);
                         if (result != null)
                             return result;
                     }
                     else if (item is IFileInfo planFile)
                     {
-                        var result = ProcessFile(context, planFile, operationType, sourceOperator, destinationOperator);
+                        var result = ProcessFile(context, planFile, operationType, sourceOperator, destinationOperator, isRoot);
                         if (result != null)
                             return result;
                     }
@@ -743,7 +796,8 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
                 IFileInfo operatorFile,
                 DataTransferOperationType operationType,
                 IFilesystemOperator sourceOperator,
-                IFilesystemOperator destinationOperator)
+                IFilesystemOperator destinationOperator,
+                bool isRoot)
             {
                 try
                 {
@@ -756,9 +810,18 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
                     if (exit)
                         return result;
 
-                    // Ask about overwriting existing file
+                    // Generate new name for the file
 
                     string targetName = operatorFile.Name;
+                    if (context.Configuration.RenameFiles && (isRoot || context.Configuration.RenameRecursive))
+                    {
+                        (exit, result) = RenameTargetFile(context, sourceOperator, destinationOperator, ref targetName);
+                        if (exit)
+                            return result;
+                    }
+
+                    // Ask about overwriting existing file
+
                     (exit, result) = EnsureDestinationFileDoesNotExist(operatorFile, sourceOperator, destinationOperator, ref targetName);
                     if (exit)
                         return result;
@@ -858,7 +921,8 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
                 IFolderInfo folderInfo,
                 DataTransferOperationType operationType,
                 IFilesystemOperator sourceOperator,
-                IFilesystemOperator destinationOperator)
+                IFilesystemOperator destinationOperator,
+                bool isRoot)
             {
                 bool exit;
                 CopyMoveWorkerResult result;
@@ -881,11 +945,11 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
                     return result;
 
                 IReadOnlyList<IBaseItemInfo> items = null;
-                (exit, result) = RetrieveFolderContents(folderInfo, sourceFolderOperator, destinationFolderOperator, ref items);
+                (exit, result) = RetrieveFolderContents(context, folderInfo, sourceFolderOperator, destinationFolderOperator, ref items);
                 if (exit)
                     return result;
 
-                return ProcessItems(context, items, operationType, sourceFolderOperator, destinationFolderOperator);
+                return ProcessItems(context, items, operationType, sourceFolderOperator, destinationFolderOperator, false);
             }            
 
             // Public properties ----------------------------------------------

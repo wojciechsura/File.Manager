@@ -57,7 +57,8 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
 
         private sealed class CopyMoveWorkerContext : BaseCopyMoveWorkerContext
         {
-            public CopyMoveWorkerContext(long totalSize, int totalFiles)
+            public CopyMoveWorkerContext(CopyMoveConfigurationModel configuration, long totalSize, int totalFiles)
+                : base(configuration)
             {
                 TotalSize = totalSize;
                 TotalFiles = totalFiles;
@@ -317,7 +318,8 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
                 return (false, null);
             }
 
-            protected override (bool exit, CopyMoveWorkerResult result) RetrieveFolderContents(IFolderInfo folderInfo,
+            protected override (bool exit, CopyMoveWorkerResult result) RetrieveFolderContents(CopyMoveWorkerContext context,
+                IFolderInfo folderInfo,
                 IFilesystemOperator sourceFolderOperator,
                 IFilesystemOperator destinationFolderOperator,
                 ref IReadOnlyList<IBaseItemInfo> items)
@@ -340,7 +342,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
                 // 2. Evaluate totals
 
                 (long totalSize, int totalFiles) = EvaluatePlanTotalsRecursive(plan);
-                var context = new CopyMoveWorkerContext(totalSize, totalFiles);
+                var context = new CopyMoveWorkerContext(configuration, totalSize, totalFiles);
 
                 // 3. Copying/moving files
 
@@ -361,10 +363,6 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
         }
 
         // Private fields -----------------------------------------------------
-
-        private readonly DataTransferOperationType operationType;
-        private readonly IReadOnlyList<Item> selectedItems;
-        private readonly CopyMoveConfigurationModel configuration;
 
         private readonly CopyMoveWorker worker;
 
@@ -408,10 +406,6 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
                   configuration,
                   operationType)
         {
-            this.operationType = operationType;
-            this.configuration = configuration;
-            this.selectedItems = selectedItems;
-
             this.worker = new CopyMoveWorker();
             worker.WorkerReportsProgress = true;
             worker.WorkerSupportsCancellation = true;

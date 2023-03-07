@@ -17,4 +17,10 @@
     <ProjectReference Include="..\File.Manager.OsInterop\File.Manager.OsInterop.csproj" />
     <ProjectReference Include="..\File.Manager.Resources\File.Manager.Resources.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <EditorConfigFiles Remove="D:\Dokumenty\Dev\VS\File.Manager\.editorconfig" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="D:\Dokumenty\Dev\VS\File.Manager\.editorconfig" />
+  </ItemGroup>
 </Project>

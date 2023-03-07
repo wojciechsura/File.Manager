@@ -13,6 +13,8 @@ using System.Windows.Input;
 using Spooksoft.VisualStateManager.Commands;
 using File.Manager.API.Filesystem.Models.Items.Listing;
 using Spooksoft.VisualStateManager.Conditions;
+using System.Diagnostics;
+using System.Text.RegularExpressions;
 
 namespace File.Manager.BusinessLogic.ViewModels.CopyMoveConfiguration
 {
@@ -27,13 +29,21 @@ namespace File.Manager.BusinessLogic.ViewModels.CopyMoveConfiguration
 
         private GenericProblemResolution overwritingOptions;
         private string fileMask;
-        private string targetFilename;
+        private bool renameFiles;
+        private bool renameRecursive;
+        private string renameFrom;
+        private string renameTo;
 
         // Private methods ----------------------------------------------------
 
         private void DoOk()
         {
-            Result = new CopyMoveConfigurationModel(FileMask, OverwritingOptions);
+            Result = new CopyMoveConfigurationModel(FileMask, 
+                OverwritingOptions, 
+                RenameFiles, 
+                RenameRecursive, 
+                RenameFrom, 
+                RenameTo);
             access.Close(true);
         }
 
@@ -43,16 +53,17 @@ namespace File.Manager.BusinessLogic.ViewModels.CopyMoveConfiguration
             access.Close(false);
         }
 
-        private bool ValidateTargetFilename(string targetFilename)
+        private static bool IsValidRegex(string regex)
         {
-            if (string.IsNullOrWhiteSpace(targetFilename))
+            try
+            {
+                _ = new Regex(regex);
+                return true;
+            }
+            catch
+            {
                 return false;
-
-            var invalidChars = System.IO.Path.GetInvalidFileNameChars()
-                .Except(new[] { '*', '?' })
-                .ToArray();
-
-            return !targetFilename.Any(c => invalidChars.Contains(c));
+            }
         }
 
         // Public methods -----------------------------------------------------
@@ -65,11 +76,17 @@ namespace File.Manager.BusinessLogic.ViewModels.CopyMoveConfiguration
             this.selectedItems = input.SelectedItems;
             this.SourceAddress = input.SourceAddress;
             this.DestinationAddress = input.DestinationAddress;
-            targetFilename = "*.*";
 
-            var targetFilenameValidCondition = new ChainedLambdaCondition<CopyMoveConfigurationWindowViewModel>(this, vm => ValidateTargetFilename(vm.targetFilename), false);
+            renameFrom = @"^(.*)(?:\\.([^\\.]*))$";
+            renameTo = @"$1\.$2";
+            renameFiles = false;
+            renameRecursive = false;
 
-            OkCommand = new AppCommand(obj => DoOk(), targetFilenameValidCondition);
+            var useRenamingCondition = new PropertyWatchCondition<CopyMoveConfigurationWindowViewModel>(this, vm => vm.RenameFiles, false);
+            var renameFromValidCondition = new ChainedLambdaCondition<CopyMoveConfigurationWindowViewModel>(this, vm => IsValidRegex(RenameFrom), false);
+            var canConfirmCondition = !useRenamingCondition | (useRenamingCondition & renameFromValidCondition);
+
+            OkCommand = new AppCommand(obj => DoOk(), canConfirmCondition);
             CancelCommand = new AppCommand(obj => DoCancel());
         }
 
@@ -112,10 +129,28 @@ namespace File.Manager.BusinessLogic.ViewModels.CopyMoveConfiguration
             set => Set(ref fileMask, value);
         }
 
-        public string TargetFilename
+        public bool RenameFiles
         {
-            get => targetFilename;
-            set => Set(ref targetFilename, value);
+            get => renameFiles;
+            set => Set(ref renameFiles, value);
+        }
+
+        public bool RenameRecursive
+        {
+            get => renameRecursive;
+            set => Set(ref renameRecursive, value);
+        }
+
+        public string RenameFrom
+        {
+            get => renameFrom;
+            set => Set(ref renameFrom, value);
+        }
+
+        public string RenameTo
+        {
+            get => renameTo;
+            set => Set(ref renameTo, value);
         }
 
         public ICommand OkCommand { get; }
