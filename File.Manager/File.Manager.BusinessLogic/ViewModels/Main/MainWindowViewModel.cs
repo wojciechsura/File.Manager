@@ -1,6 +1,7 @@
 ﻿using File.Manager.API.Filesystem.Models.Items.Listing;
 using File.Manager.API.Types;
 using File.Manager.BusinessLogic.Models.Dialogs.CopyMoveConfiguration;
+using File.Manager.BusinessLogic.Models.Dialogs.DeleteConfiguration;
 using File.Manager.BusinessLogic.Services.Dialogs;
 using File.Manager.BusinessLogic.Services.Icons;
 using File.Manager.BusinessLogic.Services.Messaging;
@@ -9,12 +10,14 @@ using File.Manager.BusinessLogic.Types;
 using File.Manager.BusinessLogic.ViewModels.Base;
 using File.Manager.BusinessLogic.ViewModels.Operations;
 using File.Manager.BusinessLogic.ViewModels.Operations.CopyMove;
+using File.Manager.BusinessLogic.ViewModels.Operations.Delete;
 using File.Manager.BusinessLogic.ViewModels.Pane;
 using File.Manager.Common.Helpers;
 using Spooksoft.VisualStateManager.Commands;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -105,6 +108,60 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
             // TODO direct
         }
 
+        private (bool result, DeleteConfigurationModel model) ShowDeleteDialog(List<Item> items, string address)
+        {
+            if (!items.Any())
+                return (false, null);
+
+            var input = new DeleteConfigurationInputModel(address, items);
+
+            return dialogService.ShowDeleteConfigurationDialog(input);
+        }
+
+        private void DoPerformDelete(PaneViewModel deletePane, bool withPlan)
+        {
+            var items = deletePane.GetSelectedItems();
+
+            (bool result, DeleteConfigurationModel model) = ShowDeleteDialog(items,
+                deletePane.Navigator.Address);
+
+            if (!result)
+                return;
+
+            BaseDeleteOperationViewModel operation;
+
+            if (withPlan)
+            {
+                operation = new DeleteWithPlanOperationViewModel(dialogService,
+                    messagingService,
+                    deletePane.Navigator.CreateOperatorForCurrentLocation(),                    
+                    model,
+                    items);
+            }
+            else
+            {
+                operation = new DeleteOperationViewModel(dialogService,
+                    messagingService,
+                    deletePane.Navigator.CreateOperatorForCurrentLocation(),
+                    model,
+                    items);
+            }
+
+            dialogService.ShowDeleteProgress(operation);
+        }
+
+        private void DoDelete()
+        {
+            var deletePane = ActivePane;
+
+            var deleteCapabilities = deletePane.Navigator.GetLocationCapabilities();
+
+            if (deleteCapabilities.HasFlag(LocationCapabilities.Delete))
+            {
+                DoPerformDelete(deletePane, deleteCapabilities.HasFlag(LocationCapabilities.Plan));
+            }
+        }
+
         private void DoSwitchPanes()
         {
             var oldLeftPane = leftPane;
@@ -172,6 +229,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
             SwitchPanesCommand = new AppCommand(obj => DoSwitchPanes());
             CopyCommand = new AppCommand(obj => DoCopyMove(DataTransferOperationType.Copy));
             MoveCommand = new AppCommand(obj => DoCopyMove(DataTransferOperationType.Move));
+            DeleteCommand = new AppCommand(obj => DoDelete());
 
             activePane = leftPane;
         }
@@ -203,5 +261,6 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
 
         public ICommand CopyCommand { get; }
         public ICommand MoveCommand { get; }
+        public ICommand DeleteCommand { get; }
     }
 }

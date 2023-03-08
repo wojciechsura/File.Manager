@@ -278,6 +278,24 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
 
         }
 
+        public bool? CheckIsSubfolderEmpty(string name)
+        {
+            var targetPath = System.IO.Path.Combine(currentPath, name);
+
+            if (!Directory.Exists(targetPath))
+                return null;
+
+            try
+            {
+                var info = new DirectoryInfo(targetPath);
+                return info.EnumerateFileSystemInfos().Any();
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
         public string CurrentPath => currentPath;
     }
 }

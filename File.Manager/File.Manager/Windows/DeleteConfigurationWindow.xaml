@@ -1,0 +1,45 @@
+﻿<Window x:Class="File.Manager.Windows.DeleteConfigurationWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:File.Manager.Windows"
+        xmlns:res="clr-namespace:File.Manager.Resources.Windows.DeleteConfigurationWindow;assembly=File.Manager.Resources" 
+        xmlns:cres="clr-namespace:File.Manager.Resources.Common;assembly=File.Manager.Resources" 
+        xmlns:sc="clr-namespace:Spooksoft.Wpf.Controls.Panels;assembly=Spooksoft.Wpf.Controls" 
+        xmlns:vm="clr-namespace:File.Manager.BusinessLogic.ViewModels.DeleteConfiguration;assembly=File.Manager.BusinessLogic" 
+        xmlns:m="clr-namespace:File.Manager.Markup"
+        xmlns:t="clr-namespace:File.Manager.BusinessLogic.Types;assembly=File.Manager.BusinessLogic"
+        d:DataContext="{d:DesignInstance Type=vm:DeleteConfigurationWindowViewModel}"
+        mc:Ignorable="d"
+        Title="{Binding Title}" SizeToContent="WidthAndHeight" MinWidth="500">
+    <StackPanel Orientation="Vertical">
+        <GroupBox Header="{x:Static res:Strings.Groupbox_Summary_Title}" Margin="{StaticResource DialogItemsMargin}">
+            <sc:EditorPanel>
+                <Label Style="{StaticResource FirstHeaderLabel}" Content="{Binding SummaryHeader}" />
+                <Label Style="{StaticResource FirstValueLabel}" MaxWidth="450">
+                    <TextBlock Text="{Binding SummaryValue}" />
+                </Label>
+
+                <Label Style="{StaticResource NextHeaderLabel}" Content="{x:Static res:Strings.Label_Address}" />
+                <Label Style="{StaticResource NextValueLabel}" MaxWidth="450">
+                    <TextBlock Text="{Binding Address}" />
+                </Label>
+            </sc:EditorPanel>
+        </GroupBox>
+
+        <GroupBox Header="{x:Static res:Strings.Groupbox_Configuration_Title}" Margin="{StaticResource DialogItemsExceptTopMargin}">
+            <sc:EditorPanel>
+                <Label Style="{StaticResource FirstHeaderLabel}" Content="{x:Static res:Strings.Label_FileMask}" />
+                <TextBox Margin="{StaticResource DialogItemsMargin}" 
+                         Text="{Binding FileMask, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                         VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+            </sc:EditorPanel>
+        </GroupBox>
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Style="{StaticResource DialogButton}" Command="{Binding OkCommand}" Content="{x:Static cres:Strings.Ok}" />
+            <Button Style="{StaticResource DialogButton}" Command="{Binding CancelCommand}" Content="{x:Static cres:Strings.Cancel}" />
+        </StackPanel>
+    </StackPanel>
+</Window>

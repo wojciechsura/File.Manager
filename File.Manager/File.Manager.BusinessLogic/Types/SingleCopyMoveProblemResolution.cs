@@ -13,23 +13,23 @@ namespace File.Manager.BusinessLogic.Types
     [TypeConverter(typeof(EnumDescriptionTypeConverter))]
     public enum SingleCopyMoveProblemResolution
     {
-        [LocalizedDescription(nameof(Strings.SingleProblemResolution_Skip), typeof(Strings))]
+        [LocalizedDescription(nameof(Strings.SingleCopyMoveProblemResolution_Skip), typeof(Strings))]
         Skip = 1,
-        [LocalizedDescription(nameof(Strings.SingleProblemResolution_SkipAll), typeof(Strings))]
+        [LocalizedDescription(nameof(Strings.SingleCopyMoveProblemResolution_SkipAll), typeof(Strings))]
         SkipAll,
-        [LocalizedDescription(nameof(Strings.SingleProblemResolution_Overwrite), typeof(Strings))]
+        [LocalizedDescription(nameof(Strings.SingleCopyMoveProblemResolution_Overwrite), typeof(Strings))]
         Overwrite,
-        [LocalizedDescription(nameof(Strings.SingleProblemResolution_OverwriteAll), typeof(Strings))]
+        [LocalizedDescription(nameof(Strings.SingleCopyMoveProblemResolution_OverwriteAll), typeof(Strings))]
         OverwriteAll,
-        [LocalizedDescription(nameof(Strings.SingleProblemResolution_Rename), typeof(Strings))]
+        [LocalizedDescription(nameof(Strings.SingleCopyMoveProblemResolution_Rename), typeof(Strings))]
         Rename,
-        [LocalizedDescription(nameof(Strings.SingleProblemResolution_RenameAll), typeof(Strings))]
+        [LocalizedDescription(nameof(Strings.SingleCopyMoveProblemResolution_RenameAll), typeof(Strings))]
         RenameAll,
-        [LocalizedDescription(nameof(Strings.SingleProblemResolution_Ignore), typeof(Strings))]
+        [LocalizedDescription(nameof(Strings.SingleCopyMoveProblemResolution_Ignore), typeof(Strings))]
         Ignore,
-        [LocalizedDescription(nameof(Strings.SingleProblemResolution_IgnoreAll), typeof(Strings))]
+        [LocalizedDescription(nameof(Strings.SingleCopyMoveProblemResolution_IgnoreAll), typeof(Strings))]
         IgnoreAll,
-        [LocalizedDescription(nameof(Strings.SingleProblemResolution_Abort), typeof(Strings))]
+        [LocalizedDescription(nameof(Strings.SingleCopyMoveProblemResolution_Abort), typeof(Strings))]
         Abort
     }
 }

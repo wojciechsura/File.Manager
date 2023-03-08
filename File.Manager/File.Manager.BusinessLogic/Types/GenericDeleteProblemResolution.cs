@@ -19,7 +19,7 @@ namespace File.Manager.BusinessLogic.Types
         Delete,
         [LocalizedDescription(nameof(Strings.GenericDeleteProblemResolution_Skip), typeof(Strings))]
         Skip,
-        [LocalizedDescription(nameof(Strings.GenericProblemResolution_Abort), typeof(Strings))]
+        [LocalizedDescription(nameof(Strings.GenericDeleteProblemResolution_Abort), typeof(Strings))]
         Abort
     }
 }

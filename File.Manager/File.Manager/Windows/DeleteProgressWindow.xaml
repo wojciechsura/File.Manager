@@ -1,0 +1,73 @@
+﻿<Window x:Class="File.Manager.Windows.DeleteProgressWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:File.Manager.Windows" 
+        xmlns:vm="clr-namespace:File.Manager.BusinessLogic.ViewModels.Operations;assembly=File.Manager.BusinessLogic" 
+        xmlns:p="clr-namespace:Spooksoft.Wpf.Controls.Panels;assembly=Spooksoft.Wpf.Controls"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        xmlns:cres="clr-namespace:File.Manager.Resources.Common;assembly=File.Manager.Resources"
+        xmlns:res="clr-namespace:File.Manager.Resources.Windows.DeleteProgressWindow;assembly=File.Manager.Resources"
+        xmlns:pc="clr-namespace:System.Windows;assembly=PresentationCore"
+        d:DataContext="{d:DesignInstance Type=vm:DeleteProgressWindowViewModel}"
+        mc:Ignorable="d"
+        Title="{Binding Operation.Title}" SizeToContent="Height" Width="600"
+        ResizeMode="NoResize"
+        Loaded="HandleWindowLoaded" Closing="Window_Closing">
+    <Window.Resources>
+        <Style TargetType="Label" x:Key="HeaderLabel">
+            
+        </Style>
+        
+        <Style TargetType="Label" x:Key="ValueLabel">
+            <Setter Property="FontWeight" Value="Bold" />
+        </Style>
+    </Window.Resources>
+    <StackPanel Orientation="Vertical" Margin="{StaticResource DialogWindowPadding}">
+
+        <GroupBox Header="{Binding Operation.Title}">
+
+            <StackPanel Orientation="Vertical">
+
+                <p:EditorPanel>
+                    <Label Style="{StaticResource HeaderLabel}" Content="{x:Static res:Strings.Label_Operation}" Margin="{StaticResource DialogItemsMargin}" />
+                    <Label Style="{StaticResource ValueLabel}" Content="{x:Static res:Strings.Label_Operation_Value}" Margin="{StaticResource DialogItemsMargin}" />
+
+                    <Label Style="{StaticResource HeaderLabel}" Content="{x:Static res:Strings.Label_Address}" Margin="{StaticResource DialogItemsExceptTopMargin}" />
+                    <Label Style="{StaticResource ValueLabel}" Margin="{StaticResource DialogItemsExceptTopMargin}">
+                        <TextBlock Text="{Binding Operation.Address}" />
+                    </Label>
+
+                </p:EditorPanel>
+
+                <!-- Overall progress bar -->
+
+                <DockPanel Margin="{StaticResource DialogItemsExceptTopMargin}" HorizontalAlignment="Stretch">
+                    <Label DockPanel.Dock="Top" Margin="{StaticResource DialogItemsMargin}" Content="{Binding Operation.ProgressDescription}" />
+
+                    <Label Margin="{StaticResource DialogItemsRightMargin}" DockPanel.Dock="Right" Width="40" HorizontalContentAlignment="Center"
+                           Visibility="{Binding Operation.ProgressIndeterminate, Converter={StaticResource InverseBoolToVisibilityConverter}, ConverterParameter={x:Static pc:Visibility.Hidden}}">
+                        <TextBlock>
+                            <TextBlock.Inlines>
+                                <Run Text="{Binding Operation.Progress, Mode=OneWay}" />
+                                <Run Text="%" />
+                            </TextBlock.Inlines>
+                        </TextBlock>
+                    </Label>
+
+                    <ProgressBar Margin="{StaticResource DialogItemsHorizontalOnlyMargin}" Value="{Binding Operation.Progress}"
+                                 IsIndeterminate="{Binding Operation.ProgressIndeterminate}"/>
+                </DockPanel>
+               
+                </StackPanel>
+        </GroupBox>
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Style="{StaticResource DialogButton}" Content="{x:Static cres:Strings.Cancel}" 
+                    Command="{Binding CancelCommand}"/>
+        </StackPanel>
+
+    </StackPanel>
+
+</Window>

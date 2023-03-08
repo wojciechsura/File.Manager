@@ -22,7 +22,7 @@ namespace File.Manager.BusinessLogic.ViewModels.CopyMoveConfiguration
     {
         // Private fields -----------------------------------------------------
 
-        private readonly ICopyMoveCOnfigurationWindowAccess access;
+        private readonly ICopyMoveConfigurationWindowAccess access;
 
         private DataTransferOperationType operationType;
         private IReadOnlyList<Item> selectedItems;
@@ -68,7 +68,7 @@ namespace File.Manager.BusinessLogic.ViewModels.CopyMoveConfiguration
 
         // Public methods -----------------------------------------------------
 
-        public CopyMoveConfigurationWindowViewModel(CopyMoveConfigurationInputModel input, ICopyMoveCOnfigurationWindowAccess access)
+        public CopyMoveConfigurationWindowViewModel(CopyMoveConfigurationInputModel input, ICopyMoveConfigurationWindowAccess access)
         {
             this.access = access ?? throw new ArgumentNullException(nameof(access));
 

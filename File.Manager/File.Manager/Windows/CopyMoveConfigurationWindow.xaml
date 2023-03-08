@@ -42,7 +42,7 @@
 
                 <Label Style="{StaticResource NextHeaderLabel}" Content="{x:Static res:Strings.Label_OverwritingOptions}" />
                 <ComboBox Margin="{StaticResource DialogItemsExceptTopMargin}"
-                          ItemsSource="{Binding Source={m:EnumBindingSource EnumType={x:Type t:GenericProblemResolution}}}"
+                          ItemsSource="{Binding Source={m:EnumBindingSource EnumType={x:Type t:GenericCopyMoveProblemResolution}}}"
                           SelectedItem="{Binding OverwritingOptions, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                           VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
 

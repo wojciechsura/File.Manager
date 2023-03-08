@@ -46,6 +46,8 @@ namespace File.Manager.API.Filesystem
 
         bool SetFileAttributes(string targetName, FileAttributes attributes);
 
+        bool? CheckIsSubfolderEmpty(string name);
+
         string CurrentPath { get; }
     }
 }

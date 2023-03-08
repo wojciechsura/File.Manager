@@ -4,6 +4,7 @@ using File.Manager.BusinessLogic.Services.Messaging;
 using File.Manager.BusinessLogic.ViewModels.Base;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,14 +13,61 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations
 {
     public abstract class BaseOperationViewModel : BaseViewModel
     {
+        // Protected types ----------------------------------------------------
+
+        protected class BaseWorker : BackgroundWorker
+        {
+            protected (TimeSpan elapsed, string elapsedString) EvalElapsed(DateTime startTime)
+            {
+                TimeSpan elapsed = DateTime.Now - startTime;
+                string elapsedString = GetTimeSpanString(elapsed);
+                return (elapsed, elapsedString);
+            }
+
+            protected string GetTimeSpanString(TimeSpan left)
+            {
+                return left.Days > 0 ? left.ToString("d'd'\\, hh\\:mm\\:ss") : left.ToString("hh\\:mm\\:ss");
+            }
+
+            protected (long totalSize, int totalFiles) EvaluatePlanTotalsRecursive(IReadOnlyList<BasePlanItem> items)
+            {
+                long totalSize = 0;
+                int totalFiles = 0;
+
+                foreach (var item in items)
+                {
+                    switch (item)
+                    {
+                        case PlanFile planFile:
+                            {
+                                totalSize += planFile.Size;
+                                totalFiles++;
+                                break;
+                            }
+                        case PlanFolder planFolder:
+                            {
+                                (long folderSize, int folderFiles) = EvaluatePlanTotalsRecursive(planFolder);
+                                totalSize += folderSize;
+                                totalFiles += folderFiles;
+                                break;
+                            }
+                        default:
+                            throw new InvalidOperationException("Unsupported plan item!");
+                    }
+                }
+
+                return (totalSize, totalFiles);
+            }
+        }
+
         // Private fields -----------------------------------------------------
 
         private string title;
         private int progress;
         private string progressDescription;
         private bool progressIndeterminate;
-        private bool isFinished;
-        
+        private bool isFinished;               
+
         // Protected fields ---------------------------------------------------
 
         protected readonly IDialogService dialogService;
@@ -31,36 +79,6 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations
         {
             IsFinished = true;
             Finished?.Invoke(this, EventArgs.Empty);
-        }
-
-        protected (long totalSize, int totalFiles) EvaluatePlanTotalsRecursive(IReadOnlyList<BasePlanItem> items)
-        {
-            long totalSize = 0;
-            int totalFiles = 0;
-
-            foreach (var item in items)
-            {
-                switch (item)
-                {
-                    case PlanFile planFile:
-                        {
-                            totalSize += planFile.Size;
-                            totalFiles++;
-                            break;
-                        }
-                    case PlanFolder planFolder:
-                        {
-                            (long folderSize, int folderFiles) = EvaluatePlanTotalsRecursive(planFolder);
-                            totalSize += folderSize;
-                            totalFiles += folderFiles;
-                            break;
-                        }
-                    default:
-                        throw new InvalidOperationException("Unsupported plan item!");
-                }
-            }
-
-            return (totalSize, totalFiles);
         }
 
         // Public methods -----------------------------------------------------

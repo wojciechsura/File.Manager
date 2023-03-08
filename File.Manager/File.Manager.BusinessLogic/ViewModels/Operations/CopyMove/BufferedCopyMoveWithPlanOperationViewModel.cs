@@ -33,26 +33,6 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
     {
         // Private types ------------------------------------------------------
 
-        // Input
-
-        private sealed class CopyMoveWorkerInput
-        {
-            public CopyMoveWorkerInput(DataTransferOperationType operationType, IFilesystemOperator sourceOperator, IFilesystemOperator destinationOperator, CopyMoveConfigurationModel configuration, IReadOnlyList<Item> selectedItems)
-            {
-                OperationType = operationType;
-                SourceOperator = sourceOperator;
-                DestinationOperator = destinationOperator;
-                Configuration = configuration;
-                SelectedItems = selectedItems;
-            }
-
-            public DataTransferOperationType OperationType { get; }
-            public IFilesystemOperator SourceOperator { get; }
-            public IFilesystemOperator DestinationOperator { get; }
-            public CopyMoveConfigurationModel Configuration { get; }
-            public IReadOnlyList<Item> SelectedItems { get; }
-        }
-
         // Worker
 
         private sealed class CopyMoveWorkerContext : BaseCopyMoveWorkerContext
@@ -117,7 +97,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
                     };
 
                     TimeSpan left = TimeSpan.FromMilliseconds(millisecondsLeft);
-                    string leftString = left.Days > 0 ? left.ToString("d'd'\\, hh\\:mm\\:ss") : left.ToString("hh\\:mm\\:ss");
+                    string leftString = GetTimeSpanString(left);
 
                     // Transfer speed
 
@@ -199,6 +179,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
             if (e.UserState is UserQuestionRequestProgress userQuestion)
             {
                 (bool result, SingleCopyMoveProblemResolution resolution) = dialogService.ShowUserDecisionDialog(userQuestion.AvailableResolutions, userQuestion.Header);
+                
                 if (result)
                     worker.UserDecision = resolution;
                 else
@@ -213,6 +194,16 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
                 FileProgress = progress.FileProgress;
                 FileProgressDescription = progress.FileDescription;
             }
+        }
+
+        private void HandleWorkerRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (e.Result is CriticalFailureCopyMoveWorkerResult critical)
+            {
+                messagingService.ShowError(critical.LocalizedMessage);
+            }
+
+            OnFinished();
         }
 
         // Public methods -----------------------------------------------------
@@ -237,16 +228,6 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
             worker.WorkerSupportsCancellation = true;
             worker.ProgressChanged += HandleWorkerProgressChanged;
             worker.RunWorkerCompleted += HandleWorkerRunWorkerCompleted;
-        }
-
-        private void HandleWorkerRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            if (e.Result is CriticalFailureCopyMoveWorkerResult critical)
-            {
-                messagingService.ShowError(critical.LocalizedMessage);
-            }
-
-            OnFinished();
         }
 
         public override void Cancel()

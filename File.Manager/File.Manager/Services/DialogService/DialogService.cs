@@ -1,8 +1,10 @@
 ﻿using File.Manager.BusinessLogic.Models.Dialogs.CopyMoveConfiguration;
+using File.Manager.BusinessLogic.Models.Dialogs.DeleteConfiguration;
 using File.Manager.BusinessLogic.Services.Dialogs;
 using File.Manager.BusinessLogic.Types;
 using File.Manager.BusinessLogic.ViewModels.Operations;
 using File.Manager.BusinessLogic.ViewModels.Operations.CopyMove;
+using File.Manager.BusinessLogic.ViewModels.Operations.Delete;
 using File.Manager.Resources;
 using File.Manager.Windows;
 using Microsoft.Win32;
@@ -66,6 +68,15 @@ namespace File.Manager.Services.DialogService
             dialog.ShowDialog();
         }
 
+        public (bool result, T resolution) ShowUserDecisionDialog<T>(T[] availableResolutions, string header)
+        {
+            var dialog = new UserDecisionDialog(availableResolutions.Cast<object>().ToArray(), header);
+            if (dialog.ShowDialog() == true)
+                return (true, (T)dialog.Result);
+            else
+                return (false, default(T));
+        }
+
         public (bool result, CopyMoveConfigurationModel model) ShowCopyMoveConfigurationDialog(CopyMoveConfigurationInputModel input)
         {
             var dialog = new CopyMoveConfigurationWindow(input);
@@ -81,13 +92,19 @@ namespace File.Manager.Services.DialogService
             dialog.ShowDialog();
         }
 
-        public (bool result, SingleCopyMoveProblemResolution resolution) ShowUserDecisionDialog(SingleCopyMoveProblemResolution[] availableResolutions, string header)
+        public (bool result, DeleteConfigurationModel model) ShowDeleteConfigurationDialog(DeleteConfigurationInputModel input)
         {
-            var dialog = new UserDecisionDialog(availableResolutions, header);
+            var dialog = new DeleteConfigurationWindow(input);
             if (dialog.ShowDialog() == true)
                 return (true, dialog.Result);
             else
-                return (false, (SingleCopyMoveProblemResolution)0);
+                return (false, null);
+        }
+
+        public void ShowDeleteProgress(BaseDeleteOperationViewModel operation)
+        {
+            var dialog = new DeleteProgressWindow(operation);
+            dialog.ShowDialog();
         }
     }
 }

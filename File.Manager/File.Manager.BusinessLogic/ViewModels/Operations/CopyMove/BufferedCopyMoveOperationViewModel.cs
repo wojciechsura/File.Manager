@@ -24,32 +24,13 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
     {
         // Private types ------------------------------------------------------
 
-        // Input
-
-        private sealed class CopyMoveWorkerInput
-        {
-            public CopyMoveWorkerInput(DataTransferOperationType operationType, IFilesystemOperator sourceOperator, IFilesystemOperator destinationOperator, CopyMoveConfigurationModel configuration, IReadOnlyList<Item> selectedItems)
-            {
-                OperationType = operationType;
-                SourceOperator = sourceOperator;
-                DestinationOperator = destinationOperator;
-                Configuration = configuration;
-                SelectedItems = selectedItems;
-            }
-
-            public DataTransferOperationType OperationType { get; }
-            public IFilesystemOperator SourceOperator { get; }
-            public IFilesystemOperator DestinationOperator { get; }
-            public CopyMoveConfigurationModel Configuration { get; }
-            public IReadOnlyList<Item> SelectedItems { get; }
-        }
-
         // Worker
 
         private sealed class CopyMoveWorkerContext : BaseCopyMoveWorkerContext
         {
             public CopyMoveWorkerContext(CopyMoveConfigurationModel configuration) : base(configuration)
             {
+
             }
         }
 
@@ -93,8 +74,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
 
                     // Elapsed
 
-                    TimeSpan elapsed = DateTime.Now - startTime;
-                    string elapsedString = elapsed.Days > 0 ? elapsed.ToString("d'd'\\, hh\\:mm\\:ss") : elapsed.ToString("hh\\:mm\\:ss");
+                    (TimeSpan elapsed, string elapsedString) = EvalElapsed(startTime);
 
                     // Transfer
 
@@ -103,14 +83,14 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
 
                     // Progress description to display
 
-                    string totalDescription = string.Format(Strings.CopyMove_Info_PartialDescription,
+                    string partialDescription = string.Format(Strings.CopyMove_Info_PartialDescription,
                         context.CopiedFiles,
                         SizeTools.BytesToHumanReadable(context.CopiedSize + bytesCopied),
                         elapsedString,
                         transfer);
 
                     ReportProgress(0, new CopyMoveProgress(0,
-                        totalDescription,
+                        partialDescription,
                         (int)(bytesCopied * 100 / operatorFile.Size),
                         operatorFile.Name));
                 }

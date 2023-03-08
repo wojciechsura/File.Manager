@@ -1,6 +1,6 @@
 ﻿namespace File.Manager.BusinessLogic.ViewModels.CopyMoveConfiguration
 {
-    public interface ICopyMoveCOnfigurationWindowAccess
+    public interface ICopyMoveConfigurationWindowAccess
     {
         void Close(bool v);
     }

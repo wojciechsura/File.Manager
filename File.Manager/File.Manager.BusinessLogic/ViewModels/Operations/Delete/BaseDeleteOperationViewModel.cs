@@ -21,12 +21,31 @@ using System.Threading.Tasks;
 using System.Net;
 using System.Xml.Linq;
 using System.Reflection;
+using System.Drawing.Printing;
 
 namespace File.Manager.BusinessLogic.ViewModels.Operations.Delete
 {
     public abstract class BaseDeleteOperationViewModel : BaseOperationViewModel
     {
         // Protected types ----------------------------------------------------
+
+        // Input
+
+        protected sealed class DeleteWorkerInput
+        {
+            public DeleteWorkerInput(IFilesystemOperator filesystemOperator,
+                DeleteConfigurationModel configuration, 
+                IReadOnlyList<Item> selectedItems)
+            {
+                FilesystemOperator = filesystemOperator;
+                Configuration = configuration;
+                SelectedItems = selectedItems;
+            }
+
+            public IFilesystemOperator FilesystemOperator { get; }
+            public DeleteConfigurationModel Configuration { get; }
+            public IReadOnlyList<Item> SelectedItems { get; }
+        }
 
         // Progress
 
@@ -109,7 +128,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.Delete
             public DeleteConfigurationModel Configuration { get; }
         }
 
-        protected abstract class BaseDeleteWorker<TContext> : BackgroundWorker
+        protected abstract class BaseDeleteWorker<TContext> : BaseWorker
             where TContext : BaseDeleteWorkerContext
         {
             // Protected types ------------------------------------------------
@@ -139,7 +158,16 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.Delete
                 CannotEnterFolder,
                 [LocalizedDescription(nameof(Strings.Delete_Question_CannotDeleteFolder), typeof(Strings))]
                 [AvailableDeleteResolutions(SingleDeleteProblemResolution.Skip, SingleDeleteProblemResolution.SkipAll, SingleDeleteProblemResolution.Abort)]
-                CannotDeleteFolder
+                CannotDeleteFolder,
+                [LocalizedDescription(nameof(Strings.Delete_Question_FileDoesNotExist), typeof(Strings))]
+                [AvailableDeleteResolutions(SingleDeleteProblemResolution.Skip, SingleDeleteProblemResolution.SkipAll, SingleDeleteProblemResolution.Abort)]
+                FileDoesNotExist,
+                [LocalizedDescription(nameof(Strings.Delete_Question_CannotCheckIfSubfolderIsEmpty), typeof(Strings))]
+                [AvailableDeleteResolutions(SingleDeleteProblemResolution.Skip, SingleDeleteProblemResolution.SkipAll, SingleDeleteProblemResolution.Abort)]
+                CannotCheckIfSubfolderIsEmpty,
+                [LocalizedDescription(nameof(Strings.Delete_Question_CannotListFolderContents), typeof(Strings))]
+                [AvailableDeleteResolutions(SingleDeleteProblemResolution.Skip, SingleDeleteProblemResolution.SkipAll, SingleDeleteProblemResolution.Abort)]
+                CannotListFolderContents
             }
 
             // Private fields -------------------------------------------------
@@ -147,55 +175,59 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.Delete
             private readonly SemaphoreSlim userDecisionSemaphore;
             private readonly Dictionary<DeleteProblemKind, GenericDeleteProblemResolution> problemResolutions = new();
 
-            // Protected methods ----------------------------------------------
+            // Private methods ------------------------------------------------
 
-            protected BaseDeleteWorker()
-            {
-                userDecisionSemaphore = new SemaphoreSlim(0, 1);
-            }
-
-            protected abstract (bool exit, DeleteWorkerResult result) RetrieveFolderContents(TContext context,
-                IFolderInfo folderInfo,
+            private (bool exit, DeleteWorkerResult result) CheckIfSubfolderEmpty(IFolderInfo folderInfo,
                 IFilesystemOperator filesystemOperator,
-                ref IReadOnlyList<IBaseItemInfo> items);
-
-            protected GenericDeleteProblemResolution GetResolutionFor(DeleteProblemKind problemKind,
-                string address,
-                string name)
+                ref bool folderEmpty)
             {
-                if (problemResolutions.TryGetValue(problemKind, out GenericDeleteProblemResolution resolution) && resolution != GenericDeleteProblemResolution.Ask)
-                    return resolution;
+                var subfolderEmpty = filesystemOperator.CheckIsSubfolderEmpty(folderInfo.Name);
 
-                LocalizedDescriptionAttribute localizedDescription = problemKind.GetAttribute<LocalizedDescriptionAttribute>();
-                string header = string.Format(localizedDescription.Description, address, name);
-
-                AvailableDeleteResolutionsAttribute availableResolutions = problemKind.GetAttribute<AvailableDeleteResolutionsAttribute>();
-
-                var progress = new UserQuestionRequestProgress(availableResolutions.AvailableResolutions, header);
-                ReportProgress(0, progress);
-
-                UserDecisionSemaphore.Wait();
-
-                switch (UserDecision)
+                if (subfolderEmpty == null)
                 {
-                    case SingleDeleteProblemResolution.Skip:
-                        return GenericDeleteProblemResolution.Skip;
-                    case SingleDeleteProblemResolution.SkipAll:
-                        problemResolutions[problemKind] = GenericDeleteProblemResolution.Skip;
-                        return GenericDeleteProblemResolution.Skip;
-                    case SingleDeleteProblemResolution.Delete:
-                        return GenericDeleteProblemResolution.Delete;
-                    case SingleDeleteProblemResolution.DeleteAll:
-                        problemResolutions[problemKind] = GenericDeleteProblemResolution.Delete;
-                        return GenericDeleteProblemResolution.Delete;
-                    case SingleDeleteProblemResolution.Abort:
-                        return GenericDeleteProblemResolution.Abort;
-                    default:
-                        throw new InvalidOperationException("Unsupported problem resolution!");
+                    var resolution = GetResolutionFor(DeleteProblemKind.CannotCheckIfSubfolderIsEmpty,
+                            filesystemOperator.CurrentPath,
+                            folderInfo.Name);
+
+                    switch (resolution)
+                    {
+                        case GenericDeleteProblemResolution.Skip:
+                            return (true, null);
+                        case GenericDeleteProblemResolution.Abort:
+                            return (true, new AbortedDeleteWorkerResult());
+                        default:
+                            throw new InvalidOperationException("Invalid problem resolution!");
+                    }
                 }
+
+                folderEmpty = subfolderEmpty.Value;
+                return (false, null);
             }
 
-            protected (bool exit, DeleteWorkerResult result) CheckForDeletingSpecialFile(IFileInfo fileInfo,
+            private (bool exit, DeleteWorkerResult result) EnsureFileExists(IFileInfo fileInfo,
+                IFilesystemOperator filesystemOperator)
+            {
+                if (!filesystemOperator.FileExists(fileInfo.Name))
+                {
+                    var resolution = GetResolutionFor(DeleteProblemKind.FileDoesNotExist,
+                        filesystemOperator.CurrentPath,
+                        fileInfo.Name);
+
+                    switch (resolution)
+                    {
+                        case GenericDeleteProblemResolution.Skip:
+                            return (true, null);
+                        case GenericDeleteProblemResolution.Abort:
+                            return (true, new AbortedDeleteWorkerResult());
+                        default:
+                            throw new InvalidOperationException("Invalid resolution!");
+                    }
+                }
+
+                return (false, null);
+            }
+
+            private (bool exit, DeleteWorkerResult result) CheckForDeletingSpecialFile(IFileInfo fileInfo,
                 IFilesystemOperator filesystemOperator)
             {
                 (bool exit, DeleteWorkerResult result) ValidateAttribute(System.IO.FileAttributes fileAttributes, System.IO.FileAttributes attribute, DeleteProblemKind problemKind)
@@ -250,7 +282,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.Delete
 
                     if (attributes == null)
                     {
-                        var resolution = GetResolutionFor(DeleteProblemKind.CannotGetFileAttributes,                            
+                        var resolution = GetResolutionFor(DeleteProblemKind.CannotGetFileAttributes,
                             filesystemOperator.CurrentPath,
                             fileInfo.Name);
 
@@ -273,41 +305,18 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.Delete
                         return (true, result);
 
                     (exit, result) = ValidateAttribute(attributes.Value, FileAttributes.Hidden, DeleteProblemKind.DeletedFileIsHidden);
-                    if (exit) 
+                    if (exit)
                         return (true, result);
 
                     (exit, result) = ValidateAttribute(attributes.Value, FileAttributes.System, DeleteProblemKind.DeletedFileIsSystem);
-                    if (exit) 
-                        return (true, result);                    
-                }
-
-                return (false, null);
-            }
-           
-            protected (bool exit, DeleteWorkerResult result) DeleteFile(IFileInfo fileInfo,
-                IFilesystemOperator filesystemOperator)
-            {
-                if (!filesystemOperator.DeleteFile(fileInfo.Name))
-                {
-                    var resolution = GetResolutionFor(DeleteProblemKind.CannotDeleteFile,
-                        filesystemOperator.CurrentPath,
-                        fileInfo.Name);
-
-                    switch (resolution)
-                    {
-                        case GenericDeleteProblemResolution.Skip:
-                            return (true, null);
-                        case GenericDeleteProblemResolution.Abort:
-                            return (true, new AbortedDeleteWorkerResult());
-                        default:
-                            throw new InvalidOperationException("Invalid resolution!");
-                    }
+                    if (exit)
+                        return (true, result);
                 }
 
                 return (false, null);
             }
 
-            protected (bool exit, DeleteWorkerResult) DeleteEmptyFolder(IFolderInfo folderInfo,
+            private (bool exit, DeleteWorkerResult) DeleteEmptyFolder(IFolderInfo folderInfo,
                 IFilesystemOperator filesystemOperator)
             {
                 if (!filesystemOperator.DeleteFolder(folderInfo.Name, true))
@@ -330,7 +339,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.Delete
                 return (false, null);
             }
 
-            protected (bool exit, DeleteWorkerResult result) EnterFolder(IFolderInfo folderInfo,
+            private (bool exit, DeleteWorkerResult result) EnterFolder(IFolderInfo folderInfo,
                 IFilesystemOperator filesystemOperator,
                 ref IFilesystemOperator filesystemFolderOperator)
             {
@@ -357,47 +366,161 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.Delete
                 return (false, null);
             }
 
-            protected (DeleteWorkerResult result, bool allDeleted) ProcessItems(TContext context,
+            private DeleteWorkerResult ProcessFile(TContext context,
+                IFileInfo fileInfo,
+                IFilesystemOperator filesystemOperator)
+            {
+                bool exit;
+                DeleteWorkerResult result;
+
+                (exit, result) = EnsureFileExists(fileInfo, filesystemOperator);
+                if (exit)
+                    return result;
+
+                (exit, result) = CheckForDeletingSpecialFile(fileInfo, filesystemOperator);
+                if (exit)
+                    return result;
+
+                (exit, result) = DeleteFile(context, fileInfo, filesystemOperator);
+                if (exit)
+                    return result;
+
+                return null;
+            }
+
+            private DeleteWorkerResult ProcessFolder(TContext context,
+                IFolderInfo folderInfo,
+                IFilesystemOperator filesystemOperator)
+            {
+                bool exit;
+                DeleteWorkerResult result;
+
+                IFilesystemOperator folderOperator = null;
+
+                (exit, result) = EnterFolder(folderInfo, filesystemOperator, ref folderOperator);
+                if (exit)
+                    return result;
+
+                IReadOnlyList<IBaseItemInfo> items = null;
+                (exit, result) = RetrieveFolderContents(context, folderInfo, folderOperator, ref items);
+                if (exit)
+                    return result;
+
+                result = ProcessItems(context, items, folderOperator);
+                if (result != null)
+                    return result;
+
+                bool folderEmpty = false;
+                (exit, result) = CheckIfSubfolderEmpty(folderInfo, filesystemOperator, ref folderEmpty);
+                if (exit) 
+                    return result;
+
+                if (folderEmpty)
+                {
+                    (exit, result) = DeleteEmptyFolder(folderInfo, filesystemOperator);
+                    if (exit)
+                        return result;
+                }
+
+                return null;
+            }
+
+
+            // Protected methods ----------------------------------------------
+
+            protected BaseDeleteWorker()
+            {
+                userDecisionSemaphore = new SemaphoreSlim(0, 1);
+            }
+
+            protected DeleteWorkerResult ProcessItems(TContext context,
                 IReadOnlyList<IBaseItemInfo> items,
                 IFilesystemOperator filesystemOperator)
             {
-                bool allItemsDeleted = true;
-
                 foreach (var item in items)
                 {
                     if (item is IFolderInfo planFolder)
                     {
-                        (var result, bool deleted) = ProcessFolder(context, planFolder, filesystemOperator);
-                        allItemsDeleted &= deleted;
+                        var result = ProcessFolder(context, planFolder, filesystemOperator);
                         if (result != null)
-                            return (result, false);
+                            return result;
                     }
                     else if (item is IFileInfo planFile)
                     {
-                        (var result, bool deleted) = ProcessFile(context, planFile, filesystemOperator);
-                        allItemsDeleted &= deleted;
+                        var result = ProcessFile(context, planFile, filesystemOperator);
                         if (result != null)
-                            return (result, false);
+                            return result;
                     }
                     else
                         throw new InvalidOperationException("Invalid plan item!");
                 }
 
-                return (null, allItemsDeleted);
+                return null;
             }
 
-            protected (DeleteWorkerResult result, bool deleted) ProcessFile(TContext context,
-                IFileInfo operatorFile,
-                IFilesystemOperator filesystemOperator)
+            protected abstract (bool exit, DeleteWorkerResult result) RetrieveFolderContents(TContext context,
+                IFolderInfo folderInfo,
+                IFilesystemOperator filesystemOperator,
+                ref IReadOnlyList<IBaseItemInfo> items);
+
+            protected GenericDeleteProblemResolution GetResolutionFor(DeleteProblemKind problemKind,
+                string address,
+                string name)
             {
-                throw new NotImplementedException();
+                if (problemResolutions.TryGetValue(problemKind, out GenericDeleteProblemResolution resolution) && resolution != GenericDeleteProblemResolution.Ask)
+                    return resolution;
+
+                LocalizedDescriptionAttribute localizedDescription = problemKind.GetAttribute<LocalizedDescriptionAttribute>();
+                string header = string.Format(localizedDescription.Description, address, name);
+
+                AvailableDeleteResolutionsAttribute availableResolutions = problemKind.GetAttribute<AvailableDeleteResolutionsAttribute>();
+
+                var progress = new UserQuestionRequestProgress(availableResolutions.AvailableResolutions, header);
+                ReportProgress(0, progress);
+
+                UserDecisionSemaphore.Wait();
+
+                switch (UserDecision)
+                {
+                    case SingleDeleteProblemResolution.Skip:
+                        return GenericDeleteProblemResolution.Skip;
+                    case SingleDeleteProblemResolution.SkipAll:
+                        problemResolutions[problemKind] = GenericDeleteProblemResolution.Skip;
+                        return GenericDeleteProblemResolution.Skip;
+                    case SingleDeleteProblemResolution.Delete:
+                        return GenericDeleteProblemResolution.Delete;
+                    case SingleDeleteProblemResolution.DeleteAll:
+                        problemResolutions[problemKind] = GenericDeleteProblemResolution.Delete;
+                        return GenericDeleteProblemResolution.Delete;
+                    case SingleDeleteProblemResolution.Abort:
+                        return GenericDeleteProblemResolution.Abort;
+                    default:
+                        throw new InvalidOperationException("Unsupported problem resolution!");
+                }
             }
 
-            private (DeleteWorkerResult result, bool deleted) ProcessFolder(TContext context,
-                IFolderInfo folderInfo,                
+            protected virtual (bool exit, DeleteWorkerResult result) DeleteFile(TContext context,
+                IFileInfo fileInfo,
                 IFilesystemOperator filesystemOperator)
             {
-                throw new NotImplementedException();
+                if (!filesystemOperator.DeleteFile(fileInfo.Name))
+                {
+                    var resolution = GetResolutionFor(DeleteProblemKind.CannotDeleteFile,
+                        filesystemOperator.CurrentPath,
+                        fileInfo.Name);
+
+                    switch (resolution)
+                    {
+                        case GenericDeleteProblemResolution.Skip:
+                            return (true, null);
+                        case GenericDeleteProblemResolution.Abort:
+                            return (true, new AbortedDeleteWorkerResult());
+                        default:
+                            throw new InvalidOperationException("Invalid resolution!");
+                    }
+                }
+
+                return (false, null);
             }
 
             // Public properties ----------------------------------------------

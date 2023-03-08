@@ -1,7 +1,7 @@
 ﻿using Autofac;
 using Autofac.Core;
-using File.Manager.BusinessLogic.Models.Dialogs.CopyMoveConfiguration;
-using File.Manager.BusinessLogic.ViewModels.CopyMoveConfiguration;
+using File.Manager.BusinessLogic.Models.Dialogs.DeleteConfiguration;
+using File.Manager.BusinessLogic.ViewModels.DeleteConfiguration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,17 +19,17 @@ using System.Windows.Shapes;
 namespace File.Manager.Windows
 {
     /// <summary>
-    /// Interaction logic for CopyMoveConfigurationWindow.xaml
+    /// Interaction logic for DeleteConfigurationWindow.xaml
     /// </summary>
-    public partial class CopyMoveConfigurationWindow : Window, ICopyMoveConfigurationWindowAccess
+    public partial class DeleteConfigurationWindow : Window, IDeleteConfigurationWindowAccess
     {
-        private readonly CopyMoveConfigurationWindowViewModel viewModel;
+        private readonly DeleteConfigurationWindowViewModel viewModel;
 
-        public CopyMoveConfigurationWindow(CopyMoveConfigurationInputModel input)
+        public DeleteConfigurationWindow(DeleteConfigurationInputModel input)
         {
             InitializeComponent();
 
-            var viewModel = Dependencies.Container.Instance.Resolve<CopyMoveConfigurationWindowViewModel>(new NamedParameter("input", input),
+            var viewModel = Dependencies.Container.Instance.Resolve<DeleteConfigurationWindowViewModel>(new NamedParameter("input", input),
                 new NamedParameter("access", this));
 
             this.viewModel = viewModel;
@@ -42,6 +42,6 @@ namespace File.Manager.Windows
             Close();
         }
 
-        public CopyMoveConfigurationModel Result => viewModel.Result;
+        public DeleteConfigurationModel Result => viewModel.Result;
     }
 }

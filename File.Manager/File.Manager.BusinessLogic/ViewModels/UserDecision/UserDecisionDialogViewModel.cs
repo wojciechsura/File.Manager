@@ -14,13 +14,13 @@ namespace File.Manager.BusinessLogic.ViewModels.UserDecision
     {
         private readonly IUserDecisionDialogAccess access;
 
-        private void DoSelectResolution(SingleCopyMoveProblemResolution resolution)
+        private void DoSelectResolution(object resolution)
         {
             Result = resolution;
             access.Close(true);
         }
 
-        public UserDecisionDialogViewModel(SingleCopyMoveProblemResolution[] availableResolutions,
+        public UserDecisionDialogViewModel(object[] availableResolutions,
             string header,
             IUserDecisionDialogAccess access)
         {
@@ -29,15 +29,15 @@ namespace File.Manager.BusinessLogic.ViewModels.UserDecision
 
             AvailableResolutions = availableResolutions;
 
-            SelectResolutionCommand = new AppCommand(obj => DoSelectResolution((SingleCopyMoveProblemResolution)obj));
+            SelectResolutionCommand = new AppCommand(obj => DoSelectResolution(obj));
         }
 
         public string Header { get; }
 
         public ICommand SelectResolutionCommand { get; }
 
-        public SingleCopyMoveProblemResolution[] AvailableResolutions { get; }
+        public object[] AvailableResolutions { get; }
 
-        public SingleCopyMoveProblemResolution Result { get; private set; }
+        public object Result { get; private set; }
     }
 }

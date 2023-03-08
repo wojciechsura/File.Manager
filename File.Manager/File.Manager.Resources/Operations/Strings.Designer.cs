@@ -79,6 +79,69 @@ namespace File.Manager.Resources.Operations {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot change attributes of the destination file {2}..
+        /// </summary>
+        public static string CopyMove_Question_CannotChangeFileAttributes {
+            get {
+                return ResourceManager.GetString("CopyMove_Question_CannotChangeFileAttributes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot check if subfolder {2} in location {0} is empty..
+        /// </summary>
+        public static string CopyMove_Question_CannotCheckIfSubfolderIsEmpty {
+            get {
+                return ResourceManager.GetString("CopyMove_Question_CannotCheckIfSubfolderIsEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot copy file {0} from {1} to {2}..
+        /// </summary>
+        public static string CopyMove_Question_CannotCopyFile {
+            get {
+                return ResourceManager.GetString("CopyMove_Question_CannotCopyFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot create folder {2} in location {1}..
+        /// </summary>
+        public static string CopyMove_Question_CannotCreateDestinationFolder {
+            get {
+                return ResourceManager.GetString("CopyMove_Question_CannotCreateDestinationFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot delete folder {2} in location {0}..
+        /// </summary>
+        public static string CopyMove_Question_CannotDeleteEmptyFolder {
+            get {
+                return ResourceManager.GetString("CopyMove_Question_CannotDeleteEmptyFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot open folder {2} in location {1}..
+        /// </summary>
+        public static string CopyMove_Question_CannotEnterDestinationFolder {
+            get {
+                return ResourceManager.GetString("CopyMove_Question_CannotEnterDestinationFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot open folde {2} in location {0}..
+        /// </summary>
+        public static string CopyMove_Question_CannotEnterSourceFolder {
+            get {
+                return ResourceManager.GetString("CopyMove_Question_CannotEnterSourceFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot get attributes of file {2} in location {0}..
         /// </summary>
         public static string CopyMove_Question_CannotGetSourceFileAttributes {
@@ -124,6 +187,15 @@ namespace File.Manager.Resources.Operations {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot delete source file {0} from location {1}..
+        /// </summary>
+        public static string CopyMove_Question_CannotRemoveSourceFile {
+            get {
+                return ResourceManager.GetString("CopyMove_Question_CannotRemoveSourceFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot set attributes for file {2} in location {1}..
         /// </summary>
         public static string CopyMove_Question_CannotSetTargetFileAttributes {
@@ -156,60 +228,6 @@ namespace File.Manager.Resources.Operations {
         public static string CopyMove_Question_DestinationFileIsSystem {
             get {
                 return ResourceManager.GetString("CopyMove_Question_DestinationFileIsSystem", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Failed to change attributes of the destination file {2}..
-        /// </summary>
-        public static string CopyMove_Question_FailedToChangeFileAttributes {
-            get {
-                return ResourceManager.GetString("CopyMove_Question_FailedToChangeFileAttributes", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Failed to copy file {0} from {1} to {2}..
-        /// </summary>
-        public static string CopyMove_Question_FailedToCopyFile {
-            get {
-                return ResourceManager.GetString("CopyMove_Question_FailedToCopyFile", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Failed to create folder {2} in location {1}..
-        /// </summary>
-        public static string CopyMove_Question_FailedToCreateDestinationFolder {
-            get {
-                return ResourceManager.GetString("CopyMove_Question_FailedToCreateDestinationFolder", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Failed to open folder {2} in location {1}..
-        /// </summary>
-        public static string CopyMove_Question_FailedToEnterDestinationFolder {
-            get {
-                return ResourceManager.GetString("CopyMove_Question_FailedToEnterDestinationFolder", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Failed to open folde {2} in location {0}..
-        /// </summary>
-        public static string CopyMove_Question_FailedToEnterSourceFolder {
-            get {
-                return ResourceManager.GetString("CopyMove_Question_FailedToEnterSourceFolder", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Failed to delete source file {0} from location {1}..
-        /// </summary>
-        public static string CopyMove_Question_FailedToRemoveSourceFile {
-            get {
-                return ResourceManager.GetString("CopyMove_Question_FailedToRemoveSourceFile", resourceCulture);
             }
         }
         
@@ -268,6 +286,33 @@ namespace File.Manager.Resources.Operations {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Deleted files: {0} ({1}). Elapsed: {2}.
+        /// </summary>
+        public static string Delete_Info_PartialDescription {
+            get {
+                return ResourceManager.GetString("Delete_Info_PartialDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Deleted files: {0} / {1} ({2} / {3}). Elapsed: {4}, left: {5}{6}.
+        /// </summary>
+        public static string Delete_Info_TotalDescription {
+            get {
+                return ResourceManager.GetString("Delete_Info_TotalDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot check if subfolder {1} in location {0} is empty..
+        /// </summary>
+        public static string Delete_Question_CannotCheckIfSubfolderIsEmpty {
+            get {
+                return ResourceManager.GetString("Delete_Question_CannotCheckIfSubfolderIsEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot delete file {1} in location {0}..
         /// </summary>
         public static string Delete_Question_CannotDeleteFile {
@@ -304,6 +349,15 @@ namespace File.Manager.Resources.Operations {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot list folder contents: {0}.
+        /// </summary>
+        public static string Delete_Question_CannotListFolderContents {
+            get {
+                return ResourceManager.GetString("Delete_Question_CannotListFolderContents", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot set attributes of file {1} in location {0}..
         /// </summary>
         public static string Delete_Question_CannotSetFileAttributes {
@@ -336,6 +390,15 @@ namespace File.Manager.Resources.Operations {
         public static string Delete_Question_DeletedFileIsSystem {
             get {
                 return ResourceManager.GetString("Delete_Question_DeletedFileIsSystem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu File {1} is no longer in location {0}..
+        /// </summary>
+        public static string Delete_Question_FileDoesNotExist {
+            get {
+                return ResourceManager.GetString("Delete_Question_FileDoesNotExist", resourceCulture);
             }
         }
     }
