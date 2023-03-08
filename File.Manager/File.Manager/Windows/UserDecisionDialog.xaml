@@ -7,17 +7,20 @@
         xmlns:vm="clr-namespace:File.Manager.BusinessLogic.ViewModels.UserDecision;assembly=File.Manager.BusinessLogic" 
         xmlns:t="clr-namespace:File.Manager.BusinessLogic.Types;assembly=File.Manager.BusinessLogic"
         xmlns:res="clr-namespace:File.Manager.Resources.Windows.UserDecision;assembly=File.Manager.Resources"
+        xmlns:p="clr-namespace:File.Manager.Controls.Panels"
         d:DataContext="{d:DesignInstance Type=vm:UserDecisionDialogViewModel}"
         mc:Ignorable="d"
         Title="{x:Static res:Strings.Title}" SizeToContent="Height" Width="400"
         WindowStartupLocation="CenterOwner">
     <StackPanel Orientation="Vertical" Margin="{StaticResource DialogWindowPadding}">
-        <Label HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Content="{Binding Header}" />
-        
+        <Label HorizontalAlignment="Stretch" HorizontalContentAlignment="Center">
+            <TextBlock Text="{Binding Header}" />
+        </Label>
+
         <ItemsControl ItemsSource="{Binding AvailableResolutions}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <WrapPanel />
+                    <p:ColumnsPanel ColumnCount="2" />
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
 

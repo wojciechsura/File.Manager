@@ -13,12 +13,13 @@
         d:DataContext="{d:DesignInstance Type=vm:NewFolderConfigurationWindowViewModel}"
         mc:Ignorable="d"
         Title="{x:Static res:Strings.Title}" SizeToContent="WidthAndHeight" MinWidth="500"
-        WindowStartupLocation="CenterOwner">
+        WindowStartupLocation="CenterOwner"
+        FocusManager.FocusedElement="{Binding ElementName=tbName}">
     <StackPanel Orientation="Vertical">
         <GroupBox Header="{x:Static res:Strings.Groupbox_Configuration_Title}" Margin="{StaticResource DialogItemsMargin}">
             <sc:EditorPanel>
                 <Label Style="{StaticResource FirstHeaderLabel}" Content="{x:Static res:Strings.Label_Name}" />
-                <TextBox Margin="{StaticResource DialogItemsMargin}" HorizontalAlignment="Stretch"
+                <TextBox x:Name="tbName" Margin="{StaticResource DialogItemsMargin}" HorizontalAlignment="Stretch"
                          Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </sc:EditorPanel>
         </GroupBox>

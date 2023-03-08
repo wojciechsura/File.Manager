@@ -7,16 +7,17 @@
         xmlns:cres="clr-namespace:File.Manager.Resources.Common;assembly=File.Manager.Resources"
         mc:Ignorable="d"
         Width="500" Height="400" ResizeMode="CanResize"
-        WindowStartupLocation="CenterOwner">
+        WindowStartupLocation="CenterOwner"
+        FocusManager.FocusedElement="{Binding ElementName=okButton}">
     <DockPanel>
         <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Command="{Binding OkCommand}" Style="{StaticResource DialogButton}" Content="{x:Static cres:Strings.Ok}" />
+            <Button x:Name="okButton" Command="{Binding OkCommand}" Style="{StaticResource DialogButton}" Content="{x:Static cres:Strings.Ok}" />
         </StackPanel>
         <GroupBox Header="{x:Static res:Strings.Header}">
             <DockPanel>
                 <Label DockPanel.Dock="Top" Margin="4" Content="{x:Static res:Strings.ExceptionDetails}"></Label>
                 <TextBox Margin="4" HorizontalAlignment="Stretch" Text="{Binding ExceptionText, Mode=OneWay}" IsReadOnly="True"
-                         FontFamily="Consolas" VerticalAlignment="Top"/>
+                         FontFamily="Consolas" VerticalAlignment="Stretch"/>
             </DockPanel>
         </GroupBox>
     </DockPanel>

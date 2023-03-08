@@ -13,7 +13,8 @@
         d:DataContext="{d:DesignInstance Type=vm:DeleteConfigurationWindowViewModel}"
         mc:Ignorable="d"
         Title="{x:Static res:Strings.Title}" SizeToContent="WidthAndHeight" MinWidth="500"
-        WindowStartupLocation="CenterOwner">
+        WindowStartupLocation="CenterOwner"
+        FocusManager.FocusedElement="{Binding ElementName=tbFileFilter}">
     <StackPanel Orientation="Vertical">
         <GroupBox Header="{x:Static res:Strings.Groupbox_Summary_Title}" Margin="{StaticResource DialogItemsMargin}">
             <sc:EditorPanel>
@@ -32,7 +33,7 @@
         <GroupBox Header="{x:Static res:Strings.Groupbox_Configuration_Title}" Margin="{StaticResource DialogItemsExceptTopMargin}">
             <sc:EditorPanel>
                 <Label Style="{StaticResource FirstHeaderLabel}" Content="{x:Static res:Strings.Label_FileMask}" />
-                <TextBox Margin="{StaticResource DialogItemsMargin}" 
+                <TextBox x:Name="tbFileFilter" Margin="{StaticResource DialogItemsMargin}" 
                          Text="{Binding FileMask, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                          VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
             </sc:EditorPanel>

@@ -15,7 +15,8 @@
         Title="{Binding Operation.Title}" SizeToContent="Height" Width="600"
         ResizeMode="NoResize"
         Loaded="HandleWindowLoaded" Closing="Window_Closing"
-        WindowStartupLocation="CenterOwner">
+        WindowStartupLocation="CenterOwner"
+        FocusManager.FocusedElement="{Binding ElementName=bCancel}">
     <Window.Resources>
         <Style TargetType="Label" x:Key="HeaderLabel">
             
@@ -45,7 +46,9 @@
                 <!-- Overall progress bar -->
 
                 <DockPanel Margin="{StaticResource DialogItemsExceptTopMargin}" HorizontalAlignment="Stretch">
-                    <Label DockPanel.Dock="Top" Margin="{StaticResource DialogItemsMargin}" Content="{Binding Operation.ProgressDescription}" />
+                    <Label DockPanel.Dock="Top" Margin="{StaticResource DialogItemsMargin}">
+                        <TextBlock Text="{Binding Operation.ProgressDescription}" />
+                    </Label>
 
                     <Label Margin="{StaticResource DialogItemsRightMargin}" DockPanel.Dock="Right" Width="40" HorizontalContentAlignment="Center"
                            Visibility="{Binding Operation.ProgressIndeterminate, Converter={StaticResource InverseBoolToVisibilityConverter}, ConverterParameter={x:Static pc:Visibility.Hidden}}">
@@ -65,7 +68,7 @@
         </GroupBox>
 
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Style="{StaticResource DialogButton}" Content="{x:Static cres:Strings.Cancel}" 
+            <Button x:Name="bCancel" Style="{StaticResource DialogButton}" Content="{x:Static cres:Strings.Cancel}" 
                     Command="{Binding CancelCommand}"/>
         </StackPanel>
 
