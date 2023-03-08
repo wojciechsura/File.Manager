@@ -20,6 +20,8 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Home
         private readonly List<ModuleFolderItem> items;
         private readonly IModuleService moduleService;
 
+        private string address;
+
         private class ModuleFolderItem : FolderItem
         {
             public ModuleFolderItem(FilesystemModule module)
@@ -33,9 +35,26 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Home
             public FilesystemModule Module { get; }
         }
 
+        private void LoadItems()
+        {
+            if (address == ROOT_ADDRESS)
+            {
+                items.Clear();
+
+                foreach (var module in moduleService.FilesystemModules)
+                {
+                    var folder = new ModuleFolderItem(module);
+                    items.Add(folder);
+                }
+            }
+            else 
+                throw new InvalidOperationException("Home navigator only supports root address!");
+        }
+
         public HomeNavigator(IModuleService moduleService)
         {
             this.moduleService = moduleService;
+            address = ROOT_ADDRESS;
             items = new();
         }
 
@@ -69,18 +88,18 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Home
 
         public override void NavigateToRoot()
         {
-            items.Clear();
-
-            foreach (var module in moduleService.FilesystemModules)
-            {
-                var folder = new ModuleFolderItem(module);
-                items.Add(folder);
-            }            
+            address = ROOT_ADDRESS;
+            LoadItems();                   
         }
 
         public override void NavigateToAddress(string address)
         {
             throw new InvalidOperationException("HomeNavigator does not support navigating to address!");
+        }
+
+        public override void Refresh()
+        {
+            LoadItems();
         }
 
         public override Item ResolveFocusedItem(FocusedItemData data)
@@ -100,7 +119,7 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Home
         public override IFilesystemOperator CreateOperatorForCurrentLocation()
             => throw new NotSupportedException("Creating operator for home module is not supported.");
 
-        public override string Address => ROOT_ADDRESS;
+        public override string Address => address;
 
         public override IReadOnlyList<Item> Items => items;
     }

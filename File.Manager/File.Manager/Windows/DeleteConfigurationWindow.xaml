@@ -12,7 +12,7 @@
         xmlns:t="clr-namespace:File.Manager.BusinessLogic.Types;assembly=File.Manager.BusinessLogic"
         d:DataContext="{d:DesignInstance Type=vm:DeleteConfigurationWindowViewModel}"
         mc:Ignorable="d"
-        Title="{Binding Title}" SizeToContent="WidthAndHeight" MinWidth="500"
+        Title="{x:Static res:Strings.Title}" SizeToContent="WidthAndHeight" MinWidth="500"
         WindowStartupLocation="CenterOwner">
     <StackPanel Orientation="Vertical">
         <GroupBox Header="{x:Static res:Strings.Groupbox_Summary_Title}" Margin="{StaticResource DialogItemsMargin}">

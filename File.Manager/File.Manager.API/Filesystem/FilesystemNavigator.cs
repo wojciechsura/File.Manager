@@ -41,6 +41,8 @@ namespace File.Manager.API.Filesystem
 
         public abstract void Dispose();
 
+        public abstract void Refresh();
+
         public abstract LocationCapabilities GetLocationCapabilities();
 
         public abstract IFilesystemOperator CreateOperatorForCurrentLocation();

@@ -1382,6 +1382,13 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
             DataTransferOperationType operationType)
             : base(dialogService, messagingService)
         {
+            this.Title = operationType switch
+            {
+                DataTransferOperationType.Move => Strings.CopyMove_Title_MovingFiles,
+                DataTransferOperationType.Copy => Strings.CopyMove_Title_CopyingFiles,
+                _ => throw new InvalidOperationException("Unsupported opertion type!")
+            };
+
             this.sourceOperator = sourceOperator;
             this.destinationOperator = destinationOperator;
             this.selectedItems = selectedItems;

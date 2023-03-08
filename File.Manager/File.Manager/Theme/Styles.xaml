@@ -7,7 +7,7 @@
 
     <Style TargetType="Button" x:Key="DialogButton" BasedOn="{StaticResource {x:Type Button}}">
         <Setter Property="Width" Value="150" />
-        <Setter Property="Margin" Value="{StaticResource DialogItemsExceptRightMargin}" />
+        <Setter Property="Margin" Value="{StaticResource DialogItemsExceptLeftMargin}" />
     </Style>
 
     <Style x:Key="FirstHeaderLabel" TargetType="Label">

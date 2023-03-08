@@ -124,11 +124,20 @@ namespace File.Manager.Resources.Windows.DeleteConfigurationWindow {
         }
         
         /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Selected {0:plural(en):Item|Items} to delete.
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Selected {0:plural(en):{} item|{} items} to delete.
         /// </summary>
         public static string SummaryValue_Plural {
             get {
                 return ResourceManager.GetString("SummaryValue_Plural", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Delete files.
+        /// </summary>
+        public static string Title {
+            get {
+                return ResourceManager.GetString("Title", resourceCulture);
             }
         }
     }

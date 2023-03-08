@@ -162,7 +162,7 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
                 throw new ItemExecutionException(message);
         }
 
-        private void TryNavigateToAddress(string newAddress = null)
+        private void TryNavigateToAddress(string newAddress)
         {
             (bool result, string message) = InternalOpenAddress(newAddress);
 
@@ -263,6 +263,11 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
             }
 
             return null;
+        }
+
+        public override void Refresh()
+        {
+            TryNavigateToAddress(address);
         }
 
         public override LocationCapabilities GetLocationCapabilities()

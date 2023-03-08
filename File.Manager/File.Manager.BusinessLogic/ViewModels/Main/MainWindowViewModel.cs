@@ -108,6 +108,12 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
             }
 
             // TODO direct
+
+            foreach (var item in copyFromPane.Items)
+            {
+                item.IsSelected = false;
+            }
+            copyToPane.Refresh();
         }
 
         private (bool result, DeleteConfigurationModel model) ShowDeleteDialog(List<Item> items, string address)

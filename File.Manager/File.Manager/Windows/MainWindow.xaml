@@ -15,6 +15,7 @@
         <KeyBinding Key="U" Modifiers="Ctrl" Command="{Binding Path=SwitchPanesCommand}" />
         <KeyBinding Key="F5" Command="{Binding CopyCommand}" />
         <KeyBinding Key="F6" Command="{Binding MoveCommand}" />
+        <KeyBinding Key="F7" Command="{Binding NewFolderCommand}" />
         <KeyBinding Key="F8" Command="{Binding DeleteCommand}" />
     </f:RibbonWindow.InputBindings>
 
@@ -38,6 +39,7 @@
                               LargeIcon="pack://application:,,,/File.Manager;component/Resources/Images/Move32.png"
                               Icon="pack://application:,,,/File.Manager;component/Resources/Images/Move16.png"/>
                     <f:Button Header="{x:Static res:Strings.Ribbon_Button_NewFolder}" 
+                              Command="{Binding NewFolderCommand}"
                               LargeIcon="pack://application:,,,/File.Manager;component/Resources/Images/NewFolder32.png"
                               Icon="pack://application:,,,/File.Manager;component/Resources/Images/NewFolder16.png"/>
                     <f:Button Header="{x:Static res:Strings.Ribbon_Button_Delete}" 

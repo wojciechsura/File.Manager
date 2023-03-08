@@ -128,7 +128,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
         // IFilesystemNavigatorHandler implementation -------------------------
 
         void IFilesystemNavigatorHandler.NotifyChanged(FocusedItemData focusedItem)
-        {
+        {            
             UpdateItems(focusedItem);
         }
 
@@ -214,7 +214,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
 
         public void Refresh()
         {
-            UpdateItems(null);
+            navigator.Refresh();
         }
 
         public void SelectItem(string name)
