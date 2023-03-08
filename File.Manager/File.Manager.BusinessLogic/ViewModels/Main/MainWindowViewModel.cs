@@ -2,6 +2,7 @@
 using File.Manager.API.Types;
 using File.Manager.BusinessLogic.Models.Dialogs.CopyMoveConfiguration;
 using File.Manager.BusinessLogic.Models.Dialogs.DeleteConfiguration;
+using File.Manager.BusinessLogic.Models.Dialogs.NewFolderConfiguration;
 using File.Manager.BusinessLogic.Services.Dialogs;
 using File.Manager.BusinessLogic.Services.Icons;
 using File.Manager.BusinessLogic.Services.Messaging;
@@ -13,6 +14,7 @@ using File.Manager.BusinessLogic.ViewModels.Operations.CopyMove;
 using File.Manager.BusinessLogic.ViewModels.Operations.Delete;
 using File.Manager.BusinessLogic.ViewModels.Pane;
 using File.Manager.Common.Helpers;
+using File.Manager.Resources.Windows.MainWindow;
 using Spooksoft.VisualStateManager.Commands;
 using System;
 using System.Collections.Generic;
@@ -148,6 +150,8 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
             }
 
             dialogService.ShowDeleteProgress(operation);
+
+            deletePane.Refresh();
         }
 
         private void DoDelete()
@@ -159,6 +163,61 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
             if (deleteCapabilities.HasFlag(LocationCapabilities.Delete))
             {
                 DoPerformDelete(deletePane, deleteCapabilities.HasFlag(LocationCapabilities.Plan));
+            }
+        }
+
+        private void DoPerformNewFolder(PaneViewModel newFolderPane)
+        {
+            (bool result, NewFolderConfigurationModel model) = dialogService.ShowNewFolderConfigurationDialog();
+
+            if (result)
+            {
+                var filesystemOperator = newFolderPane.Navigator.CreateOperatorForCurrentLocation();
+
+                bool? fileExists = filesystemOperator.FileExists(model.Name);
+                if (fileExists == null)
+                {
+                    messagingService.ShowError(string.Format(Strings.Error_CannotCheckIfFileExists, model.Name));
+                    return;
+                }
+                else if (fileExists == true)
+                {
+                    messagingService.ShowError(string.Format(Strings.Error_FileAlreadyExists, model.Name)); 
+                    return;
+                }
+
+                bool? folderExists = filesystemOperator.FolderExists(model.Name);
+                if (folderExists == null)
+                {
+                    messagingService.ShowError(string.Format(Strings.Error_CannotCheckIfFolderExists, model.Name));
+                    return;
+                }
+                else if (folderExists == true)
+                {
+                    messagingService.ShowError(string.Format(Strings.Error_FolderAlreadyExists, model.Name));
+                    return;
+                }
+
+                if (!filesystemOperator.CreateFolder(model.Name))
+                {
+                    messagingService.ShowError(string.Format(Strings.Error_CannotCreateFolder, model.Name));
+                    return;
+                }
+
+                newFolderPane.Refresh();
+                newFolderPane.SelectItem(model.Name);
+            }
+        }
+
+        private void DoNewFolder()
+        {
+            var newFolderPane = ActivePane;
+
+            var newFolderCapabilities = newFolderPane.Navigator.GetLocationCapabilities();
+
+            if (newFolderCapabilities.HasFlag(LocationCapabilities.CreateFolder))
+            {
+                DoPerformNewFolder(newFolderPane);
             }
         }
 
@@ -229,6 +288,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
             SwitchPanesCommand = new AppCommand(obj => DoSwitchPanes());
             CopyCommand = new AppCommand(obj => DoCopyMove(DataTransferOperationType.Copy));
             MoveCommand = new AppCommand(obj => DoCopyMove(DataTransferOperationType.Move));
+            NewFolderCommand = new AppCommand(obj => DoNewFolder());
             DeleteCommand = new AppCommand(obj => DoDelete());
 
             activePane = leftPane;
@@ -261,6 +321,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
 
         public ICommand CopyCommand { get; }
         public ICommand MoveCommand { get; }
+        public ICommand NewFolderCommand { get; }
         public ICommand DeleteCommand { get; }
     }
 }

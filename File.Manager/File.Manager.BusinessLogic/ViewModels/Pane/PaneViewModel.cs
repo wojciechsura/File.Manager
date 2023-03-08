@@ -212,6 +212,25 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
             return selectedItems;
         }
 
+        public void Refresh()
+        {
+            UpdateItems(null);
+        }
+
+        public void SelectItem(string name)
+        {
+            for (int i = 0; i < items.Count; i++) 
+            { 
+                if (items[i].Name == name)
+                {
+                    ItemsView.MoveCurrentTo(items[i]);
+                    break;
+                }
+            }
+
+            ItemsView.MoveCurrentToFirst();
+        }
+
         // Public properties --------------------------------------------------
 
         public IEnumerable<ItemViewModel> Items => items;

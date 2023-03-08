@@ -1,0 +1,33 @@
+﻿<Window x:Class="File.Manager.Windows.NewFolderConfigurationWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:File.Manager.Windows"
+        xmlns:res="clr-namespace:File.Manager.Resources.Windows.NewFolderConfigurationWindow;assembly=File.Manager.Resources" 
+        xmlns:cres="clr-namespace:File.Manager.Resources.Common;assembly=File.Manager.Resources" 
+        xmlns:sc="clr-namespace:Spooksoft.Wpf.Controls.Panels;assembly=Spooksoft.Wpf.Controls" 
+        xmlns:vm="clr-namespace:File.Manager.BusinessLogic.ViewModels.NewFolderConfiguration;assembly=File.Manager.BusinessLogic" 
+        xmlns:m="clr-namespace:File.Manager.Markup"
+        xmlns:t="clr-namespace:File.Manager.BusinessLogic.Types;assembly=File.Manager.BusinessLogic"
+        d:DataContext="{d:DesignInstance Type=vm:NewFolderConfigurationWindowViewModel}"
+        mc:Ignorable="d"
+        Title="{x:Static res:Strings.Title}" SizeToContent="WidthAndHeight" MinWidth="500"
+        WindowStartupLocation="CenterOwner">
+    <StackPanel Orientation="Vertical">
+        <GroupBox Header="{x:Static res:Strings.Groupbox_Configuration_Title}" Margin="{StaticResource DialogItemsMargin}">
+            <sc:EditorPanel>
+                <Label Style="{StaticResource FirstHeaderLabel}" Content="{x:Static res:Strings.Label_Name}" />
+                <TextBox Margin="{StaticResource DialogItemsMargin}" HorizontalAlignment="Stretch"
+                         Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            </sc:EditorPanel>
+        </GroupBox>
+       
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Style="{StaticResource DialogButton}" Command="{Binding OkCommand}" Content="{x:Static cres:Strings.Ok}" 
+                    IsDefault="True" />
+            <Button Style="{StaticResource DialogButton}" Command="{Binding CancelCommand}" Content="{x:Static cres:Strings.Cancel}" 
+                    IsCancel="True" />
+        </StackPanel>
+    </StackPanel>
+</Window>

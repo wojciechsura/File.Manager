@@ -29,8 +29,10 @@ namespace File.Manager.BusinessLogic.ViewModels.CopyMoveConfiguration
 
         private GenericCopyMoveProblemResolution overwritingOptions;
         private string fileMask;
+        private bool rename;
         private bool renameFiles;
         private bool renameRecursive;
+        private bool renameFolders;
         private string renameFrom;
         private string renameTo;
 
@@ -40,7 +42,9 @@ namespace File.Manager.BusinessLogic.ViewModels.CopyMoveConfiguration
         {
             Result = new CopyMoveConfigurationModel(FileMask, 
                 OverwritingOptions, 
+                Rename,
                 RenameFiles, 
+                RenameFolders,
                 RenameRecursive, 
                 RenameFrom, 
                 RenameTo);
@@ -82,8 +86,8 @@ namespace File.Manager.BusinessLogic.ViewModels.CopyMoveConfiguration
             renameFiles = false;
             renameRecursive = false;
 
-            var useRenamingCondition = new PropertyWatchCondition<CopyMoveConfigurationWindowViewModel>(this, vm => vm.RenameFiles, false);
-            var renameFromValidCondition = new ChainedLambdaCondition<CopyMoveConfigurationWindowViewModel>(this, vm => IsValidRegex(RenameFrom), false);
+            var useRenamingCondition = Condition.PropertyWatch(this, vm => vm.RenameFiles, false);
+            var renameFromValidCondition = Condition.ChainedLambda(this, vm => IsValidRegex(RenameFrom), false);
             var canConfirmCondition = !useRenamingCondition | (useRenamingCondition & renameFromValidCondition);
 
             OkCommand = new AppCommand(obj => DoOk(), canConfirmCondition);
@@ -129,10 +133,22 @@ namespace File.Manager.BusinessLogic.ViewModels.CopyMoveConfiguration
             set => Set(ref fileMask, value);
         }
 
+        public bool Rename
+        {
+            get => rename;
+            set => Set(ref rename, value);
+        }
+
         public bool RenameFiles
         {
             get => renameFiles;
             set => Set(ref renameFiles, value);
+        }
+
+        public bool RenameFolders
+        {
+            get => renameFolders;
+            set => Set(ref renameFolders, value);
         }
 
         public bool RenameRecursive

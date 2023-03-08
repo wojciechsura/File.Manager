@@ -115,6 +115,60 @@ namespace File.Manager.Resources.Windows.CopyMoveConfigurationWindow {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Rename.
+        /// </summary>
+        public static string Label_Rename {
+            get {
+                return ResourceManager.GetString("Label_Rename", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Files.
+        /// </summary>
+        public static string Label_RenameFiles {
+            get {
+                return ResourceManager.GetString("Label_RenameFiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Folders.
+        /// </summary>
+        public static string Label_RenameFolders {
+            get {
+                return ResourceManager.GetString("Label_RenameFolders", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Recursively.
+        /// </summary>
+        public static string Label_RenameRecursively {
+            get {
+                return ResourceManager.GetString("Label_RenameRecursively", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Rename regex.
+        /// </summary>
+        public static string Label_RenameRegex {
+            get {
+                return ResourceManager.GetString("Label_RenameRegex", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Rename to.
+        /// </summary>
+        public static string Label_RenameTo {
+            get {
+                return ResourceManager.GetString("Label_RenameTo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Source.
         /// </summary>
         public static string Label_Source {

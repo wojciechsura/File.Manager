@@ -88,6 +88,42 @@ namespace File.Manager.Resources.Operations {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot check if file {2} exists in location {1}..
+        /// </summary>
+        public static string CopyMove_Question_CannotCheckIfDestinationFileExists {
+            get {
+                return ResourceManager.GetString("CopyMove_Question_CannotCheckIfDestinationFileExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot check if folder {2} exists in location {1}..
+        /// </summary>
+        public static string CopyMove_Question_CannotCheckIfDestinationFolderExists {
+            get {
+                return ResourceManager.GetString("CopyMove_Question_CannotCheckIfDestinationFolderExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot check if file {2} exists in location {0}..
+        /// </summary>
+        public static string CopyMove_Question_CannotCheckIfSourceFileExists {
+            get {
+                return ResourceManager.GetString("CopyMove_Question_CannotCheckIfSourceFileExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot check if folder {2} exists in location {0}..
+        /// </summary>
+        public static string CopyMove_Question_CannotCheckIfSourceFolderExists {
+            get {
+                return ResourceManager.GetString("CopyMove_Question_CannotCheckIfSourceFolderExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot check if subfolder {2} in location {0} is empty..
         /// </summary>
         public static string CopyMove_Question_CannotCheckIfSubfolderIsEmpty {
@@ -232,6 +268,15 @@ namespace File.Manager.Resources.Operations {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot copy file {0}: location {1} already contains folder with the same name..
+        /// </summary>
+        public static string CopyMove_Question_DestinationFolderAlreadyExists {
+            get {
+                return ResourceManager.GetString("CopyMove_Question_DestinationFolderAlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu You try to copy or move a file into itself..
         /// </summary>
         public static string CopyMove_Question_FileCopiedIntoItself {
@@ -300,6 +345,15 @@ namespace File.Manager.Resources.Operations {
         public static string Delete_Info_TotalDescription {
             get {
                 return ResourceManager.GetString("Delete_Info_TotalDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot check if file {1} exists in location {0}..
+        /// </summary>
+        public static string Delete_Question_CannotCheckIfFileExists {
+            get {
+                return ResourceManager.GetString("Delete_Question_CannotCheckIfFileExists", resourceCulture);
             }
         }
         

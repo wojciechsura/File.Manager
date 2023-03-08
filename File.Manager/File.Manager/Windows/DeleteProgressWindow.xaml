@@ -14,7 +14,8 @@
         mc:Ignorable="d"
         Title="{Binding Operation.Title}" SizeToContent="Height" Width="600"
         ResizeMode="NoResize"
-        Loaded="HandleWindowLoaded" Closing="Window_Closing">
+        Loaded="HandleWindowLoaded" Closing="Window_Closing"
+        WindowStartupLocation="CenterOwner">
     <Window.Resources>
         <Style TargetType="Label" x:Key="HeaderLabel">
             

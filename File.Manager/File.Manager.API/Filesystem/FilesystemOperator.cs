@@ -27,10 +27,10 @@ namespace File.Manager.API.Filesystem
         IFilesystemOperator EnterFolder(string name);
 
         /// <summary>Checks if given file exists</summary>
-        bool FileExists(string name);
+        bool? FileExists(string name);
 
         /// <summary>Checks if given folder exists</summary>        
-        bool FolderExists(string name);
+        bool? FolderExists(string name);
 
         /// <summary>Returns existing file's attributes</summary>
         FileAttributes? GetFileAttributes(string targetName);

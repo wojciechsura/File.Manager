@@ -6,7 +6,8 @@
         xmlns:res="clr-namespace:File.Manager.Resources.Windows.ExceptionWindow;assembly=File.Manager.Resources"
         xmlns:cres="clr-namespace:File.Manager.Resources.Common;assembly=File.Manager.Resources"
         mc:Ignorable="d"
-        Width="500" Height="400" ResizeMode="CanResize">
+        Width="500" Height="400" ResizeMode="CanResize"
+        WindowStartupLocation="CenterOwner">
     <DockPanel>
         <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
             <Button Command="{Binding OkCommand}" Style="{StaticResource DialogButton}" Content="{x:Static cres:Strings.Ok}" />

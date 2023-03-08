@@ -1,5 +1,6 @@
 ﻿using File.Manager.BusinessLogic.Models.Dialogs.CopyMoveConfiguration;
 using File.Manager.BusinessLogic.Models.Dialogs.DeleteConfiguration;
+using File.Manager.BusinessLogic.Models.Dialogs.NewFolderConfiguration;
 using File.Manager.BusinessLogic.Types;
 using File.Manager.BusinessLogic.ViewModels.Operations;
 using File.Manager.BusinessLogic.ViewModels.Operations.CopyMove;
@@ -22,5 +23,6 @@ namespace File.Manager.BusinessLogic.Services.Dialogs
         void ShowCopyMoveProgress(BaseCopyMoveOperationViewModel operation);
         (bool result, DeleteConfigurationModel model) ShowDeleteConfigurationDialog(DeleteConfigurationInputModel input);
         void ShowDeleteProgress(BaseDeleteOperationViewModel operation);
+        (bool result, NewFolderConfigurationModel model) ShowNewFolderConfigurationDialog();
     }
 }

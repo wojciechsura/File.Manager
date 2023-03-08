@@ -167,7 +167,10 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.Delete
                 CannotCheckIfSubfolderIsEmpty,
                 [LocalizedDescription(nameof(Strings.Delete_Question_CannotListFolderContents), typeof(Strings))]
                 [AvailableDeleteResolutions(SingleDeleteProblemResolution.Skip, SingleDeleteProblemResolution.SkipAll, SingleDeleteProblemResolution.Abort)]
-                CannotListFolderContents
+                CannotListFolderContents,
+                [LocalizedDescription(nameof(Strings.Delete_Question_CannotCheckIfFileExists), typeof(Strings))]
+                [AvailableDeleteResolutions(SingleDeleteProblemResolution.Skip, SingleDeleteProblemResolution.SkipAll, SingleDeleteProblemResolution.Abort)]
+                CannotCheckIfFileExists
             }
 
             // Private fields -------------------------------------------------
@@ -207,7 +210,25 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.Delete
             private (bool exit, DeleteWorkerResult result) EnsureFileExists(IFileInfo fileInfo,
                 IFilesystemOperator filesystemOperator)
             {
-                if (!filesystemOperator.FileExists(fileInfo.Name))
+                var fileExists = filesystemOperator.FileExists(fileInfo.Name);
+                if (fileExists == null)
+                {
+                    var resolution = GetResolutionFor(DeleteProblemKind.CannotCheckIfFileExists,
+                        filesystemOperator.CurrentPath,
+                        fileInfo.Name);
+
+                    switch (resolution)
+                    {
+                        case GenericDeleteProblemResolution.Skip:
+                            return (true, null);
+                        case GenericDeleteProblemResolution.Abort:
+                            return (true, new AbortedDeleteWorkerResult());
+                        default:
+                            throw new InvalidOperationException("Invalid problem resolution!");
+                    }
+                }
+
+                if (fileExists == false)
                 {
                     var resolution = GetResolutionFor(DeleteProblemKind.FileDoesNotExist,
                         filesystemOperator.CurrentPath,
@@ -276,7 +297,25 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.Delete
                     return (false, null);
                 }
 
-                if (filesystemOperator.FileExists(fileInfo.Name))
+                var fileExists = filesystemOperator.FileExists(fileInfo.Name);
+                if (fileExists == null)
+                {
+                    var resolution = GetResolutionFor(DeleteProblemKind.CannotCheckIfFileExists,
+                        filesystemOperator.CurrentPath,
+                        fileInfo.Name);
+
+                    switch (resolution)
+                    {
+                        case GenericDeleteProblemResolution.Skip:
+                            return (true, null);
+                        case GenericDeleteProblemResolution.Abort:
+                            return (true, new AbortedDeleteWorkerResult());
+                        default:
+                            throw new InvalidOperationException("Invalid problem resolution!");
+                    }
+                }
+
+                if (fileExists == true)
                 {
                     var attributes = filesystemOperator.GetFileAttributes(fileInfo.Name);
 

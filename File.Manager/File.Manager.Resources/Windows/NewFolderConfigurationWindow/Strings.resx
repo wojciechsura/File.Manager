@@ -117,64 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="DestinationHeader" xml:space="preserve">
-    <value>Destination</value>
-  </data>
   <data name="Groupbox_Configuration_Title" xml:space="preserve">
-    <value>Configuration</value>
+    <value>New folder</value>
   </data>
-  <data name="Groupbox_Summary_Title" xml:space="preserve">
-    <value>Summary</value>
+  <data name="Label_Name" xml:space="preserve">
+    <value>Name</value>
   </data>
-  <data name="Label_Destination" xml:space="preserve">
-    <value>Destination</value>
-  </data>
-  <data name="Label_FileMask" xml:space="preserve">
-    <value>Filter files by mask</value>
-  </data>
-  <data name="Label_OverwritingOptions" xml:space="preserve">
-    <value>Overwriting options</value>
-  </data>
-  <data name="Label_Rename" xml:space="preserve">
-    <value>Rename</value>
-  </data>
-  <data name="Label_RenameFiles" xml:space="preserve">
-    <value>Files</value>
-  </data>
-  <data name="Label_RenameFolders" xml:space="preserve">
-    <value>Folders</value>
-  </data>
-  <data name="Label_RenameRecursively" xml:space="preserve">
-    <value>Recursively</value>
-  </data>
-  <data name="Label_RenameRegex" xml:space="preserve">
-    <value>Rename regex</value>
-  </data>
-  <data name="Label_RenameTo" xml:space="preserve">
-    <value>Rename to</value>
-  </data>
-  <data name="Label_Source" xml:space="preserve">
-    <value>Source</value>
-  </data>
-  <data name="Label_TargetFilename" xml:space="preserve">
-    <value>Target filename</value>
-  </data>
-  <data name="SourceHeader" xml:space="preserve">
-    <value>Source</value>
-  </data>
-  <data name="SummaryHeader_Copy" xml:space="preserve">
-    <value>{0:plural(en):Item|Items} to copy</value>
-  </data>
-  <data name="SummaryHeader_Move" xml:space="preserve">
-    <value>{0:plural(en):Item|Items} to move</value>
-  </data>
-  <data name="SummaryValue_Plural" xml:space="preserve">
-    <value>Selected {0:plural(en):{} item |{} items}</value>
-  </data>
-  <data name="Title_Copy" xml:space="preserve">
-    <value>Copy</value>
-  </data>
-  <data name="Title_Move" xml:space="preserve">
-    <value>Move</value>
+  <data name="Title" xml:space="preserve">
+    <value>New folder</value>
   </data>
 </root>

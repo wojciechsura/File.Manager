@@ -152,11 +152,29 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
             return new LocalOperator(targetPath);
         }
 
-        public bool FileExists(string name)
-            => System.IO.File.Exists(Path.Combine(currentPath, name));
+        public bool? FileExists(string name)
+        {
+            try
+            {
+                return System.IO.File.Exists(Path.Combine(currentPath, name));
+            }
+            catch
+            {
+                return null;
+            }
+        }
 
-        public bool FolderExists(string name)
-            => Directory.Exists(Path.Combine(currentPath, name));
+        public bool? FolderExists(string name)
+        {
+            try
+            {
+                return Directory.Exists(Path.Combine(currentPath, name));
+            }
+            catch
+            {
+                return null;
+            }
+        }
 
         public IReadOnlyList<BaseOperatorItem> List()
         {
@@ -288,7 +306,7 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
             try
             {
                 var info = new DirectoryInfo(targetPath);
-                return info.EnumerateFileSystemInfos().Any();
+                return !info.EnumerateFileSystemInfos().Any();
             }
             catch
             {

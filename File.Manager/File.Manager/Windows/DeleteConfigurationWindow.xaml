@@ -12,7 +12,8 @@
         xmlns:t="clr-namespace:File.Manager.BusinessLogic.Types;assembly=File.Manager.BusinessLogic"
         d:DataContext="{d:DesignInstance Type=vm:DeleteConfigurationWindowViewModel}"
         mc:Ignorable="d"
-        Title="{Binding Title}" SizeToContent="WidthAndHeight" MinWidth="500">
+        Title="{Binding Title}" SizeToContent="WidthAndHeight" MinWidth="500"
+        WindowStartupLocation="CenterOwner">
     <StackPanel Orientation="Vertical">
         <GroupBox Header="{x:Static res:Strings.Groupbox_Summary_Title}" Margin="{StaticResource DialogItemsMargin}">
             <sc:EditorPanel>
@@ -38,8 +39,10 @@
         </GroupBox>
 
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Style="{StaticResource DialogButton}" Command="{Binding OkCommand}" Content="{x:Static cres:Strings.Ok}" />
-            <Button Style="{StaticResource DialogButton}" Command="{Binding CancelCommand}" Content="{x:Static cres:Strings.Cancel}" />
+            <Button Style="{StaticResource DialogButton}" Command="{Binding OkCommand}" Content="{x:Static cres:Strings.Ok}" 
+                    IsDefault="True" />
+            <Button Style="{StaticResource DialogButton}" Command="{Binding CancelCommand}" Content="{x:Static cres:Strings.Cancel}" 
+                    IsCancel="True" />
         </StackPanel>
     </StackPanel>
 </Window>

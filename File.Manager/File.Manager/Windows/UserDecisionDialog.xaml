@@ -9,7 +9,8 @@
         xmlns:res="clr-namespace:File.Manager.Resources.Windows.UserDecision;assembly=File.Manager.Resources"
         d:DataContext="{d:DesignInstance Type=vm:UserDecisionDialogViewModel}"
         mc:Ignorable="d"
-        Title="{x:Static res:Strings.Title}" SizeToContent="Height" Width="400">
+        Title="{x:Static res:Strings.Title}" SizeToContent="Height" Width="400"
+        WindowStartupLocation="CenterOwner">
     <StackPanel Orientation="Vertical" Margin="{StaticResource DialogWindowPadding}">
         <Label HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Content="{Binding Header}" />
         

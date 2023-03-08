@@ -126,6 +126,18 @@
   <data name="CopyMove_Question_CannotChangeFileAttributes" xml:space="preserve">
     <value>Cannot change attributes of the destination file {2}.</value>
   </data>
+  <data name="CopyMove_Question_CannotCheckIfDestinationFileExists" xml:space="preserve">
+    <value>Cannot check if file {2} exists in location {1}.</value>
+  </data>
+  <data name="CopyMove_Question_CannotCheckIfDestinationFolderExists" xml:space="preserve">
+    <value>Cannot check if folder {2} exists in location {1}.</value>
+  </data>
+  <data name="CopyMove_Question_CannotCheckIfSourceFileExists" xml:space="preserve">
+    <value>Cannot check if file {2} exists in location {0}.</value>
+  </data>
+  <data name="CopyMove_Question_CannotCheckIfSourceFolderExists" xml:space="preserve">
+    <value>Cannot check if folder {2} exists in location {0}.</value>
+  </data>
   <data name="CopyMove_Question_CannotCheckIfSubfolderIsEmpty" xml:space="preserve">
     <value>Cannot check if subfolder {2} in location {0} is empty.</value>
   </data>
@@ -174,6 +186,9 @@
   <data name="CopyMove_Question_DestinationFileIsSystem" xml:space="preserve">
     <value>Destination file {2} is a system file.</value>
   </data>
+  <data name="CopyMove_Question_DestinationFolderAlreadyExists" xml:space="preserve">
+    <value>Cannot copy file {0}: location {1} already contains folder with the same name.</value>
+  </data>
   <data name="CopyMove_Question_FileCopiedIntoItself" xml:space="preserve">
     <value>You try to copy or move a file into itself.</value>
   </data>
@@ -197,6 +212,9 @@
   </data>
   <data name="Delete_Info_TotalDescription" xml:space="preserve">
     <value>Deleted files: {0} / {1} ({2} / {3}). Elapsed: {4}, left: {5}{6}</value>
+  </data>
+  <data name="Delete_Question_CannotCheckIfFileExists" xml:space="preserve">
+    <value>Cannot check if file {1} exists in location {0}.</value>
   </data>
   <data name="Delete_Question_CannotCheckIfSubfolderIsEmpty" xml:space="preserve">
     <value>Cannot check if subfolder {1} in location {0} is empty.</value>

@@ -44,7 +44,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations
             this.operation = operation ?? throw new ArgumentNullException(nameof(operation));
             this.access = access;
 
-            var canCancelCondition = new LambdaCondition<CopyMoveProgressWindowViewModel>(this, vm => !vm.IsCancelling, false);
+            var canCancelCondition = Condition.Lambda(this, vm => !vm.IsCancelling, false);
             CancelCommand = new AppCommand(obj => DoCancel(), canCancelCondition);
 
             operation.Finished += HandleOperationFinished;

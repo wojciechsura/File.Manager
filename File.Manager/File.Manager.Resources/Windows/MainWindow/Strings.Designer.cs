@@ -61,6 +61,51 @@ namespace File.Manager.Resources.Windows.MainWindow {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot check if file {0} exists in the current location!.
+        /// </summary>
+        public static string Error_CannotCheckIfFileExists {
+            get {
+                return ResourceManager.GetString("Error_CannotCheckIfFileExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot check if folder {0} exists in the current location!.
+        /// </summary>
+        public static string Error_CannotCheckIfFolderExists {
+            get {
+                return ResourceManager.GetString("Error_CannotCheckIfFolderExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot create folder {0} in the current location!.
+        /// </summary>
+        public static string Error_CannotCreateFolder {
+            get {
+                return ResourceManager.GetString("Error_CannotCreateFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu File {0} already exists in the current location!.
+        /// </summary>
+        public static string Error_FileAlreadyExists {
+            get {
+                return ResourceManager.GetString("Error_FileAlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Folder {0} already exists in the current location!.
+        /// </summary>
+        public static string Error_FolderAlreadyExists {
+            get {
+                return ResourceManager.GetString("Error_FolderAlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Copy F5.
         /// </summary>
         public static string Ribbon_Button_Copy {
