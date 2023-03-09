@@ -239,6 +239,14 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
             access.FocusActivePane();
         }
 
+        private void DoInvertSelection()
+        {
+            foreach (var item in ActivePane.Items)
+            {
+                item.IsSelected = !item.IsSelected;
+            }
+        }
+
         // Private properties -------------------------------------------------
 
         private PaneViewModel ActivePane
@@ -297,6 +305,8 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
             NewFolderCommand = new AppCommand(obj => DoNewFolder());
             DeleteCommand = new AppCommand(obj => DoDelete());
 
+            InvertSelectionCommand = new AppCommand(obj => DoInvertSelection());
+
             activePane = leftPane;
         }
 
@@ -329,5 +339,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
         public ICommand MoveCommand { get; }
         public ICommand NewFolderCommand { get; }
         public ICommand DeleteCommand { get; }
+
+        public ICommand InvertSelectionCommand { get; }
     }
 }

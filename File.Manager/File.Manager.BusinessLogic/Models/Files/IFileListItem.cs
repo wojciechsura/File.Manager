@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -7,7 +8,7 @@ using System.Windows.Media;
 
 namespace File.Manager.BusinessLogic.Models.Files
 {
-    public interface IFileListItem
+    public interface IFileListItem : INotifyPropertyChanged
     {
         string Name { get; }
         ImageSource SmallIcon { get; }

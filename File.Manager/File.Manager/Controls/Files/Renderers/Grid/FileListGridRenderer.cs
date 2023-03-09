@@ -4,6 +4,7 @@ using Fluent;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Diagnostics.Metrics;
 using System.Globalization;
 using System.Linq;
@@ -361,6 +362,8 @@ namespace File.Manager.Controls.Files.Renderers.Grid
 
         protected override void HandleFilesSourceCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
+            base.HandleFilesSourceCollectionChanged(sender, e);
+
             InvalidateMetrics();
             UpdateScrollData();
             host.RequestInvalidateVisual();
@@ -369,6 +372,14 @@ namespace File.Manager.Controls.Files.Renderers.Grid
         protected override void HandleFilesSourceCurrentChanged(object sender, EventArgs e)
         {
             EnsureFocusedItemVisible();
+            host.RequestInvalidateVisual();
+        }
+
+        protected override void HandleItemPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            base.HandleItemPropertyChanged(sender, e);
+
+            InvalidateMetrics();
             host.RequestInvalidateVisual();
         }
 

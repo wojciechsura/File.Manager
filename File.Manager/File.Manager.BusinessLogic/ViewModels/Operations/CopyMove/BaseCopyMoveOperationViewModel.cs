@@ -22,6 +22,7 @@ using File.Manager.API.Filesystem.Models.Items.Listing;
 using File.Manager.BusinessLogic.Models.Dialogs.CopyMoveConfiguration;
 using System.Windows.Markup;
 using System.Reflection;
+using System.Windows.Controls;
 
 namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
 {
@@ -134,7 +135,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
             public CopyMoveConfigurationModel Configuration { get; }
         }
 
-        protected abstract class BaseCopyMoveWorker<TContext> : BaseWorker
+        protected abstract class BaseCopyMoveWorker<TContext> : BaseWorker, ICopyMoveUserDecisionWorker
             where TContext : BaseCopyMoveWorkerContext
         {
             // Private constants ----------------------------------------------
@@ -241,6 +242,180 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
 
             // Private methods ------------------------------------------------
 
+            private (bool exit, CopyMoveWorkerResult result) HandleSkipAbort(CopyMoveProblemKind problemKind,
+                IFilesystemOperator sourceOperator,
+                IFilesystemOperator destinationOperator,
+                string itemName)
+            {
+                var resolution = GetResolutionFor(problemKind,
+                                        sourceOperator.CurrentPath,
+                                        destinationOperator.CurrentPath,
+                                        itemName);
+
+                switch (resolution)
+                {
+                    case GenericCopyMoveProblemResolution.Skip:
+                        return (true, null);
+                    case GenericCopyMoveProblemResolution.Abort:
+                        return (true, new AbortedCopyMoveWorkerResult());
+                    default:
+                        throw new InvalidOperationException("Invalid problem resolution!");
+                }
+            }
+
+            private (bool exit, CopyMoveWorkerResult result) HandleSkipRenameAbort(CopyMoveProblemKind fileCopiedIntoItself,
+                IBaseItemInfo fileInfo,
+                IFilesystemOperator sourceOperator,
+                IFilesystemOperator destinationOperator,
+                ref string targetName)
+            {
+                var resolution = GetResolutionFor(fileCopiedIntoItself,
+                                            sourceOperator.CurrentPath,
+                                            destinationOperator.CurrentPath,
+                                            targetName);
+
+                switch (resolution)
+                {
+                    case GenericCopyMoveProblemResolution.Skip:
+                        return (true, null);
+                    case GenericCopyMoveProblemResolution.Rename:
+                        {
+                            (bool exit, CopyMoveWorkerResult result) = FindAvailableDestinationName(fileInfo, sourceOperator, destinationOperator, ref targetName);
+                            if (exit)
+                                return (true, result);
+
+                            return (false, null);
+                        }
+                    case GenericCopyMoveProblemResolution.Abort:
+                        return (true, new AbortedCopyMoveWorkerResult());
+                    default:
+                        throw new InvalidOperationException("Invalid problem resolution!");
+                }
+            }
+
+            private (bool exit, CopyMoveWorkerResult result) HandleSkipIgnoreAbort(CopyMoveProblemKind problemKind,
+                IFilesystemOperator sourceOperator,
+                IFilesystemOperator destinationOperator,
+                string itemName)
+            {
+                var resolution = GetResolutionFor(problemKind,
+                            sourceOperator.CurrentPath,
+                            destinationOperator.CurrentPath,
+                            itemName);
+
+                switch (resolution)
+                {
+                    case GenericCopyMoveProblemResolution.Skip:
+                        return (true, null);
+                    case GenericCopyMoveProblemResolution.Ignore:
+                        // Name won't be changed
+                        return (false, null);
+                    case GenericCopyMoveProblemResolution.Abort:
+                        return (true, new AbortedCopyMoveWorkerResult());
+                    default:
+                        throw new InvalidOperationException("Invalid problem resolution!");
+                }
+            }
+
+            private (bool exit, CopyMoveWorkerResult result) HandleSkipOverwriteRenameAbort(CopyMoveProblemKind destinationFileAlreadyExists,
+                IFileInfo fileInfo,
+                IFilesystemOperator sourceOperator,
+                IFilesystemOperator destinationOperator,
+                ref string targetName)
+            {
+                var resolution = GetResolutionFor(destinationFileAlreadyExists,
+                                        sourceOperator.CurrentPath,
+                                        destinationOperator.CurrentPath,
+                                        fileInfo.Name);
+
+                switch (resolution)
+                {
+                    case GenericCopyMoveProblemResolution.Skip:
+                        return (true, null);
+                    case GenericCopyMoveProblemResolution.Abort:
+                        return (true, new AbortedCopyMoveWorkerResult());
+                    case GenericCopyMoveProblemResolution.Overwrite:
+                        return (false, null);
+                    case GenericCopyMoveProblemResolution.Rename:
+                        {
+                            (bool exit, CopyMoveWorkerResult result) = FindAvailableDestinationName(fileInfo, sourceOperator, destinationOperator, ref targetName);
+                            if (exit)
+                                return (true, result);
+
+                            return (false, null);
+                        }
+                    default:
+                        throw new InvalidOperationException("Invalid resolution!");
+                }
+            }
+
+            private (bool exit, CopyMoveWorkerResult result) HandleSkipRenameOverwriteWithAttributeChangeAbort(CopyMoveProblemKind problemKind,
+                IFileInfo fileInfo,
+                IFilesystemOperator sourceOperator,
+                IFilesystemOperator destinationOperator,
+                FileAttributes attribute,
+                ref string targetName,
+                ref FileAttributes? attributes)
+            {
+                var resolution = GetResolutionFor(problemKind,
+                                            sourceOperator.CurrentPath,
+                                            destinationOperator.CurrentPath,
+                                            targetName);
+
+                switch (resolution)
+                {
+                    case GenericCopyMoveProblemResolution.Skip:
+                        return (true, null);
+                    case GenericCopyMoveProblemResolution.Abort:
+                        return (true, new AbortedCopyMoveWorkerResult());
+                    case GenericCopyMoveProblemResolution.Rename:
+                        {
+                            (bool exit, CopyMoveWorkerResult result) = FindAvailableDestinationName(fileInfo, sourceOperator, destinationOperator, ref targetName);
+                            if (exit)
+                                return (true, result);
+
+                            return (false, null);
+                        }
+                    case GenericCopyMoveProblemResolution.Overwrite:
+                        {
+                            attributes &= ~attribute;
+
+                            if (!destinationOperator.SetFileAttributes(targetName, attributes.Value))
+                            {
+                                return HandleSkipAbort(CopyMoveProblemKind.CannotChangeFileAttributes,
+                                    sourceOperator,
+                                    destinationOperator,
+                                    targetName);
+                            }
+
+                            return (false, null);
+                        }
+                    default:
+                        throw new InvalidOperationException("Invalid resolution!");
+                }
+            }
+
+            private (bool exit, CopyMoveWorkerResult result) HandleIgnoreAbort(CopyMoveProblemKind problemKind,
+                IFilesystemOperator sourceOperator,
+                IFilesystemOperator destinationOperator,
+                string targetName)
+            {
+                var resolution = GetResolutionFor(problemKind,
+                                        sourceOperator.CurrentPath,
+                                        destinationOperator.CurrentPath,
+                                        targetName);
+
+                switch (resolution)
+                {
+                    case GenericCopyMoveProblemResolution.Ignore:
+                        return (false, null);
+                    case GenericCopyMoveProblemResolution.Abort:
+                        return (true, new AbortedCopyMoveWorkerResult());
+                    default:
+                        throw new InvalidOperationException("Invalid resolution!");
+                }
+            }
+
             private (bool exit, CopyMoveWorkerResult result) RenameTargetFile(TContext context,
                             IFilesystemOperator sourceOperator,
                             IFilesystemOperator destinationOperator,
@@ -253,23 +428,10 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
                     // New name may be invalid                    
                     if (string.IsNullOrEmpty(newName) || newName.Any(c => invalidChars.Contains(c)))
                     {
-                        var resolution = GetResolutionFor(CopyMoveProblemKind.InvalidRenamedFilename,
-                            sourceOperator.CurrentPath,
-                            destinationOperator.CurrentPath,
+                        return HandleSkipIgnoreAbort(CopyMoveProblemKind.InvalidRenamedFilename,
+                            sourceOperator,
+                            destinationOperator,
                             newName);
-
-                        switch (resolution)
-                        {
-                            case GenericCopyMoveProblemResolution.Skip:
-                                return (true, null);
-                            case GenericCopyMoveProblemResolution.Ignore:
-                                // Name won't be changed
-                                break;
-                            case GenericCopyMoveProblemResolution.Abort:
-                                return (true, new AbortedCopyMoveWorkerResult());
-                            default:
-                                throw new InvalidOperationException("Invalid problem resolution!");
-                        }
                     }
                     else
                     {
@@ -288,28 +450,11 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
                 if (sourceOperator.CurrentPath == destinationOperator.CurrentPath &&
                     fileInfo.Name == targetName)
                 {
-                    var resolution = GetResolutionFor(CopyMoveProblemKind.FileCopiedIntoItself,
-                            sourceOperator.CurrentPath,
-                            destinationOperator.CurrentPath,
-                            targetName);
-
-                    switch (resolution)
-                    {
-                        case GenericCopyMoveProblemResolution.Skip:
-                            return (true, null);
-                        case GenericCopyMoveProblemResolution.Rename:
-                            {
-                                (bool exit, CopyMoveWorkerResult result) = FindAvailableDestinationName(fileInfo, sourceOperator, destinationOperator, out targetName);
-                                if (exit)
-                                    return (true, result);
-
-                                return (false, null);
-                            }
-                        case GenericCopyMoveProblemResolution.Abort:
-                            return (true, new AbortedCopyMoveWorkerResult());
-                        default:
-                            throw new InvalidOperationException("Invalid problem resolution!");
-                    }
+                    return HandleSkipRenameAbort(CopyMoveProblemKind.FileCopiedIntoItself,
+                        fileInfo,
+                        sourceOperator,
+                        destinationOperator,
+                        ref targetName);
                 }
 
                 return (false, null);
@@ -323,28 +468,11 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
                 if (sourceOperator.CurrentPath == destinationOperator.CurrentPath &&
                     folderInfo.Name == targetName)
                 {
-                    var resolution = GetResolutionFor(CopyMoveProblemKind.FolderCopiedIntoItself,
-                            sourceOperator.CurrentPath,
-                            destinationOperator.CurrentPath,
-                            targetName);
-
-                    switch (resolution)
-                    {
-                        case GenericCopyMoveProblemResolution.Skip:
-                            return (true, null);
-                        case GenericCopyMoveProblemResolution.Rename:
-                            {
-                                (bool exit, CopyMoveWorkerResult result) = FindAvailableDestinationName(folderInfo, sourceOperator, destinationOperator, out targetName);
-                                if (exit)
-                                    return (true, result);
-
-                                return (false, null);
-                            }
-                        case GenericCopyMoveProblemResolution.Abort:
-                            return (true, new AbortedCopyMoveWorkerResult());
-                        default:
-                            throw new InvalidOperationException("Invalid problem resolution!");
-                    }
+                    return HandleSkipRenameAbort(CopyMoveProblemKind.FolderCopiedIntoItself,
+                        folderInfo,
+                        sourceOperator,
+                        destinationOperator,
+                        ref targetName);
                 }
 
                 return (false, null);
@@ -356,58 +484,38 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
             {
                 if (!sourceOperator.DeleteFolder(folderInfo.Name, true))
                 {
-                    var resolution = GetResolutionFor(CopyMoveProblemKind.CannotDeleteEmptyFolder,
-                            sourceOperator.CurrentPath,
-                            destinationOperator.CurrentPath,
+                    return HandleSkipAbort(CopyMoveProblemKind.CannotDeleteEmptyFolder,
+                            sourceOperator,
+                            destinationOperator,
                             folderInfo.Name);
-
-                    switch (resolution)
-                    {
-                        case GenericCopyMoveProblemResolution.Skip:
-                            return (true, null);
-                        case GenericCopyMoveProblemResolution.Abort:
-                            return (true, new AbortedCopyMoveWorkerResult());
-                        default:
-                            throw new InvalidOperationException("Invalid problem resolution!");
-                    }
                 }
 
                 return (false, null);
             }
 
-            private (bool exit, CopyMoveWorkerResult result) CheckIfSourceSubfolderEmpty(IFolderInfo folderInfo, 
-                IFilesystemOperator sourceOperator, 
-                IFilesystemOperator destinationOperator, 
+            private (bool exit, CopyMoveWorkerResult result) CheckIfSourceSubfolderEmpty(IFolderInfo folderInfo,
+                IFilesystemOperator sourceOperator,
+                IFilesystemOperator destinationOperator,
                 ref bool folderEmpty)
             {
                 var subfolderEmpty = sourceOperator.CheckIsSubfolderEmpty(folderInfo.Name);
 
                 if (subfolderEmpty == null)
                 {
-                    var resolution = GetResolutionFor(CopyMoveProblemKind.CannotCheckIfSubfolderIsEmpty,
-                            sourceOperator.CurrentPath,
-                            destinationOperator.CurrentPath,
+                    return HandleSkipAbort(CopyMoveProblemKind.CannotCheckIfSubfolderIsEmpty,
+                            sourceOperator,
+                            destinationOperator,
                             folderInfo.Name);
-
-                    switch (resolution)
-                    {
-                        case GenericCopyMoveProblemResolution.Skip:
-                            return (true, null);
-                        case GenericCopyMoveProblemResolution.Abort:
-                            return (true, new AbortedCopyMoveWorkerResult());
-                        default:
-                            throw new InvalidOperationException("Invalid problem resolution!");
-                    }
                 }
 
                 folderEmpty = subfolderEmpty.Value;
                 return (false, null);
             }
 
-            private (bool exit, CopyMoveWorkerResult result) FindAvailableDestinationName(IBaseItemInfo item, 
+            private (bool exit, CopyMoveWorkerResult result) FindAvailableDestinationName(IBaseItemInfo item,
                 IFilesystemOperator sourceOperator,
-                IFilesystemOperator destinationOperator, 
-                out string newName)
+                IFilesystemOperator destinationOperator,
+                ref string newName)
             {
                 long i = 1;
                 string name = System.IO.Path.GetFileNameWithoutExtension(item.Name);
@@ -424,39 +532,19 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
                     fileExists = destinationOperator.FileExists(newName);
                     if (fileExists == null)
                     {
-                        var resolution = GetResolutionFor(CopyMoveProblemKind.CannotCheckIfDestinationFileExists,
-                            sourceOperator.CurrentPath,
-                            destinationOperator.CurrentPath,
+                        return HandleSkipAbort(CopyMoveProblemKind.CannotCheckIfDestinationFileExists,
+                            sourceOperator,
+                            destinationOperator,
                             newName);
-
-                        switch (resolution)
-                        {
-                            case GenericCopyMoveProblemResolution.Skip:
-                                return (true, null);
-                            case GenericCopyMoveProblemResolution.Abort:
-                                return (true, new AbortedCopyMoveWorkerResult());
-                            default:
-                                throw new InvalidOperationException("Invalid problem resolution!");
-                        }
                     }
 
                     folderExists = destinationOperator.FolderExists(newName);
                     if (folderExists == null)
                     {
-                        var resolution = GetResolutionFor(CopyMoveProblemKind.CannotCheckIfDestinationFolderExists,
-                            sourceOperator.CurrentPath,
-                            destinationOperator.CurrentPath,
+                        return HandleSkipAbort(CopyMoveProblemKind.CannotCheckIfDestinationFolderExists,
+                            sourceOperator,
+                            destinationOperator,
                             newName);
-
-                        switch (resolution)
-                        {
-                            case GenericCopyMoveProblemResolution.Skip:
-                                return (true, null);
-                            case GenericCopyMoveProblemResolution.Abort:
-                                return (true, new AbortedCopyMoveWorkerResult());
-                            default:
-                                throw new InvalidOperationException("Invalid problem resolution!");
-                        }
                     }
                 }
                 while (fileExists == true || folderExists == true);
@@ -477,37 +565,17 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
 
                 if (fileExists == null)
                 {
-                    var resolution = GetResolutionFor(CopyMoveProblemKind.CannotCheckIfSourceFileExists,
-                            sourceOperator.CurrentPath,
-                            destinationOperator.CurrentPath,
+                    return HandleSkipAbort(CopyMoveProblemKind.CannotCheckIfSourceFileExists,
+                            sourceOperator,
+                            destinationOperator,
                             fileInfo.Name);
-
-                    switch (resolution)
-                    {
-                        case GenericCopyMoveProblemResolution.Skip:
-                            return (true, null);
-                        case GenericCopyMoveProblemResolution.Abort:
-                            return (true, new AbortedCopyMoveWorkerResult());
-                        default:
-                            throw new InvalidOperationException("Invalid resolution!");
-                    }
                 }
                 else if (fileExists == false)
                 {
-                    var resolution = GetResolutionFor(CopyMoveProblemKind.SourceFileDoesNotExist,
-                        sourceOperator.CurrentPath,
-                        destinationOperator.CurrentPath,
+                    return HandleSkipAbort(CopyMoveProblemKind.SourceFileDoesNotExist,
+                        sourceOperator,
+                        destinationOperator,
                         fileInfo.Name);
-
-                    switch (resolution)
-                    {
-                        case GenericCopyMoveProblemResolution.Skip:
-                            return (true, null);
-                        case GenericCopyMoveProblemResolution.Abort:
-                            return (true, new AbortedCopyMoveWorkerResult());
-                        default:
-                            throw new InvalidOperationException("Invalid resolution!");
-                    }
                 }
 
                 return (false, null);
@@ -522,48 +590,15 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
 
                 if (fileExists == null)
                 {
-                    var resolution = GetResolutionFor(CopyMoveProblemKind.CannotCheckIfDestinationFileExists,
-                            sourceOperator.CurrentPath,
-                            destinationOperator.CurrentPath,
+                    return HandleSkipAbort(CopyMoveProblemKind.CannotCheckIfDestinationFileExists,
+                            sourceOperator,
+                            destinationOperator,
                             fileInfo.Name);
-
-                    switch (resolution)
-                    {
-                        case GenericCopyMoveProblemResolution.Skip:
-                            return (true, null);
-                        case GenericCopyMoveProblemResolution.Abort:
-                            return (true, new AbortedCopyMoveWorkerResult());
-                        default:
-                            throw new InvalidOperationException("Invalid resolution!");
-                    }
-                }                
+                }
 
                 if (fileExists == true)
                 {
-                    var resolution = GetResolutionFor(CopyMoveProblemKind.DestinationFileAlreadyExists,
-                        sourceOperator.CurrentPath,
-                        destinationOperator.CurrentPath,
-                        fileInfo.Name);
-
-                    switch (resolution)
-                    {
-                        case GenericCopyMoveProblemResolution.Skip:
-                            return (true, null);
-                        case GenericCopyMoveProblemResolution.Abort:
-                            return (true, new AbortedCopyMoveWorkerResult());
-                        case GenericCopyMoveProblemResolution.Overwrite:
-                            break;
-                        case GenericCopyMoveProblemResolution.Rename:
-                            {
-                                (bool exit, CopyMoveWorkerResult result) = FindAvailableDestinationName(fileInfo, sourceOperator, destinationOperator, out targetName);
-                                if (exit)
-                                    return (true, result);
-
-                                return (false, null);
-                            }
-                        default:
-                            throw new InvalidOperationException("Invalid resolution!");
-                    }
+                    return HandleSkipOverwriteRenameAbort(CopyMoveProblemKind.DestinationFileAlreadyExists, fileInfo, sourceOperator, destinationOperator, ref targetName);
                 }
 
                 return (false, null);
@@ -578,76 +613,39 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
 
                 if (folderExists == null)
                 {
-                    var resolution = GetResolutionFor(CopyMoveProblemKind.CannotCheckIfDestinationFolderExists,
-                            sourceOperator.CurrentPath,
-                            destinationOperator.CurrentPath,
+                    return HandleSkipAbort(CopyMoveProblemKind.CannotCheckIfDestinationFolderExists,
+                            sourceOperator,
+                            destinationOperator,
                             fileInfo.Name);
-
-                    switch (resolution)
-                    {
-                        case GenericCopyMoveProblemResolution.Skip:
-                            return (true, null);
-                        case GenericCopyMoveProblemResolution.Abort:
-                            return (true, new AbortedCopyMoveWorkerResult());
-                        default:
-                            throw new InvalidOperationException("Invalid resolution!");
-                    }
                 }
 
                 if (folderExists == true)
                 {
-                    var resolution = GetResolutionFor(CopyMoveProblemKind.DestinationFolderAlreadyExists,
-                        sourceOperator.CurrentPath,
-                        destinationOperator.CurrentPath,
-                        fileInfo.Name);
-
-                    switch (resolution)
-                    {
-                        case GenericCopyMoveProblemResolution.Skip:
-                            return (true, null);
-                        case GenericCopyMoveProblemResolution.Abort:
-                            return (true, new AbortedCopyMoveWorkerResult());
-                        case GenericCopyMoveProblemResolution.Overwrite:
-                            break;
-                        case GenericCopyMoveProblemResolution.Rename:
-                            {
-                                (bool exit, CopyMoveWorkerResult result) = FindAvailableDestinationName(fileInfo, sourceOperator, destinationOperator, out targetName);
-                                if (exit)
-                                    return (true, result);
-
-                                return (false, null);
-                            }
-                        default:
-                            throw new InvalidOperationException("Invalid resolution!");
-                    }
+                    return HandleSkipOverwriteRenameAbort(CopyMoveProblemKind.DestinationFolderAlreadyExists,
+                        fileInfo,
+                        sourceOperator,
+                        destinationOperator,
+                        ref targetName);
                 }
 
                 return (false, null);
             }
 
-            private (bool exit, CopyMoveWorkerResult result) CheckForOverwritingReadOnlyFile(IFileInfo fileInfo,
+            private (bool exit, CopyMoveWorkerResult result) CheckForOverwritingSpecialFile(IFileInfo fileInfo,
                 IFilesystemOperator sourceOperator,
                 IFilesystemOperator destinationOperator,
+                FileAttributes attribute,
+                CopyMoveProblemKind attributeProblemKind,
                 ref string targetName)
             {
                 var fileExists = destinationOperator.FileExists(targetName);
 
                 if (fileExists == null)
                 {
-                    var resolution = GetResolutionFor(CopyMoveProblemKind.CannotCheckIfDestinationFileExists,
-                        sourceOperator.CurrentPath,
-                        destinationOperator.CurrentPath,
+                    return HandleSkipAbort(CopyMoveProblemKind.CannotCheckIfDestinationFileExists,
+                        sourceOperator,
+                        destinationOperator,
                         targetName);
-
-                    switch (resolution)
-                    {
-                        case GenericCopyMoveProblemResolution.Skip:
-                            return (true, null);
-                        case GenericCopyMoveProblemResolution.Abort:
-                            return (true, new AbortedCopyMoveWorkerResult());
-                        default:
-                            throw new InvalidOperationException("Invalid problem resolution!");
-                    }
                 }
 
                 if (fileExists == true)
@@ -656,171 +654,21 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
 
                     if (attributes == null)
                     {
-                        var resolution = GetResolutionFor(CopyMoveProblemKind.CannotGetTargetFileAttributes,
-                            sourceOperator.CurrentPath,
-                            destinationOperator.CurrentPath,
+                        return HandleSkipAbort(CopyMoveProblemKind.CannotGetTargetFileAttributes,
+                            sourceOperator,
+                            destinationOperator,
                             targetName);
-
-                        switch (resolution)
-                        {
-                            case GenericCopyMoveProblemResolution.Skip:
-                                return (true, null);
-                            case GenericCopyMoveProblemResolution.Abort:
-                                return (true, new AbortedCopyMoveWorkerResult());
-                            default:
-                                throw new InvalidOperationException("Invalid resolution!");
-                        }
                     }
 
-                    if (attributes.Value.HasFlag(System.IO.FileAttributes.ReadOnly))
+                    if (attributes.Value.HasFlag(attribute))
                     {
-                        var resolution = GetResolutionFor(CopyMoveProblemKind.DestinationFileIsReadOnly,
-                            sourceOperator.CurrentPath,
-                            destinationOperator.CurrentPath,
-                            targetName);
-
-                        switch (resolution)
-                        {
-                            case GenericCopyMoveProblemResolution.Skip:
-                                return (true, null);
-                            case GenericCopyMoveProblemResolution.Abort:
-                                return (true, new AbortedCopyMoveWorkerResult());
-                            case GenericCopyMoveProblemResolution.Rename:
-                                {
-                                    (bool exit, CopyMoveWorkerResult result) = FindAvailableDestinationName(fileInfo, sourceOperator, destinationOperator, out targetName);
-                                    if (exit)
-                                        return (true, result);
-
-                                    return (false, null);
-                                }
-                            case GenericCopyMoveProblemResolution.Overwrite:
-                                {
-                                    attributes &= ~FileAttributes.ReadOnly;
-
-                                    if (!destinationOperator.SetFileAttributes(targetName, attributes.Value))
-                                    {
-                                        var innerResolution = GetResolutionFor(CopyMoveProblemKind.CannotChangeFileAttributes,
-                                            sourceOperator.CurrentPath,
-                                            destinationOperator.CurrentPath,
-                                            targetName);
-
-                                        switch (innerResolution)
-                                        {
-                                            case GenericCopyMoveProblemResolution.Skip:
-                                                return (true, null);
-                                            case GenericCopyMoveProblemResolution.Abort:
-                                                return (true, new AbortedCopyMoveWorkerResult());
-                                            default:
-                                                throw new InvalidOperationException("Invalid resolution!");
-                                        }
-                                    }
-
-                                    break;
-                                }
-                            default:
-                                throw new InvalidOperationException("Invalid resolution!");
-                        }
-                    }
-                }
-
-                return (false, null);
-            }
-
-            private (bool exit, CopyMoveWorkerResult result) CheckForOverwritingSystemFile(IFileInfo fileInfo,
-                IFilesystemOperator sourceOperator,
-                IFilesystemOperator destinationOperator,
-                ref string targetName)
-            {
-                var fileExists = destinationOperator.FileExists(targetName);
-
-                if (fileExists == null)
-                {
-                    var resolution = GetResolutionFor(CopyMoveProblemKind.CannotCheckIfDestinationFileExists,
-                        sourceOperator.CurrentPath,
-                        destinationOperator.CurrentPath,
-                        targetName);
-
-                    switch (resolution)
-                    {
-                        case GenericCopyMoveProblemResolution.Skip:
-                            return (true, null);
-                        case GenericCopyMoveProblemResolution.Abort:
-                            return (true, new AbortedCopyMoveWorkerResult());
-                        default:
-                            throw new InvalidOperationException("Invalid problem resolution!");
-                    }
-                }
-
-                if (fileExists == true)
-                {
-                    var attributes = destinationOperator.GetFileAttributes(targetName);
-
-                    if (attributes == null)
-                    {
-                        var resolution = GetResolutionFor(CopyMoveProblemKind.CannotGetTargetFileAttributes,
-                            sourceOperator.CurrentPath,
-                            destinationOperator.CurrentPath,
-                            targetName);
-
-                        switch (resolution)
-                        {
-                            case GenericCopyMoveProblemResolution.Skip:
-                                return (true, null);
-                            case GenericCopyMoveProblemResolution.Abort:
-                                return (true, new AbortedCopyMoveWorkerResult());
-                            default:
-                                throw new InvalidOperationException("Invalid resolution!");
-                        }
-                    }
-
-                    if (attributes.Value.HasFlag(System.IO.FileAttributes.System))
-                    {
-                        var resolution = GetResolutionFor(CopyMoveProblemKind.DestinationFileIsSystem,
-                            sourceOperator.CurrentPath,
-                            destinationOperator.CurrentPath,
-                            targetName);
-
-                        switch (resolution)
-                        {
-                            case GenericCopyMoveProblemResolution.Skip:
-                                return (true, null);
-                            case GenericCopyMoveProblemResolution.Abort:
-                                return (true, new AbortedCopyMoveWorkerResult());
-                            case GenericCopyMoveProblemResolution.Rename:
-                                {
-                                    (bool exit, CopyMoveWorkerResult result) = FindAvailableDestinationName(fileInfo, sourceOperator, destinationOperator, out targetName);
-                                    if (exit)
-                                        return (true, result);
-
-                                    return (false, null);
-                                }
-                            case GenericCopyMoveProblemResolution.Overwrite:
-                                {
-                                    attributes &= ~FileAttributes.System;
-
-                                    if (!destinationOperator.SetFileAttributes(targetName, attributes.Value))
-                                    {
-                                        var innerResolution = GetResolutionFor(CopyMoveProblemKind.CannotChangeFileAttributes,
-                                            sourceOperator.CurrentPath,
-                                            destinationOperator.CurrentPath,
-                                            targetName);
-
-                                        switch (innerResolution)
-                                        {
-                                            case GenericCopyMoveProblemResolution.Skip:
-                                                return (true, null);
-                                            case GenericCopyMoveProblemResolution.Abort:
-                                                return (true, new AbortedCopyMoveWorkerResult());
-                                            default:
-                                                throw new InvalidOperationException("Invalid resolution!");
-                                        }
-                                    }
-
-                                    break;
-                                }
-                            default:
-                                throw new InvalidOperationException("Invalid resolution!");
-                        }
+                        return HandleSkipRenameOverwriteWithAttributeChangeAbort(attributeProblemKind,
+                            fileInfo,
+                            sourceOperator,
+                            destinationOperator,
+                            attribute,
+                            ref targetName,
+                            ref attributes);
                     }
                 }
 
@@ -836,38 +684,18 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
 
                 if (attributes == null)
                 {
-                    var resolution = GetResolutionFor(CopyMoveProblemKind.CannotGetSourceFileAttributes,
-                        sourceOperator.CurrentPath,
-                        destinationOperator.CurrentPath,
+                    return HandleSkipAbort(CopyMoveProblemKind.CannotGetSourceFileAttributes,
+                        sourceOperator,
+                        destinationOperator,
                         fileInfo.Name);
-
-                    switch (resolution)
-                    {
-                        case GenericCopyMoveProblemResolution.Skip:
-                            return (true, null);
-                        case GenericCopyMoveProblemResolution.Abort:
-                            return (true, new AbortedCopyMoveWorkerResult());
-                        default:
-                            throw new InvalidOperationException("Invalid resolution!");
-                    }
                 }
 
                 if (!destinationOperator.SetFileAttributes(targetName, attributes.Value))
                 {
-                    var resolution = GetResolutionFor(CopyMoveProblemKind.CannotSetTargetFileAttributes,
-                        sourceOperator.CurrentPath,
-                        destinationOperator.CurrentPath,
+                    return HandleIgnoreAbort(CopyMoveProblemKind.CannotSetTargetFileAttributes,
+                        sourceOperator,
+                        destinationOperator,
                         targetName);
-
-                    switch (resolution)
-                    {
-                        case GenericCopyMoveProblemResolution.Ignore:
-                            return (false, null);
-                        case GenericCopyMoveProblemResolution.Abort:
-                            return (true, new AbortedCopyMoveWorkerResult());
-                        default:
-                            throw new InvalidOperationException("Invalid resolution!");
-                    }
                 }
 
                 return (false, null);
@@ -881,20 +709,10 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
                 sourceStream = sourceOperator.OpenFileForReading(fileInfo.Name);
                 if (sourceStream == null)
                 {
-                    var resolution = GetResolutionFor(CopyMoveProblemKind.CannotOpenSourceFile,
-                        sourceOperator.CurrentPath,
-                        destinationOperator.CurrentPath,
+                    return HandleSkipAbort(CopyMoveProblemKind.CannotOpenSourceFile,
+                        sourceOperator,
+                        destinationOperator,
                         fileInfo.Name);
-
-                    switch (resolution)
-                    {
-                        case GenericCopyMoveProblemResolution.Skip:
-                            return (true, null);
-                        case GenericCopyMoveProblemResolution.Abort:
-                            return (true, new AbortedCopyMoveWorkerResult());
-                        default:
-                            throw new InvalidOperationException("Invalid resolution!");
-                    }
                 }
 
                 return (false, null);
@@ -909,20 +727,10 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
                 destinationStream = destinationOperator.OpenFileForWriting(targetName);
                 if (destinationStream == null)
                 {
-                    var resolution = GetResolutionFor(CopyMoveProblemKind.CannotOpenDestinationFile,
-                        sourceOperator.CurrentPath,
-                        destinationOperator.CurrentPath,
+                    return HandleSkipAbort(CopyMoveProblemKind.CannotOpenDestinationFile,
+                        sourceOperator,
+                        destinationOperator,
                         targetName);
-
-                    switch (resolution)
-                    {
-                        case GenericCopyMoveProblemResolution.Skip:
-                            return (true, null);
-                        case GenericCopyMoveProblemResolution.Abort:
-                            return (true, new AbortedCopyMoveWorkerResult());
-                        default:
-                            throw new InvalidOperationException("Invalid resolution!");
-                    }
                 }
 
                 return (false, null);
@@ -934,20 +742,10 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
             {
                 if (!sourceOperator.DeleteFile(fileInfo.Name))
                 {
-                    var resolution = GetResolutionFor(CopyMoveProblemKind.CannotDeleteSourceFile,
-                        sourceOperator.CurrentPath,
-                        destinationOperator.CurrentPath,
+                    return HandleSkipAbort(CopyMoveProblemKind.CannotDeleteSourceFile,
+                        sourceOperator,
+                        destinationOperator,
                         fileInfo.Name);
-
-                    switch (resolution)
-                    {
-                        case GenericCopyMoveProblemResolution.Skip:
-                            return (true, null);
-                        case GenericCopyMoveProblemResolution.Abort:
-                            return (true, new AbortedCopyMoveWorkerResult());
-                        default:
-                            throw new InvalidOperationException("Invalid resolution!");
-                    }
                 }
 
                 return (false, null);
@@ -960,20 +758,10 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
             {
                 if (!destinationOperator.CreateFolder(targetName))
                 {
-                    var resolution = GetResolutionFor(CopyMoveProblemKind.CannotCreateDestinationFolder,
-                        sourceOperator.CurrentPath,
-                        destinationOperator.CurrentPath,
+                    return HandleSkipAbort(CopyMoveProblemKind.CannotCreateDestinationFolder,
+                        sourceOperator,
+                        destinationOperator,
                         targetName);
-
-                    switch (resolution)
-                    {
-                        case GenericCopyMoveProblemResolution.Skip:
-                            return (true, null);
-                        case GenericCopyMoveProblemResolution.Abort:
-                            return (true, new AbortedCopyMoveWorkerResult());
-                        default:
-                            throw new InvalidOperationException("Invalid problem resolution!");
-                    }
                 }
 
                 return (false, null);
@@ -989,20 +777,10 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
                 // Enter folder in local location
                 if (sourceFolderOperator == null)
                 {
-                    var resolution = GetResolutionFor(CopyMoveProblemKind.CannotEnterSourceFolder,
-                        sourceOperator.CurrentPath,
-                        destinationOperator.CurrentPath,
+                    return HandleSkipAbort(CopyMoveProblemKind.CannotEnterSourceFolder,
+                        sourceOperator,
+                        destinationOperator,
                         folderInfo.Name);
-
-                    switch (resolution)
-                    {
-                        case GenericCopyMoveProblemResolution.Skip:
-                            return (true, null);
-                        case GenericCopyMoveProblemResolution.Abort:
-                            return (true, new AbortedCopyMoveWorkerResult());
-                        default:
-                            throw new InvalidOperationException("Invalid problem resolution!");
-                    }
                 }
 
                 return (false, null);
@@ -1019,25 +797,14 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
                 // Enter folder in remote location
                 if (destinationFolderOperator == null)
                 {
-                    var resolution = GetResolutionFor(CopyMoveProblemKind.CannotEnterDestinationFolder,
-                        sourceOperator.CurrentPath,
-                        destinationOperator.CurrentPath,
+                    return HandleSkipAbort(CopyMoveProblemKind.CannotEnterDestinationFolder,
+                        sourceOperator,
+                        destinationOperator,
                         targetName);
-
-                    switch (resolution)
-                    {
-                        case GenericCopyMoveProblemResolution.Skip:
-                            return (true, null);
-                        case GenericCopyMoveProblemResolution.Abort:
-                            return (true, new AbortedCopyMoveWorkerResult());
-                        default:
-                            throw new InvalidOperationException("Invalid problem resolution!");
-                    }
                 }
 
                 return (false, null);
             }
-
 
             private CopyMoveWorkerResult ProcessFile(TContext context,
                 IFileInfo fileInfo,
@@ -1060,8 +827,8 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
                     // Generate new name for the file
 
                     string targetName = fileInfo.Name;
-                    if (context.Configuration.Rename && 
-                        context.Configuration.RenameFiles && 
+                    if (context.Configuration.Rename &&
+                        context.Configuration.RenameFiles &&
                         (isRoot || context.Configuration.RenameRecursive))
                     {
                         (exit, result) = RenameTargetFile(context, sourceOperator, destinationOperator, ref targetName);
@@ -1075,6 +842,11 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
                     if (exit)
                         return result;
 
+                    // Check if destination does not contain folder with the same name
+                    (exit, result) = EnsureDestinationFolderDoesNotExist(fileInfo, sourceOperator, destinationOperator, ref targetName);
+                    if (exit)
+                        return result;
+
                     // Ask about overwriting existing file
 
                     (exit, result) = EnsureDestinationFileDoesNotExist(fileInfo, sourceOperator, destinationOperator, ref targetName);
@@ -1083,13 +855,13 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
 
                     // Ask about overwriting readonly file
 
-                    (exit, result) = CheckForOverwritingReadOnlyFile(fileInfo, sourceOperator, destinationOperator, ref targetName);
+                    (exit, result) = CheckForOverwritingSpecialFile(fileInfo, sourceOperator, destinationOperator, FileAttributes.ReadOnly, CopyMoveProblemKind.DestinationFileIsReadOnly, ref targetName);
                     if (exit)
                         return result;
 
                     // Ask about overwriting system file
 
-                    (exit, result) = CheckForOverwritingSystemFile(fileInfo, sourceOperator, destinationOperator, ref targetName);
+                    (exit, result) = CheckForOverwritingSpecialFile(fileInfo, sourceOperator, destinationOperator, FileAttributes.System, CopyMoveProblemKind.DestinationFileIsSystem, ref targetName);
                     if (exit)
                         return result;
 
@@ -1254,7 +1026,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
             protected readonly char[] invalidChars;
 
             // Protected methods ----------------------------------------------
-            
+
             protected BaseCopyMoveWorker()
             {
                 userDecisionSemaphore = new SemaphoreSlim(0, 1);
@@ -1371,9 +1143,44 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
         protected readonly IReadOnlyList<Item> selectedItems;
         protected readonly CopyMoveConfigurationModel configuration;
 
+        // Protected methods --------------------------------------------------
+
+        protected virtual void HandleWorkerProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            var worker = (ICopyMoveUserDecisionWorker)sender;
+
+            if (e.UserState is UserQuestionRequestProgress userQuestion)
+            {
+                (bool result, SingleCopyMoveProblemResolution resolution) = dialogService.ShowUserDecisionDialog(userQuestion.AvailableResolutions, userQuestion.Header);
+                if (result)
+                    worker.UserDecision = resolution;
+                else
+                    worker.UserDecision = SingleCopyMoveProblemResolution.Abort;
+
+                worker.UserDecisionSemaphore.Release();
+            }
+            else if (e.UserState is CopyMoveProgress progress)
+            {
+                Progress = progress.Progress;
+                ProgressDescription = progress.Description;
+                FileProgress = progress.FileProgress;
+                FileProgressDescription = progress.FileDescription;
+            }
+        }
+
+        protected virtual void HandleWorkerRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (e.Result is CriticalFailureCopyMoveWorkerResult critical)
+            {
+                messagingService.ShowError(critical.LocalizedMessage);
+            }
+
+            OnFinished();
+        }
+
         // Public methods -----------------------------------------------------
 
-        public BaseCopyMoveOperationViewModel(IDialogService dialogService, 
+        public BaseCopyMoveOperationViewModel(IDialogService dialogService,
             IMessagingService messagingService,
             IFilesystemOperator sourceOperator,
             IFilesystemOperator destinationOperator,
@@ -1412,7 +1219,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
 
         public string FromAddress
         {
-            get => fromAddress; 
+            get => fromAddress;
             set => Set(ref fromAddress, value);
         }
 
@@ -1421,5 +1228,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
             get => toAddress;
             set => Set(ref toAddress, value);
         }
+
+        // Private methods ----------------------------------------------------        
     }
 }

@@ -135,38 +135,6 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.Delete
 
         private readonly DeleteWorker worker;
 
-        // Private methods ----------------------------------------------------
-
-        private void HandleWorkerProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-            if (e.UserState is UserQuestionRequestProgress userQuestion)
-            {
-                (bool result, SingleDeleteProblemResolution resolution) = dialogService.ShowUserDecisionDialog(userQuestion.AvailableResolutions, userQuestion.Header);
-                
-                if (result)
-                    worker.UserDecision = resolution;
-                else
-                    worker.UserDecision = SingleDeleteProblemResolution.Abort;
-
-                worker.UserDecisionSemaphore.Release();
-            }
-            else if (e.UserState is DeleteProgress progress)
-            {
-                Progress = progress.Progress;
-                ProgressDescription = progress.Description;
-            }
-        }
-
-        private void HandleWorkerRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            if (e.Result is CriticalFailureDeleteWorkerResult critical)
-            {
-                messagingService.ShowError(critical.LocalizedMessage);
-            }
-
-            OnFinished();
-        }
-
         // Public methods -----------------------------------------------------
 
         public DeleteWithPlanOperationViewModel(IDialogService dialogService,

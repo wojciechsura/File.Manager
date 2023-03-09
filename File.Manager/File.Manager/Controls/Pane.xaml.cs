@@ -78,7 +78,7 @@ namespace File.Manager.Controls
 
         private void HandlePaneGotFocus(object sender, RoutedEventArgs e)
         {
-            if (flList.IsFocused)
+            if (!flList.IsFocused)
                 flList.Focus();
         }
     }

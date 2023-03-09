@@ -20,8 +20,8 @@ using Spooksoft.VisualStateManager.Commands;
 using System.Windows.Data;
 using System.ComponentModel;
 using File.Manager.BusinessLogic.Models.Files;
-using Gstc.Collections.ObservableLists;
 using File.Manager.API.Filesystem.Models.Items.Listing;
+using Gstc.Collections.ObservableLists;
 
 namespace File.Manager.BusinessLogic.ViewModels.Pane
 {

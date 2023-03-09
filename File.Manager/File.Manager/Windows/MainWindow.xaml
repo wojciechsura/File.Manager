@@ -18,6 +18,7 @@
         <KeyBinding Key="F6" Command="{Binding MoveCommand}" />
         <KeyBinding Key="F7" Command="{Binding NewFolderCommand}" />
         <KeyBinding Key="F8" Command="{Binding DeleteCommand}" />
+        <KeyBinding Key="Multiply" Command="{Binding InvertSelectionCommand}" />
     </f:RibbonWindow.InputBindings>
 
     <DockPanel>

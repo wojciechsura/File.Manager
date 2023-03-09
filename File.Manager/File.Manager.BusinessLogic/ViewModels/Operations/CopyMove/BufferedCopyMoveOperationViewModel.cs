@@ -163,29 +163,6 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
 
         private readonly CopyMoveWorker worker;
 
-        // Private methods ----------------------------------------------------
-
-        private void HandleWorkerProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-            if (e.UserState is UserQuestionRequestProgress userQuestion)
-            {
-                (bool result, SingleCopyMoveProblemResolution resolution) = dialogService.ShowUserDecisionDialog(userQuestion.AvailableResolutions, userQuestion.Header);
-                if (result)
-                    worker.UserDecision = resolution;
-                else
-                    worker.UserDecision = SingleCopyMoveProblemResolution.Abort;
-
-                worker.UserDecisionSemaphore.Release();
-            }
-            else if (e.UserState is CopyMoveProgress progress)
-            {
-                Progress = progress.Progress;
-                ProgressDescription = progress.Description;
-                FileProgress = progress.FileProgress;
-                FileProgressDescription = progress.FileDescription;
-            }
-        }
-
         // Public methods -----------------------------------------------------
 
         public BufferedCopyMoveOperationViewModel(IDialogService dialogService,
@@ -208,16 +185,6 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
             worker.WorkerSupportsCancellation = true;
             worker.ProgressChanged += HandleWorkerProgressChanged;
             worker.RunWorkerCompleted += HandleWorkerRunWorkerCompleted;
-        }
-
-        private void HandleWorkerRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            if (e.Result is CriticalFailureCopyMoveWorkerResult critical)
-            {
-                messagingService.ShowError(critical.LocalizedMessage);
-            }
-
-            OnFinished();
         }
 
         public override void Cancel()

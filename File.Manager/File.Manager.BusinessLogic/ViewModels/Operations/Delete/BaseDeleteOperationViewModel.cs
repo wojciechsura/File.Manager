@@ -22,6 +22,7 @@ using System.Net;
 using System.Xml.Linq;
 using System.Reflection;
 using System.Drawing.Printing;
+using System.Windows.Controls;
 
 namespace File.Manager.BusinessLogic.ViewModels.Operations.Delete
 {
@@ -180,6 +181,59 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.Delete
 
             // Private methods ------------------------------------------------
 
+            private (bool exit, DeleteWorkerResult result) HandleSkipAbort(DeleteProblemKind problemKind,
+                string itemName,
+                IFilesystemOperator filesystemOperator)
+            {
+                var resolution = GetResolutionFor(problemKind,
+                    filesystemOperator.CurrentPath,
+                    itemName);
+
+                switch (resolution)
+                {
+                    case GenericDeleteProblemResolution.Skip:
+                        return (true, null);
+                    case GenericDeleteProblemResolution.Abort:
+                        return (true, new AbortedDeleteWorkerResult());
+                    default:
+                        throw new InvalidOperationException("Invalid problem resolution!");
+                }
+            }
+
+            private (bool exit, DeleteWorkerResult reuslt) HandleSkipDeleteWithAttributeChangeAbort(DeleteProblemKind problemKind,
+                            string itemName,
+                            IFilesystemOperator filesystemOperator,
+                            ref FileAttributes fileAttributes,
+                            FileAttributes attribute)
+            {
+                var resolution = GetResolutionFor(DeleteProblemKind.DeletedFileIsReadOnly,
+                    filesystemOperator.CurrentPath,
+                    itemName);
+
+                switch (resolution)
+                {
+                    case GenericDeleteProblemResolution.Skip:
+                        return (true, null);
+                    case GenericDeleteProblemResolution.Abort:
+                        return (true, new AbortedDeleteWorkerResult());
+                    case GenericDeleteProblemResolution.Delete:
+                        {
+                            fileAttributes &= ~attribute;
+
+                            if (!filesystemOperator.SetFileAttributes(itemName, fileAttributes))
+                            {
+                                return HandleSkipAbort(problemKind,
+                                    itemName,
+                                    filesystemOperator);
+                            }
+
+                            return (false, null);
+                        }
+                    default:
+                        throw new InvalidOperationException("Invalid resolution!");
+                }
+            }
+
             private (bool exit, DeleteWorkerResult result) CheckIfSubfolderEmpty(IFolderInfo folderInfo,
                 IFilesystemOperator filesystemOperator,
                 ref bool folderEmpty)
@@ -188,19 +242,9 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.Delete
 
                 if (subfolderEmpty == null)
                 {
-                    var resolution = GetResolutionFor(DeleteProblemKind.CannotCheckIfSubfolderIsEmpty,
-                            filesystemOperator.CurrentPath,
-                            folderInfo.Name);
-
-                    switch (resolution)
-                    {
-                        case GenericDeleteProblemResolution.Skip:
-                            return (true, null);
-                        case GenericDeleteProblemResolution.Abort:
-                            return (true, new AbortedDeleteWorkerResult());
-                        default:
-                            throw new InvalidOperationException("Invalid problem resolution!");
-                    }
+                    return HandleSkipAbort(DeleteProblemKind.CannotCheckIfSubfolderIsEmpty, 
+                        folderInfo.Name, 
+                        filesystemOperator);
                 }
 
                 folderEmpty = subfolderEmpty.Value;
@@ -213,19 +257,9 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.Delete
                 var fileExists = filesystemOperator.FileExists(fileInfo.Name);
                 if (fileExists == null)
                 {
-                    var resolution = GetResolutionFor(DeleteProblemKind.CannotCheckIfFileExists,
-                        filesystemOperator.CurrentPath,
-                        fileInfo.Name);
-
-                    switch (resolution)
-                    {
-                        case GenericDeleteProblemResolution.Skip:
-                            return (true, null);
-                        case GenericDeleteProblemResolution.Abort:
-                            return (true, new AbortedDeleteWorkerResult());
-                        default:
-                            throw new InvalidOperationException("Invalid problem resolution!");
-                    }
+                    return HandleSkipAbort(DeleteProblemKind.CannotCheckIfFileExists,
+                        fileInfo.Name,
+                        filesystemOperator);                    
                 }
 
                 if (fileExists == false)
@@ -255,43 +289,11 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.Delete
                 {
                     if (fileAttributes.HasFlag(attribute))
                     {
-                        var resolution = GetResolutionFor(DeleteProblemKind.DeletedFileIsReadOnly,
-                            filesystemOperator.CurrentPath,
-                            fileInfo.Name);
-
-                        switch (resolution)
-                        {
-                            case GenericDeleteProblemResolution.Skip:
-                                return (true, null);
-                            case GenericDeleteProblemResolution.Abort:
-                                return (true, new AbortedDeleteWorkerResult());
-                            case GenericDeleteProblemResolution.Delete:
-                                {
-                                    fileAttributes &= ~attribute;
-
-                                    if (!filesystemOperator.SetFileAttributes(fileInfo.Name, fileAttributes))
-                                    {
-                                        var innerResolution = GetResolutionFor(problemKind,
-                                            filesystemOperator.CurrentPath,
-                                            fileInfo.Name);
-
-                                        switch (innerResolution)
-                                        {
-                                            case GenericDeleteProblemResolution.Skip:
-                                                return (true, null);
-                                            case GenericDeleteProblemResolution.Abort:
-                                                return (true, new AbortedDeleteWorkerResult());
-                                            default:
-                                                throw new InvalidOperationException("Invalid resolution!");
-                                        }
-                                    }
-
-                                    return (false, null);
-                                }
-                            default:
-                                throw new InvalidOperationException("Invalid resolution!");
-                        }
-
+                        return HandleSkipDeleteWithAttributeChangeAbort(problemKind,
+                            fileInfo.Name,
+                            filesystemOperator,
+                            ref fileAttributes,
+                            attribute);
                     }
 
                     return (false, null);
@@ -300,19 +302,9 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.Delete
                 var fileExists = filesystemOperator.FileExists(fileInfo.Name);
                 if (fileExists == null)
                 {
-                    var resolution = GetResolutionFor(DeleteProblemKind.CannotCheckIfFileExists,
-                        filesystemOperator.CurrentPath,
-                        fileInfo.Name);
-
-                    switch (resolution)
-                    {
-                        case GenericDeleteProblemResolution.Skip:
-                            return (true, null);
-                        case GenericDeleteProblemResolution.Abort:
-                            return (true, new AbortedDeleteWorkerResult());
-                        default:
-                            throw new InvalidOperationException("Invalid problem resolution!");
-                    }
+                    return HandleSkipAbort(DeleteProblemKind.CannotCheckIfFileExists,
+                        fileInfo.Name,
+                        filesystemOperator);
                 }
 
                 if (fileExists == true)
@@ -321,19 +313,9 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.Delete
 
                     if (attributes == null)
                     {
-                        var resolution = GetResolutionFor(DeleteProblemKind.CannotGetFileAttributes,
-                            filesystemOperator.CurrentPath,
-                            fileInfo.Name);
-
-                        switch (resolution)
-                        {
-                            case GenericDeleteProblemResolution.Skip:
-                                return (true, null);
-                            case GenericDeleteProblemResolution.Abort:
-                                return (true, new AbortedDeleteWorkerResult());
-                            default:
-                                throw new InvalidOperationException("Invalid resolution!");
-                        }
+                        return HandleSkipAbort(DeleteProblemKind.CannotGetFileAttributes,
+                            fileInfo.Name, 
+                            filesystemOperator);                        
                     }
 
                     bool exit;
@@ -360,19 +342,9 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.Delete
             {
                 if (!filesystemOperator.DeleteFolder(folderInfo.Name, true))
                 {
-                    var resolution = GetResolutionFor(DeleteProblemKind.CannotDeleteFolder,
-                        filesystemOperator.CurrentPath,
-                        folderInfo.Name);
-
-                    switch (resolution)
-                    {
-                        case GenericDeleteProblemResolution.Skip:
-                            return (true, null);
-                        case GenericDeleteProblemResolution.Abort:
-                            return (true, new AbortedDeleteWorkerResult());
-                        default:
-                            throw new InvalidOperationException("Invalid resolution!");
-                    }
+                    return HandleSkipAbort(DeleteProblemKind.CannotDeleteFolder,
+                        folderInfo.Name,
+                        filesystemOperator);                    
                 }
 
                 return (false, null);
@@ -387,19 +359,9 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.Delete
                 // Enter folder in local location
                 if (filesystemFolderOperator == null)
                 {
-                    var resolution = GetResolutionFor(DeleteProblemKind.CannotEnterFolder,
-                        filesystemOperator.CurrentPath,
-                        folderInfo.Name);
-
-                    switch (resolution)
-                    {
-                        case GenericDeleteProblemResolution.Skip:
-                            return (true, null);
-                        case GenericDeleteProblemResolution.Abort:
-                            return (true, new AbortedDeleteWorkerResult());
-                        default:
-                            throw new InvalidOperationException("Invalid problem resolution!");
-                    }
+                    return HandleSkipAbort(DeleteProblemKind.CannotEnterFolder,
+                        folderInfo.Name,
+                        filesystemOperator);
                 }
 
                 return (false, null);
@@ -578,6 +540,39 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.Delete
         protected readonly IFilesystemOperator filesystemOperator;
         protected readonly IReadOnlyList<Item> selectedItems;
         protected readonly DeleteConfigurationModel configuration;
+
+        // Protected methods --------------------------------------------------
+
+        protected void HandleWorkerProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            var worker = (IDeleteUserDecisionWorker)sender;
+
+            if (e.UserState is UserQuestionRequestProgress userQuestion)
+            {
+                (bool result, SingleDeleteProblemResolution resolution) = dialogService.ShowUserDecisionDialog(userQuestion.AvailableResolutions, userQuestion.Header);
+                if (result)
+                    worker.UserDecision = resolution;
+                else
+                    worker.UserDecision = SingleDeleteProblemResolution.Abort;
+
+                worker.UserDecisionSemaphore.Release();
+            }
+            else if (e.UserState is DeleteProgress progress)
+            {
+                Progress = progress.Progress;
+                ProgressDescription = progress.Description;
+            }
+        }
+
+        protected void HandleWorkerRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (e.Result is CriticalFailureDeleteWorkerResult critical)
+            {
+                messagingService.ShowError(critical.LocalizedMessage);
+            }
+
+            OnFinished();
+        }
 
         // Public methods -----------------------------------------------------
 
