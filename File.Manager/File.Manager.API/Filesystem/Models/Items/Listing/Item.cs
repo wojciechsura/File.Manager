@@ -63,10 +63,11 @@ namespace File.Manager.API.Filesystem.Models.Items.Listing
             }
         }
 
-        private protected Item(string name)
+        private protected Item(string name, bool isSelectable)
         {
             attributes = new();
             attributes[NameKey] = name;
+            IsSelectable = isSelectable;
         }
 
         public string Name => TryGet<string>(NameKey)!;
@@ -112,6 +113,8 @@ namespace File.Manager.API.Filesystem.Models.Items.Listing
             get => TryGet<string?>(AttributesKey);
             set => Set(AttributesKey, value);
         }
+
+        public bool IsSelectable { get; }
 
         public object? this[string key]
         {

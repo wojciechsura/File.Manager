@@ -33,7 +33,7 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
         private sealed class LocalDriveItem : FolderItem
         {
             public LocalDriveItem(string name, string filename)
-                : base(name)
+                : base(name, false)
             {
                 Filename = filename;
             }

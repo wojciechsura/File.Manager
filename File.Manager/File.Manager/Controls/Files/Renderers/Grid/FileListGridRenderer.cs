@@ -322,6 +322,8 @@ namespace File.Manager.Controls.Files.Renderers.Grid
 
         private void EnsureFocusedItemVisible()
         {
+            ValidateMetrics();
+
             int selectedItemTopY = FilesSource.CurrentPosition * metrics.Item.ItemHeight;
             int selectedItemBottomY = selectedItemTopY + metrics.Item.ItemHeight - 1;
             int topY = host.ScrollPosition;

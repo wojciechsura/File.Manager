@@ -14,7 +14,7 @@ namespace File.Manager.API.Filesystem.Models.Items.Listing
     public sealed class UpFolderItem : Item
     {
         public UpFolderItem() :
-            base(Resources.Strings.Item_UpFolder_Name)
+            base(Resources.Strings.Item_UpFolder_Name, false)
         {
 
         }

@@ -25,7 +25,7 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Home
         private class ModuleFolderItem : FolderItem
         {
             public ModuleFolderItem(FilesystemModule module)
-                : base(module.DisplayName)
+                : base(module.DisplayName, false)
             {                
                 SmallIcon = module.SmallIcon;
                 LargeIcon = module.LargeIcon;

@@ -15,6 +15,7 @@ namespace File.Manager.BusinessLogic.Models.Files
         ImageSource LargeIcon { get; }
         long? Size { get; }
         bool IsSelected { get; set; }
+        bool IsSelectable { get; }
         object this[string key] { get; }
     }
 }

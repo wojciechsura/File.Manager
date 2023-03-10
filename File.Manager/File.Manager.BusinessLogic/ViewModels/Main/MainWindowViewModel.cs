@@ -113,6 +113,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
             {
                 item.IsSelected = false;
             }
+
             copyToPane.Refresh();
         }
 
@@ -241,7 +242,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
 
         private void DoInvertSelection()
         {
-            foreach (var item in ActivePane.Items)
+            foreach (var item in ActivePane.Items.Where(i => i.IsSelectable))
             {
                 item.IsSelected = !item.IsSelected;
             }

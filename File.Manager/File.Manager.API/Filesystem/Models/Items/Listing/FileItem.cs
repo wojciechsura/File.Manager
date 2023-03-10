@@ -13,14 +13,14 @@ namespace File.Manager.API.Filesystem.Models.Items.Listing
     /// </summary>
     public class FileItem : Item
     {
-        public FileItem(string name)
-            : base(name)
+        public FileItem(string name, bool isSelectable = true)
+            : base(name, isSelectable)
         {
 
         }
 
-        public FileItem(string name, ImageSource smallIcon, ImageSource largeIcon)
-            : this(name)
+        public FileItem(string name, ImageSource smallIcon, ImageSource largeIcon, bool isSelectable = true)
+            : this(name, isSelectable)
         {
             SmallIcon = smallIcon;
             LargeIcon = largeIcon;

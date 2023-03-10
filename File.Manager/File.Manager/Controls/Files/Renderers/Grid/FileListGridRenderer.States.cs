@@ -107,8 +107,10 @@ namespace File.Manager.Controls.Files.Renderers.Grid
 							renderer.host.RequestInvalidateVisual();
 						}
 					}
-				}
-				else if (e.Key == Key.Home)
+
+                    e.Handled = true;
+                }
+                else if (e.Key == Key.Home)
 				{
 					if (renderer.FilesSource != null)
 					{
@@ -116,8 +118,10 @@ namespace File.Manager.Controls.Files.Renderers.Grid
 						renderer.EnsureFocusedItemVisible();
 						renderer.host.RequestInvalidateVisual();
 					}
-				}
-				else if (e.Key == Key.Down)
+
+                    e.Handled = true;
+                }
+                else if (e.Key == Key.Down)
 				{
 					if (renderer.FilesSource != null)
 					{
@@ -158,8 +162,10 @@ namespace File.Manager.Controls.Files.Renderers.Grid
 							renderer.host.RequestInvalidateVisual();
 						}
 					}
-				}
-				else if (e.Key == Key.End)
+
+                    e.Handled = true;
+                }
+                else if (e.Key == Key.End)
 				{
 					if (renderer.FilesSource != null)
 					{
@@ -167,23 +173,33 @@ namespace File.Manager.Controls.Files.Renderers.Grid
 						renderer.EnsureFocusedItemVisible();
 						renderer.host.RequestInvalidateVisual();
 					}
-				}
-				else if (e.Key == Key.Space)
+
+                    e.Handled = true;
+                }
+                else if (e.Key == Key.Space)
 				{
 					if (renderer.FilesSource != null && renderer.FilesSource.CurrentItem != null)
-					{
+					{						
 						IFileListItem item = (IFileListItem)renderer.FilesSource.CurrentItem;
-						item.IsSelected = !item.IsSelected;
-						renderer.EnsureFocusedItemVisible();
-						renderer.host.RequestInvalidateVisual();
+						if (item.IsSelectable)
+						{
+							item.IsSelected = !item.IsSelected;
+							renderer.EnsureFocusedItemVisible();
+							renderer.host.RequestInvalidateVisual();
+						}
 					}
-				}
-				else if (e.Key == Key.Insert)
+
+                    e.Handled = true;
+                }
+                else if (e.Key == Key.Insert)
 				{
 					if (renderer.FilesSource != null && renderer.FilesSource.CurrentItem != null)
 					{
 						IFileListItem item = (IFileListItem)renderer.FilesSource.CurrentItem;
-						item.IsSelected = !item.IsSelected;
+						if (item.IsSelectable)
+						{
+							item.IsSelected = !item.IsSelected;
+						}
 
 						if (renderer.FilesSource.CurrentPosition < renderer.FilesSource.Cast<object>().Count() - 1)
 							renderer.FilesSource.MoveCurrentToNext();
@@ -198,6 +214,8 @@ namespace File.Manager.Controls.Files.Renderers.Grid
 					{
 						renderer.host.RequestExecuteCurrentItem();
 					}
+
+					e.Handled = true;
 				}
 			}
 
@@ -230,7 +248,7 @@ namespace File.Manager.Controls.Files.Renderers.Grid
 					if (renderer.FilesSource != null && mouseHit is FileListGridRendererMetrics.ItemMouseHit itemHit && itemHit.ItemIndex != null)
 					{
 						var item = renderer.FilesSource.Cast<IFileListItem>().Skip(itemHit.ItemIndex.Value).FirstOrDefault();
-						if (item != null)
+						if (item != null && item.IsSelectable)
 						{
 							var newSelected = !item.IsSelected;
 							item.IsSelected = newSelected;
@@ -371,7 +389,7 @@ namespace File.Manager.Controls.Files.Renderers.Grid
                 if (renderer.FilesSource != null && mouseHit is FileListGridRendererMetrics.ItemMouseHit itemHit && itemHit.ItemIndex != null)
                 {
 					var item = renderer.FilesSource.Cast<IFileListItem>().Skip(itemHit.ItemIndex.Value).FirstOrDefault();
-					if (item != null && item.IsSelected != newSelection)
+					if (item != null && item.IsSelectable && item.IsSelected != newSelection)
 					{
 						item.IsSelected = newSelection;
 						renderer.host.RequestInvalidateVisual();
