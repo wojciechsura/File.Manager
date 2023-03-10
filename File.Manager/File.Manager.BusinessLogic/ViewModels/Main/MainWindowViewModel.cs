@@ -3,6 +3,7 @@ using File.Manager.API.Types;
 using File.Manager.BusinessLogic.Models.Dialogs.CopyMoveConfiguration;
 using File.Manager.BusinessLogic.Models.Dialogs.DeleteConfiguration;
 using File.Manager.BusinessLogic.Models.Dialogs.NewFolderConfiguration;
+using File.Manager.BusinessLogic.Models.Dialogs.Selection;
 using File.Manager.BusinessLogic.Services.Dialogs;
 using File.Manager.BusinessLogic.Services.Icons;
 using File.Manager.BusinessLogic.Services.Messaging;
@@ -21,6 +22,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -248,6 +250,47 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
             }
         }
 
+        private void DoChangeSelection(SelectionOperationKind operation)
+        {
+            static void ApplySelection(SelectionOperationKind operation, ItemViewModel item)
+            {
+                item.IsSelected = operation switch
+                {
+                    SelectionOperationKind.Add => true,
+                    SelectionOperationKind.Remove => false,
+                    _ => throw new InvalidOperationException("Unsupported selection operation kind")
+                };
+            }
+
+            (bool result, SelectionResultModel model) = dialogService.ShowSelectionDialog(operation);
+            if (result)
+            {
+                switch (model.SelectionMethod)
+                {
+                    case SelectionMethod.Mask:
+                        {
+                            foreach (var item in ActivePane.Items
+                                .Where(i => i.IsSelectable && PatternMatcher.StrictMatchPattern(model.Mask, i.Name)))
+                                ApplySelection(operation, item);
+
+                            break;
+                        }
+                    case SelectionMethod.RegularExpression:
+                        {
+                            var regex = new Regex(model.RegularExpression, RegexOptions.IgnoreCase);
+
+                            foreach (var item in ActivePane.Items.Where(i => i.IsSelectable && regex.IsMatch(i.Name)))
+                                ApplySelection(operation, item);
+
+                            break;
+                        }
+                    default:
+                        throw new InvalidOperationException("Unsupported selection method!");
+                }
+            }
+        }
+
+
         // Private properties -------------------------------------------------
 
         private PaneViewModel ActivePane
@@ -307,6 +350,8 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
             DeleteCommand = new AppCommand(obj => DoDelete());
 
             InvertSelectionCommand = new AppCommand(obj => DoInvertSelection());
+            AddToSelectionCommand = new AppCommand(obj => DoChangeSelection(SelectionOperationKind.Add));
+            RemoveFromSelectionCommand = new AppCommand(obj => DoChangeSelection(SelectionOperationKind.Remove));
 
             activePane = leftPane;
         }
@@ -342,5 +387,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
         public ICommand DeleteCommand { get; }
 
         public ICommand InvertSelectionCommand { get; }
+        public ICommand AddToSelectionCommand { get; }
+        public ICommand RemoveFromSelectionCommand { get; }
     }
 }

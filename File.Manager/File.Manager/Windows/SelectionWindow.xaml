@@ -13,7 +13,8 @@
         d:DataContext="{d:DesignInstance Type=vm:SelectionWindowViewModel}"
         mc:Ignorable="d"
         Title="{Binding Title}" SizeToContent="Height" Width="400"
-        WindowStartupLocation="CenterOwner">
+        WindowStartupLocation="CenterOwner"
+        FocusManager.FocusedElement="{Binding ElementName=tbMask}">
     <StackPanel Orientation="Vertical">
         <GroupBox Header="{Binding Title}" Margin="{StaticResource DialogItemsExceptTopMargin}">
             <sc:EditorPanel>

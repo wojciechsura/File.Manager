@@ -58,11 +58,14 @@ namespace File.Manager.BusinessLogic.ViewModels.Selection
             this.operationKind = operationKind;
             selectionMethod = SelectionMethod.Mask;
 
+            mask = "*.*";
+            regularExpression = "^.*$";
+
             invalidChars = System.IO.Path.GetInvalidFileNameChars()
                 .Except(new[] { '*', '?' })
                 .ToArray();
 
-            var canConfirmCondition = Condition.Lambda(this, vm => (SelectionMethod == SelectionMethod.Mask && ValidMask(mask)) || (SelectionMethod == SelectionMethod.RegularExpression && ValidRegularExpression(RegularExpression)), false);
+            var canConfirmCondition = Condition.ChainedLambda(this, vm => (SelectionMethod == SelectionMethod.Mask && ValidMask(mask)) || (SelectionMethod == SelectionMethod.RegularExpression && ValidRegularExpression(RegularExpression)), false);
 
             OkCommand = new AppCommand(obj => DoOk(), canConfirmCondition);
             CancelCommand = new AppCommand(obj => DoCancel());

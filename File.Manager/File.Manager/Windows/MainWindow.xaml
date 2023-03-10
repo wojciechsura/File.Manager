@@ -19,6 +19,8 @@
         <KeyBinding Key="F7" Command="{Binding NewFolderCommand}" />
         <KeyBinding Key="F8" Command="{Binding DeleteCommand}" />
         <KeyBinding Key="Multiply" Command="{Binding InvertSelectionCommand}" />
+        <KeyBinding Key="Add" Command="{Binding AddToSelectionCommand}" />
+        <KeyBinding Key="Subtract" Command="{Binding RemoveFromSelectionCommand}" />
     </f:RibbonWindow.InputBindings>
 
     <DockPanel>
@@ -48,6 +50,25 @@
                               Command="{Binding DeleteCommand}"
                               LargeIcon="pack://application:,,,/File.Manager;component/Resources/Images/Delete32.png"
                               Icon="pack://application:,,,/File.Manager;component/Resources/Images/Delete16.png"/>
+                </f:RibbonGroupBox>
+
+                <f:RibbonGroupBox Header="{x:Static res:Strings.Ribbon_Group_Selection}">
+                    <f:Button Header="{x:Static res:Strings.Ribbon_Button_AddToSelection}"
+                              Command="{Binding AddToSelectionCommand}"
+                              Size="Large"
+                              LargeIcon="pack://application:,,,/File.Manager;component/Resources/Images/AddToSelection32.png"
+                              Icon="pack://application:,,,/File.Manager;component/Resources/Images/AddToSelection16.png"/>
+                    <f:Button Header="{x:Static res:Strings.Ribbon_Button_RemoveFromSelection}"
+                              Command="{Binding RemoveFromSelectionCommand}"
+                              Size="Middle"
+                              LargeIcon="pack://application:,,,/File.Manager;component/Resources/Images/RemoveFromSelection32.png"
+                              Icon="pack://application:,,,/File.Manager;component/Resources/Images/RemoveFromSelection16.png"/>
+                    <f:Button Header="{x:Static res:Strings.Ribbon_Button_InvertSelection}"
+                              Command="{Binding InvertSelectionCommand}"
+                              Size="Middle"
+                              LargeIcon="pack://application:,,,/File.Manager;component/Resources/Images/InvertSelection32.png"
+                              Icon="pack://application:,,,/File.Manager;component/Resources/Images/InvertSelection16.png"/>
+
                 </f:RibbonGroupBox>
             </f:RibbonTabItem>
         </f:Ribbon>

@@ -132,6 +132,9 @@
   <data name="Error_FolderAlreadyExists" xml:space="preserve">
     <value>Folder {0} already exists in the current location!</value>
   </data>
+  <data name="Ribbon_Button_AddToSelection" xml:space="preserve">
+    <value>Add to selection</value>
+  </data>
   <data name="Ribbon_Button_Copy" xml:space="preserve">
     <value>Copy F5</value>
   </data>
@@ -141,17 +144,26 @@
   <data name="Ribbon_Button_Edit" xml:space="preserve">
     <value>Edit F4</value>
   </data>
+  <data name="Ribbon_Button_InvertSelection" xml:space="preserve">
+    <value>Invert selection</value>
+  </data>
   <data name="Ribbon_Button_Move" xml:space="preserve">
     <value>Move F6</value>
   </data>
   <data name="Ribbon_Button_NewFolder" xml:space="preserve">
     <value>New Folder F7</value>
   </data>
+  <data name="Ribbon_Button_RemoveFromSelection" xml:space="preserve">
+    <value>Remove from selection</value>
+  </data>
   <data name="Ribbon_Button_View" xml:space="preserve">
     <value>View F3</value>
   </data>
   <data name="Ribbon_Group_Actions" xml:space="preserve">
     <value>Actions</value>
+  </data>
+  <data name="Ribbon_Group_Selection" xml:space="preserve">
+    <value>Selection</value>
   </data>
   <data name="Ribbon_Tab_Home" xml:space="preserve">
     <value>Home</value>

@@ -106,6 +106,15 @@ namespace File.Manager.Resources.Windows.MainWindow {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Add to selection.
+        /// </summary>
+        public static string Ribbon_Button_AddToSelection {
+            get {
+                return ResourceManager.GetString("Ribbon_Button_AddToSelection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Copy F5.
         /// </summary>
         public static string Ribbon_Button_Copy {
@@ -133,6 +142,15 @@ namespace File.Manager.Resources.Windows.MainWindow {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Invert selection.
+        /// </summary>
+        public static string Ribbon_Button_InvertSelection {
+            get {
+                return ResourceManager.GetString("Ribbon_Button_InvertSelection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Move F6.
         /// </summary>
         public static string Ribbon_Button_Move {
@@ -151,6 +169,15 @@ namespace File.Manager.Resources.Windows.MainWindow {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Remove from selection.
+        /// </summary>
+        public static string Ribbon_Button_RemoveFromSelection {
+            get {
+                return ResourceManager.GetString("Ribbon_Button_RemoveFromSelection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu View F3.
         /// </summary>
         public static string Ribbon_Button_View {
@@ -165,6 +192,15 @@ namespace File.Manager.Resources.Windows.MainWindow {
         public static string Ribbon_Group_Actions {
             get {
                 return ResourceManager.GetString("Ribbon_Group_Actions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Selection.
+        /// </summary>
+        public static string Ribbon_Group_Selection {
+            get {
+                return ResourceManager.GetString("Ribbon_Group_Selection", resourceCulture);
             }
         }
         
