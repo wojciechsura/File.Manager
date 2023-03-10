@@ -21,7 +21,7 @@ using System.Windows.Data;
 using System.ComponentModel;
 using File.Manager.BusinessLogic.Models.Files;
 using File.Manager.API.Filesystem.Models.Items.Listing;
-using Gstc.Collections.ObservableLists;
+using File.Manager.Common.Wpf.Collections;
 
 namespace File.Manager.BusinessLogic.ViewModels.Pane
 {
@@ -81,7 +81,10 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
                     newSelectedItemViewModel = itemViewModel;
             }
 
-            items.AddRange(newItems);
+            foreach (var item in newItems)
+                items.Add(item);
+
+            //items.AddRange(newItems);
 
             if (newSelectedItemViewModel != null)
                 collectionView.MoveCurrentTo(newSelectedItemViewModel);
@@ -181,7 +184,6 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
             this.messagingService = messagingService;
 
             items = new();
-            items.IsAddRangeResetEvent = true;
             collectionView = new CollectionView(items);            
 
             ExecuteCurrentItemCommand = new AppCommand(DoExecuteCurrentItem);
