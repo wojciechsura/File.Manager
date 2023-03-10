@@ -1,6 +1,7 @@
 ﻿using File.Manager.BusinessLogic.Models.Dialogs.CopyMoveConfiguration;
 using File.Manager.BusinessLogic.Models.Dialogs.DeleteConfiguration;
 using File.Manager.BusinessLogic.Models.Dialogs.NewFolderConfiguration;
+using File.Manager.BusinessLogic.Models.Dialogs.Selection;
 using File.Manager.BusinessLogic.Services.Dialogs;
 using File.Manager.BusinessLogic.Types;
 using File.Manager.BusinessLogic.ViewModels.NewFolderConfiguration;
@@ -156,6 +157,7 @@ namespace File.Manager.Services.DialogService
                 ActivateLastDialog();
             }
         }
+
         public (bool result, CopyMoveConfigurationModel model) ShowCopyMoveConfigurationDialog(CopyMoveConfigurationInputModel input)
         {
             var dialog = new CopyMoveConfigurationWindow(input);
@@ -222,6 +224,26 @@ namespace File.Manager.Services.DialogService
             try
             {
                 dialog.ShowDialog();
+            }
+            finally
+            {
+                PopDialog(dialog);
+                ActivateLastDialog();
+            }
+        }
+
+        public (bool result, SelectionResultModel model) ShowSelectionDialog(SelectionOperationKind operationKind)
+        {
+            var dialog = new SelectionWindow(operationKind);
+            dialog.Owner = GetOwnerWindow();
+            dialogWindows.Push(dialog);
+
+            try
+            {
+                if (dialog.ShowDialog() == true)
+                    return (true, dialog.Result);
+                else
+                    return (false, null);
             }
             finally
             {

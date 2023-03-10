@@ -1,0 +1,45 @@
+﻿<Window x:Class="File.Manager.Windows.SelectionWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:File.Manager.Windows" 
+        xmlns:vm="clr-namespace:File.Manager.BusinessLogic.ViewModels.Selection;assembly=File.Manager.BusinessLogic" 
+        xmlns:t="clr-namespace:File.Manager.BusinessLogic.Types;assembly=File.Manager.BusinessLogic"
+        xmlns:res="clr-namespace:File.Manager.Resources.Windows.Selection;assembly=File.Manager.Resources"
+        xmlns:cres="clr-namespace:File.Manager.Resources.Common;assembly=File.Manager.Resources"
+        xmlns:p="clr-namespace:File.Manager.Controls.Panels" 
+        xmlns:sc="clr-namespace:Spooksoft.Wpf.Controls.Panels;assembly=Spooksoft.Wpf.Controls"
+        d:DataContext="{d:DesignInstance Type=vm:SelectionWindowViewModel}"
+        mc:Ignorable="d"
+        Title="{Binding Title}" SizeToContent="Height" Width="400"
+        WindowStartupLocation="CenterOwner">
+    <StackPanel Orientation="Vertical">
+        <GroupBox Header="{Binding Title}" Margin="{StaticResource DialogItemsExceptTopMargin}">
+            <sc:EditorPanel>
+                <RadioButton Margin="{StaticResource DialogItemsMargin}" Content="{x:Static res:Strings.Label_Mask}" 
+                             VerticalAlignment="Center"
+                             IsChecked="{Binding SelectionMethod, Converter={StaticResource RadioToEnumConverter}, ConverterParameter={x:Static t:SelectionMethod.Mask}}"/>
+                <TextBox x:Name="tbMask" Margin="{StaticResource DialogItemsMargin}" 
+                             Text="{Binding Mask, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                             VerticalAlignment="Center" HorizontalAlignment="Stretch"
+                         IsEnabled="{Binding SelectionMethod, Converter={StaticResource EqualsToParameterToBoolConverter}, ConverterParameter={x:Static t:SelectionMethod.Mask}}" />
+
+                <RadioButton Margin="{StaticResource DialogItemsExceptTopMargin}" Content="{x:Static res:Strings.Label_RegularExpression}" 
+                             VerticalAlignment="Center"
+                             IsChecked="{Binding SelectionMethod, Converter={StaticResource RadioToEnumConverter}, ConverterParameter={x:Static t:SelectionMethod.RegularExpression}}"/>
+                <TextBox Margin="{StaticResource DialogItemsExceptTopMargin}"
+                         Text="{Binding RegularExpression, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         VerticalAlignment="Center" HorizontalAlignment="Stretch" 
+                         IsEnabled="{Binding SelectionMethod, Converter={StaticResource EqualsToParameterToBoolConverter}, ConverterParameter={x:Static t:SelectionMethod.RegularExpression}}"/>
+            </sc:EditorPanel>
+        </GroupBox>
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Style="{StaticResource DialogButton}" Command="{Binding OkCommand}" Content="{x:Static cres:Strings.Ok}" 
+                        IsDefault="True" />
+            <Button Style="{StaticResource DialogButton}" Command="{Binding CancelCommand}" Content="{x:Static cres:Strings.Cancel}" 
+                        IsCancel="True" />
+        </StackPanel>
+    </StackPanel>
+</Window>

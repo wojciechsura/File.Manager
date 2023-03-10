@@ -13,6 +13,8 @@
 
             <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
             <conv:InverseBooleanToVisibilityConverter x:Key="InverseBoolToVisibilityConverter" />
+            <conv:RadioToEnumConverter x:Key="RadioToEnumConverter" />
+            <conv:EqualsParameterToBoolConverter x:Key="EqualsToParameterToBoolConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>
