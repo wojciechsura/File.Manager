@@ -1,0 +1,80 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:dc="clr-namespace:File.Manager.Controls.Dialogs"
+                    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="Dimensions.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <Style TargetType="{x:Type dc:ModernGroupBox}">
+        <Setter Property="Margin" Value="0" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="MinHeight" Value="0" />
+        <Setter Property="MinWidth" Value="0" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type dc:ModernGroupBox}">
+                    <Grid Margin="{TemplateBinding Padding}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock
+                            x:Name="Header"
+                            Grid.Row="0"
+                            Margin="0"
+                            FontSize="18"
+                            FontWeight="DemiBold"
+                            Text="{TemplateBinding HeaderText}" />
+
+                        <ui:Card Grid.Row="1" Margin="0,8,0,16">
+                            <ContentPresenter Content="{TemplateBinding Content}" />
+                        </ui:Card>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="HeaderText" Value="{x:Null}">
+                            <Setter TargetName="Header" Property="Visibility" Value="Collapsed" />
+                        </Trigger>
+                        <Trigger Property="HeaderText" Value="">
+                            <Setter TargetName="Header" Property="Visibility" Value="Collapsed" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type dc:DialogHost}">
+        <Setter Property="Margin" Value="0" />
+        <Setter Property="MinHeight" Value="0" />
+        <Setter Property="MinWidth" Value="0" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type dc:DialogHost}">
+                    <StackPanel Orientation="Vertical">
+                        <Border Padding="{StaticResource DialogHostContentPadding}">
+                            <Border.Background>
+                                <SolidColorBrush Color="{DynamicResource SystemFillColorSolidNeutralBackground}" />
+                            </Border.Background>
+                            <ContentPresenter Content="{TemplateBinding Content}" />
+                        </Border>
+                        <Border Padding="{StaticResource DialogHostButtonsPadding}">
+                            <Border.Background>
+                                <SolidColorBrush Color="{DynamicResource ControlFillColorDefault}" />
+                            </Border.Background>
+                            <ContentPresenter Content="{TemplateBinding Buttons}" />
+                        </Border>
+                    </StackPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+</ResourceDictionary>

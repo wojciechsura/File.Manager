@@ -9,89 +9,110 @@
         xmlns:sc="clr-namespace:Spooksoft.Wpf.Controls.Panels;assembly=Spooksoft.Wpf.Controls" 
         xmlns:vm="clr-namespace:File.Manager.BusinessLogic.ViewModels.CopyMoveConfiguration;assembly=File.Manager.BusinessLogic" 
         xmlns:m="clr-namespace:File.Manager.Markup"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        xmlns:cd="clr-namespace:File.Manager.Controls.Dialogs"
         xmlns:t="clr-namespace:File.Manager.BusinessLogic.Types;assembly=File.Manager.BusinessLogic"
         d:DataContext="{d:DesignInstance Type=vm:CopyMoveConfigurationWindowViewModel}"
         mc:Ignorable="d"
         Title="{Binding Title}" SizeToContent="WidthAndHeight" MinWidth="500"
         WindowStartupLocation="CenterOwner"
         FocusManager.FocusedElement="{Binding ElementName=tbFileFilter}">
-    <StackPanel Orientation="Vertical">
-        <GroupBox Header="{x:Static res:Strings.Groupbox_Summary_Title}" Margin="{StaticResource DialogItemsMargin}">
-            <sc:EditorPanel>
-                <Label Style="{StaticResource FirstHeaderLabel}" Content="{Binding SummaryHeader}" />
-                <Label Style="{StaticResource FirstValueLabel}" MaxWidth="450">
-                    <TextBlock Text="{Binding SummaryValue}" />
-                </Label>
+    <cd:DialogHost>
+        <cd:DialogHost.Content>
+            <StackPanel Orientation="Vertical">
+                <cd:ModernGroupBox HeaderText="{x:Static res:Strings.Groupbox_Summary_Title}">
+                    <sc:EditorPanel>
+                        <Label Style="{StaticResource PrimaryLabel}" Content="{Binding SummaryHeader}" />
+                        <Label Style="{StaticResource PrimaryLabel}" MaxWidth="450">
+                            <TextBlock Text="{Binding SummaryValue}" />
+                        </Label>
 
-                <Label Style="{StaticResource NextHeaderLabel}" Content="{x:Static res:Strings.Label_Source}" />
-                <Label Style="{StaticResource NextValueLabel}" MaxWidth="450">
-                    <TextBlock Text="{Binding SourceAddress}" />
-                </Label>
+                        <Label Style="{StaticResource PrimaryLabel}" Content="{x:Static res:Strings.Label_Source}" />
+                        <Label Style="{StaticResource PrimaryLabel}" MaxWidth="450">
+                            <TextBlock Text="{Binding SourceAddress}" />
+                        </Label>
 
-                <Label Style="{StaticResource NextHeaderLabel}" Content="{x:Static res:Strings.Label_Destination}" />
-                <Label Style="{StaticResource NextValueLabel}" MaxWidth="450">
-                    <TextBlock Text="{Binding DestinationAddress}" />
-                </Label>
-            </sc:EditorPanel>
-        </GroupBox>
+                        <Label Style="{StaticResource PrimaryLabel}" Content="{x:Static res:Strings.Label_Destination}" />
+                        <Label Style="{StaticResource PrimaryLabel}" MaxWidth="450">
+                            <TextBlock Text="{Binding DestinationAddress}" />
+                        </Label>
+                    </sc:EditorPanel>
+                </cd:ModernGroupBox>
 
-        <GroupBox Header="{x:Static res:Strings.Groupbox_Configuration_Title}" Margin="{StaticResource DialogItemsExceptTopMargin}">
-            <sc:EditorPanel>
-                <Label Style="{StaticResource FirstHeaderLabel}" Content="{x:Static res:Strings.Label_FileMask}" />
-                <TextBox x:Name="tbFileFilter" Margin="{StaticResource DialogItemsMargin}" 
+                <cd:ModernGroupBox HeaderText="{x:Static res:Strings.Groupbox_Configuration_Title}"
+                                   Margin="{StaticResource NextModernGroupBoxMargin}">
+                    <sc:EditorPanel>
+                        <Label Style="{StaticResource PrimaryLabel}" Content="{x:Static res:Strings.Label_FileMask}" 
+                       VerticalAlignment="Center" />
+                        <TextBox x:Name="tbFileFilter" Margin="{StaticResource DialogItemsMargin}" 
                          Text="{Binding FileMask, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                          VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
 
-                <Label Style="{StaticResource NextHeaderLabel}" Content="{x:Static res:Strings.Label_OverwritingOptions}" />
-                <ComboBox Margin="{StaticResource DialogItemsExceptTopMargin}"
-                          ItemsSource="{Binding Source={m:EnumBindingSource EnumType={x:Type t:GenericCopyMoveProblemResolution}}}"
-                          SelectedItem="{Binding OverwritingOptions, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                          VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                        <Label Style="{StaticResource PrimaryLabel}" Content="{x:Static res:Strings.Label_OverwritingOptions}" 
+                               VerticalAlignment="Center" />
+                        <ComboBox Margin="{StaticResource DialogItemsExceptTopMargin}"
+                                  ItemsSource="{Binding Source={m:EnumBindingSource EnumType={x:Type t:GenericCopyMoveProblemResolution}}}"
+                                  SelectedItem="{Binding OverwritingOptions, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                  VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
 
-                <Label Style="{StaticResource NextHeaderLabel}" Content="{x:Static res:Strings.Label_Rename}" />
-                <CheckBox Margin="{StaticResource DialogItemsExceptTopMargin}" 
-                          IsChecked="{Binding Rename, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                          VerticalAlignment="Center"/>
+                        <Label Style="{StaticResource PrimaryLabel}" Content="{x:Static res:Strings.Label_Rename}"                               
+                               VerticalAlignment="Center" />
+                        <CheckBox Margin="{StaticResource DialogItemsExceptTopMargin}" 
+                                  IsChecked="{Binding Rename, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                  VerticalAlignment="Center"/>
 
-                <Label Style="{StaticResource NextSubHeaderLabel}" Content="{x:Static res:Strings.Label_RenameFiles}" 
-                       Visibility="{Binding Rename, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                <CheckBox Margin="{StaticResource DialogItemsExceptTopMargin}" IsChecked="{Binding RenameFiles, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                          VerticalAlignment="Center"
-                          Visibility="{Binding Rename, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                        <Label Style="{StaticResource PrimaryLabel}" Content="{x:Static res:Strings.Label_RenameFiles}" 
+                               Margin="{StaticResource EditorPanelSubItem}" 
+                               VerticalAlignment="Center"
+                               Visibility="{Binding Rename, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                        <CheckBox Margin="{StaticResource DialogItemsExceptTopMargin}" IsChecked="{Binding RenameFiles, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                  VerticalAlignment="Center"
+                                  Visibility="{Binding Rename, Converter={StaticResource BoolToVisibilityConverter}}"/>
 
-                <Label Style="{StaticResource NextSubHeaderLabel}" Content="{x:Static res:Strings.Label_RenameFolders}" 
-                       Visibility="{Binding Rename, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                <CheckBox Margin="{StaticResource DialogItemsExceptTopMargin}" IsChecked="{Binding RenameFolders, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                          VerticalAlignment="Center"
-                          Visibility="{Binding Rename, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                        <Label Style="{StaticResource PrimaryLabel}" Content="{x:Static res:Strings.Label_RenameFolders}" 
+                               Margin="{StaticResource EditorPanelSubItem}" 
+                               VerticalAlignment="Center"
+                               Visibility="{Binding Rename, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                        <CheckBox Margin="{StaticResource DialogItemsExceptTopMargin}" IsChecked="{Binding RenameFolders, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                  VerticalAlignment="Center"
+                                  Visibility="{Binding Rename, Converter={StaticResource BoolToVisibilityConverter}}"/>
 
+                        <Label Style="{StaticResource PrimaryLabel}" Content="{x:Static res:Strings.Label_RenameRegex}" 
+                               Margin="{StaticResource EditorPanelSubItem}" 
+                               VerticalAlignment="Center"
+                               Visibility="{Binding Rename, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                        <TextBox Margin="{StaticResource DialogItemsExceptTopMargin}" 
+                                 Text="{Binding RenameFrom, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 VerticalAlignment="Center" 
+                                 Visibility="{Binding Rename, Converter={StaticResource BoolToVisibilityConverter}}"/>
 
-                <Label Style="{StaticResource NextSubHeaderLabel}" Content="{x:Static res:Strings.Label_RenameFiles}" 
-                       Visibility="{Binding Rename, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                <TextBox Margin="{StaticResource DialogItemsExceptTopMargin}" 
-                         Text="{Binding RenameFrom, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                         VerticalAlignment="Center" 
-                         Visibility="{Binding Rename, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                        <Label Style="{StaticResource PrimaryLabel}" Content="{x:Static res:Strings.Label_RenameTo}" 
+                               Margin="{StaticResource EditorPanelSubItem}" 
+                               VerticalAlignment="Center"
+                               Visibility="{Binding Rename, Converter={StaticResource BoolToVisibilityConverter}}" />
+                        <TextBox Margin="{StaticResource DialogItemsExceptTopMargin}" Text="{Binding RenameTo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 VerticalAlignment="Center" 
+                                 Visibility="{Binding Rename, Converter={StaticResource BoolToVisibilityConverter}}"/>
 
-                <Label Style="{StaticResource NextSubHeaderLabel}" Content="{x:Static res:Strings.Label_RenameTo}" 
-                       Visibility="{Binding Rename, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                <TextBox Margin="{StaticResource DialogItemsExceptTopMargin}" Text="{Binding RenameTo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                         VerticalAlignment="Center" 
-                         Visibility="{Binding Rename, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                        <Label Style="{StaticResource PrimaryLabel}" Content="{x:Static res:Strings.Label_RenameRecursively}" 
+                               Margin="{StaticResource EditorPanelSubItem}" 
+                               VerticalAlignment="Center"
+                               Visibility="{Binding Rename, Converter={StaticResource BoolToVisibilityConverter}}" />
+                        <CheckBox Margin="{StaticResource DialogItemsExceptTopMargin}" IsChecked="{Binding RenameRecursive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                  VerticalAlignment="Center"
+                                  Visibility="{Binding Rename, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                    </sc:EditorPanel>
+                </cd:ModernGroupBox>
+            </StackPanel>
+        </cd:DialogHost.Content>
 
-                <Label Style="{StaticResource NextSubHeaderLabel}" Content="{x:Static res:Strings.Label_RenameRecursively}" 
-                       Visibility="{Binding Rename, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                <CheckBox Margin="{StaticResource DialogItemsExceptTopMargin}" IsChecked="{Binding RenameRecursive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                          VerticalAlignment="Center"
-                          Visibility="{Binding Rename, Converter={StaticResource BoolToVisibilityConverter}}"/>
-            </sc:EditorPanel>
-        </GroupBox>
-
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Style="{StaticResource DialogButton}" Command="{Binding OkCommand}" Content="{x:Static cres:Strings.Ok}" 
+        <cd:DialogHost.Buttons>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Style="{StaticResource DialogButton}" Command="{Binding OkCommand}" Content="{x:Static cres:Strings.Ok}" 
                     IsDefault="True"/>
-            <Button Style="{StaticResource DialogButton}" Command="{Binding CancelCommand}" Content="{x:Static cres:Strings.Cancel}" 
+                <Button Style="{StaticResource DialogButton}" Command="{Binding CancelCommand}" Content="{x:Static cres:Strings.Cancel}" 
                     IsCancel="True"/>
-        </StackPanel>
-    </StackPanel>
+            </StackPanel>
+        </cd:DialogHost.Buttons>
+    </cd:DialogHost>
 </Window>

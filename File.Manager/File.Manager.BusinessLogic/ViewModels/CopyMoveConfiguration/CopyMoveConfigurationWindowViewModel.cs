@@ -83,7 +83,8 @@ namespace File.Manager.BusinessLogic.ViewModels.CopyMoveConfiguration
 
             renameFrom = @"^(.*)(?:\\.([^\\.]*))$";
             renameTo = @"$1\.$2";
-            renameFiles = false;
+            renameFiles = true;
+            renameFolders = true;
             renameRecursive = false;
 
             var useRenamingCondition = Condition.PropertyWatch(this, vm => vm.RenameFiles, false);

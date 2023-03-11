@@ -129,7 +129,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.Delete
             public DeleteConfigurationModel Configuration { get; }
         }
 
-        protected abstract class BaseDeleteWorker<TContext> : BaseWorker
+        protected abstract class BaseDeleteWorker<TContext> : BaseWorker, IDeleteUserDecisionWorker
             where TContext : BaseDeleteWorkerContext
         {
             // Protected types ------------------------------------------------

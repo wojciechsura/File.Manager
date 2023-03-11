@@ -36,7 +36,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
 
         private FilesystemNavigator navigator;
         private readonly ObservableList<ItemViewModel> items;
-        private readonly CollectionView collectionView;
+        private readonly ListCollectionView collectionView;
 
         private IPaneAccess access;
         private bool active;
@@ -184,7 +184,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
             this.messagingService = messagingService;
 
             items = new();
-            collectionView = new CollectionView(items);            
+            collectionView = new(items);            
 
             ExecuteCurrentItemCommand = new AppCommand(DoExecuteCurrentItem);
 

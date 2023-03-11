@@ -9,7 +9,7 @@ using System.Windows.Navigation;
 
 namespace File.Manager.Common.Wpf.Collections
 {
-    public class ObservableList<T> : IList<T>, INotifyCollectionChanged
+    public class ObservableList<T> : IList<T>, IList, INotifyCollectionChanged
     {
         // Private fields -----------------------------------------------------
 
@@ -164,6 +164,69 @@ namespace File.Manager.Common.Wpf.Collections
 
             CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item, index));
         }
+
+        // IList implementation -----------------------------------------------
+
+        int IList.Add(object value)
+        {
+            Add((T)value);
+            return list.Count - 1;
+        }
+
+        void IList.Clear()
+        {
+            this.Clear();
+        }
+
+        bool IList.Contains(object value)
+        {
+            return this.Contains((T)value);
+        }
+
+        int IList.IndexOf(object value)
+        {
+            return IndexOf((T)value);
+        }
+
+        void IList.Insert(int index, object value)
+        {
+            Insert(index, (T)value);
+        }
+
+        void IList.Remove(object value)
+        {
+            Remove((T)value);
+        }
+
+        void IList.RemoveAt(int index)
+        {
+            RemoveAt(index);
+        }
+
+        bool IList.IsFixedSize => false;
+
+        bool IList.IsReadOnly => false;
+
+        object IList.this[int index] 
+        { 
+            get => this[index];
+            set => this[index] = (T)value;
+        }
+
+        // ICollection implementation -----------------------------------------
+
+        void ICollection.CopyTo(Array array, int index)
+        {
+            ((ICollection)list).CopyTo(array, index);
+        }
+
+        int ICollection.Count => Count;
+
+        bool ICollection.IsSynchronized => false;
+
+        object ICollection.SyncRoot => null;
+
+        // Public properties --------------------------------------------------
 
         public int Count => EnsureSnapshot().Length;
 

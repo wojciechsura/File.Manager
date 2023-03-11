@@ -1,9 +1,0 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-
-    <!-- General -->
-
-    <SolidColorBrush x:Key="LinkBrush">#1080e0</SolidColorBrush>
-    <SolidColorBrush x:Key="SelectedItemForegroundBrush">#e02020</SolidColorBrush>
-
-</ResourceDictionary>
