@@ -14,26 +14,29 @@
         xmlns:t="clr-namespace:File.Manager.BusinessLogic.Types;assembly=File.Manager.BusinessLogic"
         d:DataContext="{d:DesignInstance Type=vm:CopyMoveConfigurationWindowViewModel}"
         mc:Ignorable="d"
-        Title="{Binding Title}" SizeToContent="WidthAndHeight" MinWidth="500"
+        Title="{Binding Title}" SizeToContent="WidthAndHeight" MinWidth="500" ResizeMode="NoResize"
         WindowStartupLocation="CenterOwner"
         FocusManager.FocusedElement="{Binding ElementName=tbFileFilter}">
+    <Window.Resources>
+        
+    </Window.Resources>
     <cd:DialogHost>
         <cd:DialogHost.Content>
             <StackPanel Orientation="Vertical">
                 <cd:ModernGroupBox HeaderText="{x:Static res:Strings.Groupbox_Summary_Title}">
                     <sc:EditorPanel>
-                        <Label Style="{StaticResource PrimaryLabel}" Content="{Binding SummaryHeader}" />
-                        <Label Style="{StaticResource PrimaryLabel}" MaxWidth="450">
+                        <Label Style="{StaticResource HeaderLabel}" Content="{Binding SummaryHeader}" />
+                        <Label Style="{StaticResource ValueLabel}" MaxWidth="450">
                             <TextBlock Text="{Binding SummaryValue}" />
                         </Label>
 
-                        <Label Style="{StaticResource PrimaryLabel}" Content="{x:Static res:Strings.Label_Source}" />
-                        <Label Style="{StaticResource PrimaryLabel}" MaxWidth="450">
+                        <Label Style="{StaticResource HeaderLabel}" Content="{x:Static res:Strings.Label_Source}" />
+                        <Label Style="{StaticResource ValueLabel}" MaxWidth="450">
                             <TextBlock Text="{Binding SourceAddress}" />
                         </Label>
 
-                        <Label Style="{StaticResource PrimaryLabel}" Content="{x:Static res:Strings.Label_Destination}" />
-                        <Label Style="{StaticResource PrimaryLabel}" MaxWidth="450">
+                        <Label Style="{StaticResource HeaderLabel}" Content="{x:Static res:Strings.Label_Destination}" />
+                        <Label Style="{StaticResource ValueLabel}" MaxWidth="450">
                             <TextBlock Text="{Binding DestinationAddress}" />
                         </Label>
                     </sc:EditorPanel>

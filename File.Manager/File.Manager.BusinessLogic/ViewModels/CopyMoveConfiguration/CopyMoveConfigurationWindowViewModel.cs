@@ -81,6 +81,7 @@ namespace File.Manager.BusinessLogic.ViewModels.CopyMoveConfiguration
             this.SourceAddress = input.SourceAddress;
             this.DestinationAddress = input.DestinationAddress;
 
+            fileMask = "*.*";
             renameFrom = @"^(.*)(?:\\.([^\\.]*))$";
             renameTo = @"$1\.$2";
             renameFiles = true;

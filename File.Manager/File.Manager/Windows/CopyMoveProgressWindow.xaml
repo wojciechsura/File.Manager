@@ -9,7 +9,7 @@
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:cres="clr-namespace:File.Manager.Resources.Common;assembly=File.Manager.Resources"
         xmlns:res="clr-namespace:File.Manager.Resources.Windows.CopyMoveProgressWindow;assembly=File.Manager.Resources"
-        xmlns:pc="clr-namespace:System.Windows;assembly=PresentationCore"
+        xmlns:pc="clr-namespace:System.Windows;assembly=PresentationCore" xmlns:cd="clr-namespace:File.Manager.Controls.Dialogs"
         d:DataContext="{d:DesignInstance Type=vm:CopyMoveProgressWindowViewModel}"
         mc:Ignorable="d"
         Title="{Binding Operation.Title}" SizeToContent="Height" Width="600"
@@ -17,86 +17,81 @@
         Loaded="HandleWindowLoaded" Closing="Window_Closing"
         WindowStartupLocation="CenterOwner"
         FocusManager.FocusedElement="{Binding ElementName=bCancel}">
-    <Window.Resources>
-        <Style TargetType="Label" x:Key="HeaderLabel">
-            
-        </Style>
-        
-        <Style TargetType="Label" x:Key="ValueLabel">
-            <Setter Property="FontWeight" Value="Bold" />
-        </Style>
-    </Window.Resources>
-    <StackPanel Orientation="Vertical" Margin="{StaticResource DialogWindowPadding}">
+    <cd:DialogHost>
+        <cd:DialogHost.Content>
+            <cd:ModernGroupBox HeaderText="{Binding Operation.Title}">
 
-        <GroupBox Header="{Binding Operation.Title}">
+                <StackPanel Orientation="Vertical">
 
-            <StackPanel Orientation="Vertical">
+                    <p:EditorPanel>
+                        <Label Style="{StaticResource HeaderLabel}" Content="{x:Static res:Strings.Label_Operation}" />
+                        <Label Style="{StaticResource ValueLabel}">
+                            <TextBlock Text="{Binding Operation.Title}" />
+                        </Label>
 
-                <p:EditorPanel>
-                    <Label Style="{StaticResource HeaderLabel}" Content="{x:Static res:Strings.Label_Operation}" Margin="{StaticResource DialogItemsMargin}" />
-                    <Label Style="{StaticResource ValueLabel}" Margin="{StaticResource DialogItemsMargin}">
-                        <TextBlock Text="{Binding Operation.Title}" />
-                    </Label>
+                        <Label Style="{StaticResource HeaderLabel}" Content="{x:Static res:Strings.Label_From}" />
+                        <Label Style="{StaticResource ValueLabel}">
+                            <TextBlock Text="{Binding Operation.FromAddress}" />
+                        </Label>
 
-                    <Label Style="{StaticResource HeaderLabel}" Content="{x:Static res:Strings.Label_From}" Margin="{StaticResource DialogItemsExceptTopMargin}" />
-                    <Label Style="{StaticResource ValueLabel}" Margin="{StaticResource DialogItemsExceptTopMargin}">
-                        <TextBlock Text="{Binding Operation.FromAddress}" />
-                    </Label>
+                        <Label Style="{StaticResource HeaderLabel}" Content="{x:Static res:Strings.Label_To}" />
+                        <Label Style="{StaticResource ValueLabel}">
+                            <TextBlock Text="{Binding Operation.ToAddress}" />
+                        </Label>
 
-                    <Label Style="{StaticResource HeaderLabel}" Content="{x:Static res:Strings.Label_To}" Margin="{StaticResource DialogItemsExceptTopMargin}" />
-                    <Label Style="{StaticResource ValueLabel}" Margin="{StaticResource DialogItemsExceptTopMargin}">
-                        <TextBlock Text="{Binding Operation.ToAddress}" />
-                    </Label>
+                    </p:EditorPanel>
 
-                </p:EditorPanel>
+                    <!-- Overall progress bar -->
 
-                <!-- Overall progress bar -->
+                    <DockPanel Margin="{StaticResource DialogItemsExceptTopMargin}" HorizontalAlignment="Stretch">
+                        <Label Style="{StaticResource PrimaryLabel}" DockPanel.Dock="Top" Margin="{StaticResource DialogItemsMargin}">
+                            <TextBlock Text="{Binding Operation.ProgressDescription}" />
+                        </Label>
 
-                <DockPanel Margin="{StaticResource DialogItemsExceptTopMargin}" HorizontalAlignment="Stretch">
-                    <Label DockPanel.Dock="Top" Margin="{StaticResource DialogItemsMargin}">
-                        <TextBlock Text="{Binding Operation.ProgressDescription}" />
-                    </Label>
-
-                    <Label Margin="{StaticResource DialogItemsRightMargin}" DockPanel.Dock="Right" Width="40" HorizontalContentAlignment="Center"
+                        <Label Style="{StaticResource PrimaryLabel}" Margin="{StaticResource DialogItemsRightMargin}" DockPanel.Dock="Right" Width="40" HorizontalContentAlignment="Center"
                            Visibility="{Binding Operation.ProgressIndeterminate, Converter={StaticResource InverseBoolToVisibilityConverter}, ConverterParameter={x:Static pc:Visibility.Hidden}}">
-                        <TextBlock>
-                            <TextBlock.Inlines>
-                                <Run Text="{Binding Operation.Progress, Mode=OneWay}" />
-                                <Run Text="%" />
-                            </TextBlock.Inlines>
-                        </TextBlock>
-                    </Label>
+                            <TextBlock>
+                                <TextBlock.Inlines>
+                                    <Run Text="{Binding Operation.Progress, Mode=OneWay}" />
+                                    <Run Text="%" />
+                                </TextBlock.Inlines>
+                            </TextBlock>
+                        </Label>
 
-                    <ProgressBar Margin="{StaticResource DialogItemsHorizontalOnlyMargin}" Value="{Binding Operation.Progress}"
-                                 IsIndeterminate="{Binding Operation.ProgressIndeterminate}"/>
-                </DockPanel>
+                        <ProgressBar Margin="{StaticResource DialogItemsHorizontalOnlyMargin}" Value="{Binding Operation.Progress}"
+                                 IsIndeterminate="{Binding Operation.ProgressIndeterminate}" Height="23"/>
+                    </DockPanel>
 
-                <DockPanel Margin="{StaticResource DialogItemsExceptTopMargin}" HorizontalAlignment="Stretch">
+                    <DockPanel Margin="{StaticResource DialogItemsExceptTopMargin}" HorizontalAlignment="Stretch">
 
-                    <Label DockPanel.Dock="Top" Margin="{StaticResource DialogItemsMargin}">
-                        <TextBlock Text="{Binding Operation.FileProgressDescription}" />
-                    </Label>
+                        <Label Style="{StaticResource PrimaryLabel}" DockPanel.Dock="Top" Margin="{StaticResource DialogItemsMargin}">
+                            <TextBlock Text="{Binding Operation.FileProgressDescription}" />
+                        </Label>
 
-                    <Label Margin="{StaticResource DialogItemsRightMargin}" DockPanel.Dock="Right" Width="40" HorizontalContentAlignment="Center">
-                        <TextBlock>
-                            <TextBlock.Inlines>
-                                <Run Text="{Binding Operation.FileProgress, Mode=OneWay}" />
-                                <Run Text="%" />
-                            </TextBlock.Inlines>
-                        </TextBlock>
-                    </Label>
+                        <Label Style="{StaticResource PrimaryLabel}" Margin="{StaticResource DialogItemsRightMargin}" DockPanel.Dock="Right" Width="40" HorizontalContentAlignment="Center">
+                            <TextBlock>
+                                <TextBlock.Inlines>
+                                    <Run Text="{Binding Operation.FileProgress, Mode=OneWay}" />
+                                    <Run Text="%" />
+                                </TextBlock.Inlines>
+                            </TextBlock>
+                        </Label>
 
-                    <ProgressBar Margin="{StaticResource DialogItemsHorizontalOnlyMargin}" Value="{Binding Operation.FileProgress}" />
-                </DockPanel>
+                        <ProgressBar Margin="{StaticResource DialogItemsHorizontalOnlyMargin}" Value="{Binding Operation.FileProgress}" 
+                                     Height="23"/>
+                    </DockPanel>
 
                 </StackPanel>
-        </GroupBox>
+            </cd:ModernGroupBox>
 
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button x:Name="bCancel" Style="{StaticResource DialogButton}" Content="{x:Static cres:Strings.Cancel}" 
+        </cd:DialogHost.Content>
+
+        <cd:DialogHost.Buttons>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button x:Name="bCancel" Style="{StaticResource DialogButton}" Content="{x:Static cres:Strings.Cancel}" 
                     Command="{Binding CancelCommand}"/>
-        </StackPanel>
+            </StackPanel>
+        </cd:DialogHost.Buttons>
 
-    </StackPanel>
-
+    </cd:DialogHost>
 </Window>

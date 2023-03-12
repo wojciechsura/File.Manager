@@ -12,6 +12,33 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <Style TargetType="Label" x:Key="HeaderLabel" BasedOn="{StaticResource PrimaryLabel}">
+
+    </Style>
+
+    <Style TargetType="Label" x:Key="ValueLabel" BasedOn="{StaticResource PrimaryLabel}">
+        <Setter Property="FontWeight" Value="Bold" />
+    </Style>
+
+    <Style TargetType="Label" x:Key="DialogHeader" BasedOn="{StaticResource {x:Type Label}}">
+        <Setter Property="Foreground">
+            <Setter.Value>
+                <SolidColorBrush Color="{DynamicResource TextFillColorPrimary}" />
+            </Setter.Value>
+        </Setter>
+        <Setter Property="FontSize" Value="{DynamicResource ControlContentThemeFontSize}" />
+        <Setter Property="FontWeight" Value="Medium" />
+    </Style>
+
+    <Style TargetType="Label" x:Key="DialogText" BasedOn="{StaticResource {x:Type Label}}">
+        <Setter Property="Foreground">
+            <Setter.Value>
+                <SolidColorBrush Color="{DynamicResource TextFillColorPrimary}" />
+            </Setter.Value>
+        </Setter>
+        <Setter Property="FontSize" Value="{DynamicResource ControlContentThemeFontSize}" />
+    </Style>
     
     <!-- -->
     

@@ -79,7 +79,7 @@ namespace File.Manager.Resources.Operations {
         }
         
         /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot change attributes of the destination file {2}..
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot change attributes of the destination file &quot;{2}&quot;..
         /// </summary>
         public static string CopyMove_Question_CannotChangeFileAttributes {
             get {
@@ -88,7 +88,7 @@ namespace File.Manager.Resources.Operations {
         }
         
         /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot check if file {2} exists in location {1}..
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot check if file &quot;{2}&quot; exists in location &quot;{1}&quot;..
         /// </summary>
         public static string CopyMove_Question_CannotCheckIfDestinationFileExists {
             get {
@@ -97,7 +97,7 @@ namespace File.Manager.Resources.Operations {
         }
         
         /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot check if folder {2} exists in location {1}..
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot check if folder &quot;{2}&quot; exists in location &quot;{1}&quot;..
         /// </summary>
         public static string CopyMove_Question_CannotCheckIfDestinationFolderExists {
             get {
@@ -106,7 +106,7 @@ namespace File.Manager.Resources.Operations {
         }
         
         /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot check if file {2} exists in location {0}..
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot check if file &quot;{2}&quot; exists in location &quot;{0}&quot;..
         /// </summary>
         public static string CopyMove_Question_CannotCheckIfSourceFileExists {
             get {
@@ -115,7 +115,7 @@ namespace File.Manager.Resources.Operations {
         }
         
         /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot check if folder {2} exists in location {0}..
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot check if folder &quot;{2}&quot; exists in location &quot;{0}&quot;..
         /// </summary>
         public static string CopyMove_Question_CannotCheckIfSourceFolderExists {
             get {
@@ -124,7 +124,7 @@ namespace File.Manager.Resources.Operations {
         }
         
         /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot check if subfolder {2} in location {0} is empty..
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot check if subfolder &quot;{2}&quot; in location &quot;{0}&quot; is empty..
         /// </summary>
         public static string CopyMove_Question_CannotCheckIfSubfolderIsEmpty {
             get {
@@ -133,7 +133,7 @@ namespace File.Manager.Resources.Operations {
         }
         
         /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot copy file {0} from {1} to {2}..
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot copy file &quot;{0}&quot; from &quot;{1}&quot; to &quot;{2}&quot;..
         /// </summary>
         public static string CopyMove_Question_CannotCopyFile {
             get {
@@ -142,7 +142,7 @@ namespace File.Manager.Resources.Operations {
         }
         
         /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot create folder {2} in location {1}..
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot create folder &quot;{2}&quot; in location &quot;{1}&quot;..
         /// </summary>
         public static string CopyMove_Question_CannotCreateDestinationFolder {
             get {
@@ -151,7 +151,7 @@ namespace File.Manager.Resources.Operations {
         }
         
         /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot delete folder {2} in location {0}..
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot delete folder &quot;{2}&quot; in location &quot;{0}&quot;..
         /// </summary>
         public static string CopyMove_Question_CannotDeleteEmptyFolder {
             get {
@@ -160,7 +160,7 @@ namespace File.Manager.Resources.Operations {
         }
         
         /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot open folder {2} in location {1}..
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot open folder &quot;{2}&quot; in location &quot;{1}&quot;..
         /// </summary>
         public static string CopyMove_Question_CannotEnterDestinationFolder {
             get {
@@ -169,7 +169,7 @@ namespace File.Manager.Resources.Operations {
         }
         
         /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot open folde {2} in location {0}..
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot open folde &quot;{2}&quot; in location &quot;{0}&quot;..
         /// </summary>
         public static string CopyMove_Question_CannotEnterSourceFolder {
             get {
@@ -178,7 +178,7 @@ namespace File.Manager.Resources.Operations {
         }
         
         /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot get attributes of file {2} in location {0}..
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot get attributes of file &quot;{2}&quot; in location &quot;{0}&quot;..
         /// </summary>
         public static string CopyMove_Question_CannotGetSourceFileAttributes {
             get {
@@ -187,7 +187,7 @@ namespace File.Manager.Resources.Operations {
         }
         
         /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot get attributes of file {2} in location {1}..
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot get attributes of file &quot;{2}&quot; in location &quot;{1}&quot;..
         /// </summary>
         public static string CopyMove_Question_CannotGetTargetFileAttributes {
             get {
@@ -196,7 +196,7 @@ namespace File.Manager.Resources.Operations {
         }
         
         /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot list source folder contents: {0}.
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot list source folder contents: &quot;{0}&quot;.
         /// </summary>
         public static string CopyMove_Question_CannotListSourceFolder {
             get {
@@ -205,7 +205,7 @@ namespace File.Manager.Resources.Operations {
         }
         
         /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot open destination file {2} in location {0}..
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot open destination file &quot;{2}&quot; in location &quot;{0}&quot;..
         /// </summary>
         public static string CopyMove_Question_CannotOpenDestinationFile {
             get {
@@ -214,7 +214,7 @@ namespace File.Manager.Resources.Operations {
         }
         
         /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot open source file {2} in location {0}..
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot open source file &quot;{2}&quot; in location &quot;{0}&quot;..
         /// </summary>
         public static string CopyMove_Question_CannotOpenSourceFile {
             get {
@@ -223,7 +223,7 @@ namespace File.Manager.Resources.Operations {
         }
         
         /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot delete source file {0} from location {1}..
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot delete source file &quot;{0}&quot; from location &quot;{1}&quot;..
         /// </summary>
         public static string CopyMove_Question_CannotRemoveSourceFile {
             get {
@@ -232,7 +232,7 @@ namespace File.Manager.Resources.Operations {
         }
         
         /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot set attributes for file {2} in location {1}..
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot set attributes for file &quot;{2}&quot; in location &quot;{1}&quot;..
         /// </summary>
         public static string CopyMove_Question_CannotSetTargetFileAttributes {
             get {
@@ -241,7 +241,7 @@ namespace File.Manager.Resources.Operations {
         }
         
         /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Destination file {2} already exists in location {1}..
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Destination file &quot;{2}&quot; already exists in location &quot;{1}&quot;..
         /// </summary>
         public static string CopyMove_Question_DestinationFileAlreadyExists {
             get {
@@ -250,7 +250,7 @@ namespace File.Manager.Resources.Operations {
         }
         
         /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Destination file {2} is read only..
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Destination file &quot;{2}&quot; is read only..
         /// </summary>
         public static string CopyMove_Question_DestinationFileIsReadOnly {
             get {
@@ -259,7 +259,7 @@ namespace File.Manager.Resources.Operations {
         }
         
         /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Destination file {2} is a system file..
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Destination file &quot;{2}&quot; is a system file..
         /// </summary>
         public static string CopyMove_Question_DestinationFileIsSystem {
             get {
@@ -268,7 +268,7 @@ namespace File.Manager.Resources.Operations {
         }
         
         /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot copy file {0}: location {1} already contains folder with the same name..
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot copy file &quot;{0}&quot;: location &quot;{1}&quot; already contains folder with the same name..
         /// </summary>
         public static string CopyMove_Question_DestinationFolderAlreadyExists {
             get {
@@ -295,7 +295,7 @@ namespace File.Manager.Resources.Operations {
         }
         
         /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Renamed file name {2} is invalid..
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Renamed file name &quot;{2}&quot; is invalid..
         /// </summary>
         public static string CopyMove_Question_InvalidRenamedFilename {
             get {
@@ -304,7 +304,7 @@ namespace File.Manager.Resources.Operations {
         }
         
         /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Source file {2} does not exist in location {0}..
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Source file &quot;{2}&quot; does not exist in location &quot;{0}&quot;..
         /// </summary>
         public static string CopyMove_Question_SourceFileDoesNotExist {
             get {
@@ -349,7 +349,7 @@ namespace File.Manager.Resources.Operations {
         }
         
         /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot check if file {1} exists in location {0}..
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot check if file &quot;{1}&quot; exists in location &quot;{0}&quot;..
         /// </summary>
         public static string Delete_Question_CannotCheckIfFileExists {
             get {
@@ -358,7 +358,7 @@ namespace File.Manager.Resources.Operations {
         }
         
         /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot check if subfolder {1} in location {0} is empty..
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot check if subfolder &quot;{1}&quot; in location &quot;{0}&quot; is empty..
         /// </summary>
         public static string Delete_Question_CannotCheckIfSubfolderIsEmpty {
             get {
@@ -367,7 +367,7 @@ namespace File.Manager.Resources.Operations {
         }
         
         /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot delete file {1} in location {0}..
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot delete file &quot;{1}&quot; in location &quot;{0}&quot;..
         /// </summary>
         public static string Delete_Question_CannotDeleteFile {
             get {
@@ -376,7 +376,7 @@ namespace File.Manager.Resources.Operations {
         }
         
         /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot delete folder {1} in location {0}..
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot delete folder &quot;{1}&quot; in location &quot;{0}&quot;..
         /// </summary>
         public static string Delete_Question_CannotDeleteFolder {
             get {
@@ -385,7 +385,7 @@ namespace File.Manager.Resources.Operations {
         }
         
         /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot open folder {1} in location {0}..
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot open folder &quot;{1}&quot; in location &quot;{0}&quot;..
         /// </summary>
         public static string Delete_Question_CannotEnterFolder {
             get {
@@ -394,7 +394,7 @@ namespace File.Manager.Resources.Operations {
         }
         
         /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot get attributes of file {1} in location {0}..
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot get attributes of file &quot;{1}&quot; in location &quot;{0}&quot;..
         /// </summary>
         public static string Delete_Question_CannotGetFileAttributes {
             get {
@@ -403,7 +403,7 @@ namespace File.Manager.Resources.Operations {
         }
         
         /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot list folder contents: {0}.
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot list folder contents: &quot;{0}&quot;.
         /// </summary>
         public static string Delete_Question_CannotListFolderContents {
             get {
@@ -412,7 +412,7 @@ namespace File.Manager.Resources.Operations {
         }
         
         /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot set attributes of file {1} in location {0}..
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot set attributes of file &quot;{1}&quot; in location &quot;{0}&quot;..
         /// </summary>
         public static string Delete_Question_CannotSetFileAttributes {
             get {
@@ -421,7 +421,7 @@ namespace File.Manager.Resources.Operations {
         }
         
         /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu File {1} in location {0} is hidden..
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu File &quot;{1}&quot; in location &quot;{0}&quot; is hidden..
         /// </summary>
         public static string Delete_Question_DeletedFileIsHidden {
             get {
@@ -430,7 +430,7 @@ namespace File.Manager.Resources.Operations {
         }
         
         /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu File {1} in location {0} is read only..
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu File &quot;{1}&quot; in location &quot;{0}&quot; is read only..
         /// </summary>
         public static string Delete_Question_DeletedFileIsReadOnly {
             get {
@@ -439,7 +439,7 @@ namespace File.Manager.Resources.Operations {
         }
         
         /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu File {1} in location {0} is system..
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu File &quot;{1}&quot; in location &quot;{0}&quot; is system..
         /// </summary>
         public static string Delete_Question_DeletedFileIsSystem {
             get {
@@ -448,7 +448,7 @@ namespace File.Manager.Resources.Operations {
         }
         
         /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu File {1} is no longer in location {0}..
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu File &quot;{1}&quot; is no longer in location &quot;{0}&quot;..
         /// </summary>
         public static string Delete_Question_FileDoesNotExist {
             get {

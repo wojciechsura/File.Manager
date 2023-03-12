@@ -7,30 +7,40 @@
         xmlns:vm="clr-namespace:File.Manager.BusinessLogic.ViewModels.UserDecision;assembly=File.Manager.BusinessLogic" 
         xmlns:t="clr-namespace:File.Manager.BusinessLogic.Types;assembly=File.Manager.BusinessLogic"
         xmlns:res="clr-namespace:File.Manager.Resources.Windows.UserDecision;assembly=File.Manager.Resources"
-        xmlns:p="clr-namespace:File.Manager.Controls.Panels"
+        xmlns:p="clr-namespace:File.Manager.Controls.Panels" 
+        xmlns:cd="clr-namespace:File.Manager.Controls.Dialogs"
         d:DataContext="{d:DesignInstance Type=vm:UserDecisionDialogViewModel}"
         mc:Ignorable="d"
-        Title="{x:Static res:Strings.Title}" SizeToContent="Height" Width="400"
+        Title="{x:Static res:Strings.Title}" SizeToContent="Height" Width="500" ResizeMode="NoResize"
         WindowStartupLocation="CenterOwner">
-    <StackPanel Orientation="Vertical" Margin="{StaticResource DialogWindowPadding}">
-        <Label HorizontalAlignment="Stretch" HorizontalContentAlignment="Center">
-            <TextBlock Text="{Binding Header}" />
-        </Label>
+    <cd:DialogHost>
+        <cd:DialogHost.Content>
+            <StackPanel Orientation="Vertical">
+                <Label Style="{StaticResource DialogHeader}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Content="{x:Static res:Strings.Label_Header}" 
+                       Margin="{StaticResource DialogItemsBottomMargin}" />
+                <Label Style="{StaticResource DialogText}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left">
+                    <TextBlock Text="{Binding Header}" TextWrapping="Wrap" />
+                </Label>
+            </StackPanel>
+        </cd:DialogHost.Content>
+        <cd:DialogHost.Buttons>
+            <ItemsControl ItemsSource="{Binding AvailableResolutions}" 
+                          HorizontalAlignment="Stretch">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <p:ColumnsPanel ColumnCount="2" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
 
-        <ItemsControl ItemsSource="{Binding AvailableResolutions}">
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <p:ColumnsPanel ColumnCount="2" />
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type t:SingleCopyMoveProblemResolution}">
+                        <Button Content="{Binding}" HorizontalAlignment="Stretch"
+                                Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}}, Path=DataContext.SelectResolutionCommand}"
+                                CommandParameter="{Binding}" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </cd:DialogHost.Buttons>
+    </cd:DialogHost>
 
-            <ItemsControl.ItemTemplate>
-                <DataTemplate DataType="{x:Type t:SingleCopyMoveProblemResolution}">
-                    <Button Style="{StaticResource DialogButton}" Content="{Binding}"
-                            Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}}, Path=DataContext.SelectResolutionCommand}"
-                            CommandParameter="{Binding}" />
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
-    </StackPanel>
 </Window>

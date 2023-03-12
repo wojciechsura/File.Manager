@@ -6,22 +6,22 @@
     
     <Thickness x:Key="DialogWindowPadding">24</Thickness>
     
-    <Thickness x:Key="DialogItemsBottomMargin" Bottom="4" />
-    <Thickness x:Key="DialogItemsTopMargin" Top="4" />
-    <Thickness x:Key="DialogItemsLeftMargin" Left="4" />
-    <Thickness x:Key="DialogItemsRightMargin" Right="4" />
+    <Thickness x:Key="DialogItemsBottomMargin" Bottom="8" />
+    <Thickness x:Key="DialogItemsTopMargin" Top="8" />
+    <Thickness x:Key="DialogItemsLeftMargin" Left="8" />
+    <Thickness x:Key="DialogItemsRightMargin" Right="8" />
 
-    <Thickness x:Key="DialogItemsExceptBottomMargin" Left="4" Top="4" Right="4" Bottom="0" />
-    <Thickness x:Key="DialogItemsExceptTopMargin" Left="4" Top="0" Right="4" Bottom="4" />
-    <Thickness x:Key="DialogItemsExceptLeftMargin" Left="0" Top="4" Right="4" Bottom="4" />
-    <Thickness x:Key="DialogItemsExceptRightMargin" Left="4" Top="4" Right="0" Bottom="4" />
+    <Thickness x:Key="DialogItemsExceptBottomMargin" Left="8" Top="8" Right="8" Bottom="0" />
+    <Thickness x:Key="DialogItemsExceptTopMargin" Left="8" Top="0" Right="8" Bottom="8" />
+    <Thickness x:Key="DialogItemsExceptLeftMargin" Left="0" Top="8" Right="8" Bottom="8" />
+    <Thickness x:Key="DialogItemsExceptRightMargin" Left="8" Top="8" Right="0" Bottom="8" />
 
-    <Thickness x:Key="DialogItemsVerticalOnlyMargin" Left="0" Top="4" Right="0" Bottom="4" />
-    <Thickness x:Key="DialogItemsHorizontalOnlyMargin" Left="4" Top="0" Right="4" Bottom="0" />
+    <Thickness x:Key="DialogItemsVerticalOnlyMargin" Left="0" Top="8" Right="0" Bottom="8" />
+    <Thickness x:Key="DialogItemsHorizontalOnlyMargin" Left="8" Top="0" Right="8" Bottom="0" />
 
-    <Thickness x:Key="DialogItemsMargin" Left="4" Top="4" Right="4" Bottom="4" />
+    <Thickness x:Key="DialogItemsMargin" Left="8" Top="8" Right="8" Bottom="8" />
 
-    <Thickness x:Key="DefaultMargin">4</Thickness>
+    <Thickness x:Key="DefaultMargin">8</Thickness>
 
     <Thickness x:Key="EditorPanelSubItem" Left="16" />
 

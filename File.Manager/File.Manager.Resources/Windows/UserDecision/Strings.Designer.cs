@@ -61,6 +61,15 @@ namespace File.Manager.Resources.Windows.UserDecision {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Problem encountered.
+        /// </summary>
+        public static string Label_Header {
+            get {
+                return ResourceManager.GetString("Label_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Choose problem resolution.
         /// </summary>
         public static string Title {

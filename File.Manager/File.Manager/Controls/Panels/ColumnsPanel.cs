@@ -15,7 +15,7 @@ namespace File.Manager.Controls.Panels
         {
             List<double> rowHeights = new();
 
-            double columnWidth = Math.Max(MinColumnWidth, availableSize.Width / ColumnCount);
+            double columnWidth = Math.Max(MinColumnWidth, (availableSize.Width - ColumnSpacing * (ColumnCount - 1)) / ColumnCount );
 
             for (int i = 0; i < InternalChildren.Count; i++)
             {
@@ -27,15 +27,18 @@ namespace File.Manager.Controls.Panels
                 rowHeights[row] = Math.Max(rowHeights[row], InternalChildren[i].DesiredSize.Height);
             }
 
-            double resultWidth = columnWidth * ColumnCount;
-            double resultHeight = rowHeights.Any() ? rowHeights.Sum() : 0.0;
+            // Integer version of Ceiling()
+            int rows = (InternalChildren.Count + ColumnCount - 1) / ColumnCount;
+
+            double resultWidth = (columnWidth * ColumnCount + ColumnSpacing * (ColumnCount - 1));
+            double resultHeight = (rowHeights.Any() ? rowHeights.Sum() : 0.0) + (Math.Max(0, rows - 1)) * RowSpacing;
 
             return new Size(resultWidth, resultHeight);
         }
 
         protected override Size ArrangeOverride(Size finalSize)
         {
-            double columnWidth = Math.Max(MinColumnWidth, finalSize.Width / ColumnCount);
+            double columnWidth = Math.Max(MinColumnWidth, (finalSize.Width - ColumnSpacing * (ColumnCount - 1)) / ColumnCount);
 
             List<double> rowHeights = new();
             double runningY = 0.0;
@@ -46,18 +49,23 @@ namespace File.Manager.Controls.Panels
                 int col = i % ColumnCount;
 
                 if (row > 0 && col == 0)
-                    runningY += rowHeights[row - 1];
+                {
+                    runningY += rowHeights[row - 1] + RowSpacing;                    
+                }
 
                 if (rowHeights.Count < row + 1)
                     rowHeights.Add(0.0);
 
                 rowHeights[row] = Math.Max(rowHeights[row], InternalChildren[i].DesiredSize.Height);
 
-                InternalChildren[i].Arrange(new Rect(col * columnWidth, runningY, columnWidth, InternalChildren[i].DesiredSize.Height));
+                InternalChildren[i].Arrange(new Rect(col * (columnWidth + ColumnSpacing), runningY, columnWidth, InternalChildren[i].DesiredSize.Height));
             }
 
-            double resultWidth = columnWidth * ColumnCount;
-            double resultHeight = rowHeights.Any() ? rowHeights.Sum() : 0.0;
+            // Integer version of Ceiling()
+            int rows = (InternalChildren.Count + ColumnCount - 1) / ColumnCount;
+
+            double resultWidth = (columnWidth * ColumnCount + ColumnSpacing * (ColumnCount - 1));
+            double resultHeight = (rowHeights.Any() ? rowHeights.Sum() : 0.0) + (Math.Max(0, rows - 1)) * RowSpacing;
 
             return new Size(resultWidth, resultHeight);
         }
@@ -79,6 +87,34 @@ namespace File.Manager.Controls.Panels
             var value = (int)baseValue;
             return Math.Max(1, value);
         }
+
+        #endregion
+
+        #region ColumnSpacing dependency property
+
+        public double ColumnSpacing
+        {
+            get { return (double)GetValue(ColumnSpacingProperty); }
+            set { SetValue(ColumnSpacingProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for ColumnSpacing.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ColumnSpacingProperty =
+            DependencyProperty.Register("ColumnSpacing", typeof(double), typeof(ColumnsPanel), new PropertyMetadata(16.0));
+
+        #endregion
+
+        #region RowSpacing dependency property
+
+        public double RowSpacing
+        {
+            get { return (double)GetValue(RowSpacingProperty); }
+            set { SetValue(RowSpacingProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for RowSpacing.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty RowSpacingProperty =
+            DependencyProperty.Register("RowSpacing", typeof(double), typeof(ColumnsPanel), new PropertyMetadata(8.0));
 
         #endregion
 
