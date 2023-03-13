@@ -144,6 +144,8 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
                 var newItems = TryLoadItems(newAddress);
                 items = newItems;
                 address = newAddress;
+                OnAddressChanged();
+
                 return (true, null);
             }
             catch (Exception e)

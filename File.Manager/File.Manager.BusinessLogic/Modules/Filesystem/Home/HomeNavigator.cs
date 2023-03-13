@@ -89,6 +89,7 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Home
         public override void NavigateToRoot()
         {
             address = ROOT_ADDRESS;
+            OnAddressChanged();
             LoadItems();                   
         }
 

@@ -22,6 +22,11 @@ namespace File.Manager.API.Filesystem
 
         protected IFilesystemNavigatorHandler? Handler => handler;
 
+        protected virtual void OnAddressChanged()
+        {
+            AddressChanged?.Invoke(this, EventArgs.Empty);
+        }
+
         // Protected methods --------------------------------------------------
 
         protected FilesystemNavigator()
@@ -63,5 +68,7 @@ namespace File.Manager.API.Filesystem
         public abstract string Address { get; }
         
         public abstract IReadOnlyList<Item> Items { get; }
+
+        public event EventHandler AddressChanged;
     }
 }

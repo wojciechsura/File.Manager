@@ -94,15 +94,29 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
 
         private void ReplaceCurrentNavigator(FilesystemNavigator newNavigator, FocusedItemData data)
         {
-            navigator?.Dispose();
+            if (navigator != null)
+            {
+                navigator.AddressChanged -= HandleNavigatorAddressChanged;
+                navigator.Dispose();
+            }
 
             navigator = newNavigator;
 
-            navigator?.SetHandler(this);
+            if (navigator != null)
+            {
+                navigator.SetHandler(this);
+                navigator.AddressChanged += HandleNavigatorAddressChanged;
+            }            
 
             UpdateItems(data);
 
             OnPropertyChanged(nameof(Navigator));
+            OnPropertyChanged(nameof(Address));
+        }
+
+        private void HandleNavigatorAddressChanged(object sender, EventArgs e)
+        {
+            OnPropertyChanged(nameof(Address));
         }
 
         private void SetHomeNavigator(FocusedItemData data)
@@ -241,6 +255,8 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
 
         public FilesystemNavigator Navigator => navigator;
 
+        public string Address => Navigator?.Address ?? string.Empty;
+
         public IPaneAccess Access
         {
             get => access;
@@ -252,7 +268,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
                 access = value;
             }            
         }
-
+        
         public bool Active 
         {  
             get => active; 
