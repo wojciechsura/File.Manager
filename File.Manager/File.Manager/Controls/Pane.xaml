@@ -12,7 +12,7 @@
              d:DesignHeight="450" d:DesignWidth="800" PreviewKeyDown="HandlePanePreviewKeyDown" GotFocus="HandlePaneGotFocus">
     <DockPanel>
         <TextBox DockPanel.Dock="Top" Text="{Binding Navigator.Address, Mode=OneWay}"
-                 IsReadOnly="True" Padding="4" Margin="{StaticResource DialogItemsBottomMargin}"/>
+                 IsReadOnly="True" Padding="4" Margin="{StaticResource DialogItemsBottomMargin}" />
         <ScrollBar DockPanel.Dock="Right" Orientation="Vertical" Minimum="0" Maximum="{Binding ElementName=flList, Path=ScrollMaximum}"
                    SmallChange="{Binding ElementName=flList, Path=ScrollSmallChange}" LargeChange="{Binding ElementName=flList, Path=ScrollLargeChange}"
                    Value="{Binding ElementName=flList, Path=ScrollPosition, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ViewportSize="{Binding ElementName=flList, Path=ScrollViewportSize}"/>
