@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -55,7 +56,7 @@ namespace File.Manager.API.Filesystem.Models.Items.Listing
                     attributes[ModifiedKey] = (DateTime?)value;
                     break;
                 case AttributesKey:
-                    attributes[AttributesKey] = (string?)value;
+                    attributes[AttributesKey] = (FileAttributes?)value;
                     break;
                 default:
                     attributes[key] = value;
@@ -108,9 +109,9 @@ namespace File.Manager.API.Filesystem.Models.Items.Listing
             set => Set(ModifiedKey, value);
         }
 
-        public string? Attributes
+        public FileAttributes? Attributes
         {
-            get => TryGet<string?>(AttributesKey);
+            get => TryGet<FileAttributes?>(AttributesKey);
             set => Set(AttributesKey, value);
         }
 

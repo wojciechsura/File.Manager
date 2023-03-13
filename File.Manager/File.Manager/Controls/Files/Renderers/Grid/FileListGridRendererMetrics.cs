@@ -88,6 +88,7 @@ namespace File.Manager.Controls.Files.Renderers.Grid
                 int scrollMaximum,
                 int scrollSmallChange,
                 int scrollLargeChange,
+                int scrollViewportSize,
                 int itemsInView,
                 int itemHeight, 
                 int verticalMargin, 
@@ -104,6 +105,7 @@ namespace File.Manager.Controls.Files.Renderers.Grid
                 ScrollMaximum = scrollMaximum;
                 ScrollSmallChange = scrollSmallChange;
                 ScrollLargeChange = scrollLargeChange;
+                ScrollViewportSize = scrollViewportSize;
                 ItemsInView = itemsInView;
                 ItemHeight = itemHeight;
                 VerticalMargin = verticalMargin;
@@ -121,6 +123,7 @@ namespace File.Manager.Controls.Files.Renderers.Grid
             public int ScrollMaximum { get; }
             public int ScrollSmallChange { get; }
             public int ScrollLargeChange { get; }
+            public int ScrollViewportSize { get; }
             public int ItemsInView { get; }
             public int ItemHeight { get; }
             public int VerticalMargin { get; }
@@ -383,6 +386,7 @@ namespace File.Manager.Controls.Files.Renderers.Grid
             int scrollMaximum = itemTotalHeight - itemArea.Height - 1;
             int scrollSmallChange = itemHeight;
             int scrollLargeChange = itemArea.Height;
+            int scrollViewportSize = itemArea.Height;
 
             int itemsInView = (int)Math.Ceiling((double)host.Bounds.Height / itemHeight);
 
@@ -392,6 +396,7 @@ namespace File.Manager.Controls.Files.Renderers.Grid
                 scrollMaximum,
                 scrollSmallChange,
                 scrollLargeChange,
+                scrollViewportSize,
                 itemsInView,
                 itemHeight,
                 verticalMargin,

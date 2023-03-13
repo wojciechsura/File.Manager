@@ -282,6 +282,12 @@ namespace File.Manager.Controls.Files
             set => this.ScrollLargeChange = value;
         }
 
+        int IFileListRendererHost.ScrollViewportSize
+        {
+            get => this.ScrollViewportSize;
+            set => this.ScrollViewportSize = value;
+        }
+
         IInputElement IFileListRendererHost.InputElement => this;
 
         // Public methods -----------------------------------------------------
@@ -672,6 +678,20 @@ namespace File.Manager.Controls.Files
                     DependencyProperty.RegisterReadOnly("ScrollSmallChange", typeof(int), typeof(FileList), new PropertyMetadata(1));
 
         public static readonly DependencyProperty ScrollSmallChangeProperty = ScrollSmallChangePropertyKey.DependencyProperty;
+
+        #endregion
+
+        #region ScrollViewportSize dependency property
+
+        public int ScrollViewportSize
+        {
+            get { return (int)GetValue(ScrollViewportSizeProperty); }
+            set { SetValue(ScrollViewportSizeProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for ScrollViewportSize.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ScrollViewportSizeProperty =
+            DependencyProperty.Register("ScrollViewportSize", typeof(int), typeof(FileList), new PropertyMetadata(0));
 
         #endregion
 

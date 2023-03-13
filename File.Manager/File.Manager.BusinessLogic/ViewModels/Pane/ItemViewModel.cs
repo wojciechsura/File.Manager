@@ -3,6 +3,7 @@ using File.Manager.BusinessLogic.Models.Files;
 using File.Manager.BusinessLogic.ViewModels.Base;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -45,7 +46,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
         
         public DateTime? Modified => Item.Modified;
         
-        public string Attributes => Item.Attributes;
+        public FileAttributes? Attributes => Item.Attributes;
 
         public Item Item { get; }
 
@@ -56,6 +57,18 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
         }
 
         public bool IsSelectable => Item.IsSelectable;
+
+        public bool IsHidden
+        {
+            get
+            {
+                var attributesObject = Item[Item.AttributesKey];
+                if (attributesObject is FileAttributes fileAttributes)
+                    return fileAttributes.HasFlag(FileAttributes.Hidden);
+
+                return false;
+            }
+        }
 
         [System.Runtime.CompilerServices.IndexerName("ItemItems")]
         public object this[string key] => Item[key];

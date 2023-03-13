@@ -10,16 +10,11 @@
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance Type=vm:PaneViewModel}"
              d:DesignHeight="450" d:DesignWidth="800" PreviewKeyDown="HandlePanePreviewKeyDown" GotFocus="HandlePaneGotFocus">
-    <UserControl.Resources>
-        <DataTemplate x:Key="NameColumnTemplate" DataType="{x:Type vm:ItemViewModel}">
-            <DockPanel>
-                <Image DockPanel.Dock="Left" Margin="{StaticResource DialogItemsMargin}" Width="16" Height="16" Source="{Binding SmallIcon}" />
-                <TextBlock Margin="{StaticResource DialogItemsExceptLeftMargin}" Text="{Binding Name, Mode=OneWay}" />
-            </DockPanel>
-        </DataTemplate>
-    </UserControl.Resources>
     <DockPanel>
-        <c:FileList Grid.Column="0" x:Name="flList" SnapsToDevicePixels="True" FilesSource="{Binding ItemsView}"
+        <ScrollBar DockPanel.Dock="Right" Orientation="Vertical" Minimum="0" Maximum="{Binding ElementName=flList, Path=ScrollMaximum}"
+                   SmallChange="{Binding ElementName=flList, Path=ScrollSmallChange}" LargeChange="{Binding ElementName=flList, Path=ScrollLargeChange}"
+                   Value="{Binding ElementName=flList, Path=ScrollPosition, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ViewportSize="{Binding ElementName=flList, Path=ScrollViewportSize}"/>
+        <c:FileList x:Name="flList" SnapsToDevicePixels="True" FilesSource="{Binding ItemsView}"
                     IsActive="{Binding Active, Mode=TwoWay}" ExecuteCurrentItemCommand="{Binding ExecuteCurrentItemCommand}" />
     </DockPanel>
 </UserControl>

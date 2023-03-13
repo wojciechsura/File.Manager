@@ -16,6 +16,8 @@ namespace File.Manager.BusinessLogic.Models.Files
         long? Size { get; }
         bool IsSelected { get; set; }
         bool IsSelectable { get; }
+        bool IsHidden { get; }
+
         object this[string key] { get; }
     }
 }

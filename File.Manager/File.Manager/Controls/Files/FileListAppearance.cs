@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,8 +9,13 @@ using System.Windows.Media;
 
 namespace File.Manager.Controls.Files
 {
-    public class FileListAppearance : DependencyObject
+    public class FileListAppearance : DependencyObject, INotifyPropertyChanged
     {
+        // Private fields -----------------------------------------------------
+
+        private Brush hiddenItemForegroundBrush;
+        private Brush hiddenSelectedItemForegroundBrush;
+
         // Private methods ----------------------------------------------------
 
         private static void AppearancePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -52,6 +58,34 @@ namespace File.Manager.Controls.Files
         }
 
         // Public properties --------------------------------------------------
+
+        public Brush HiddenItemForegroundBrush
+        {
+            get
+            {
+                if (hiddenItemForegroundBrush == null)
+                {
+                    hiddenItemForegroundBrush = ItemForegroundBrush.Clone();
+                    hiddenItemForegroundBrush.Opacity = 0.5;
+                }
+
+                return hiddenItemForegroundBrush;
+            }
+        }
+
+        public Brush HiddenSelectedItemForegroundBrush
+        {
+            get
+            {
+                if (hiddenSelectedItemForegroundBrush == null)
+                {
+                    hiddenSelectedItemForegroundBrush = SelectedItemForegroundBrush.Clone();
+                    hiddenSelectedItemForegroundBrush.Opacity = 0.5;
+                }
+
+                return hiddenSelectedItemForegroundBrush;
+            }
+        }
 
         #region Background dependency property
 
@@ -161,7 +195,21 @@ namespace File.Manager.Controls.Files
 
         // Using a DependencyProperty as the backing store for ItemForegroundBrush.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ItemForegroundBrushProperty =
-            DependencyProperty.Register("ItemForegroundBrush", typeof(Brush), typeof(FileListAppearance), new PropertyMetadata(new SolidColorBrush(Color.FromArgb(0xff, 0x40, 0x40, 0x40)), AppearancePropertyChanged));
+            DependencyProperty.Register("ItemForegroundBrush", typeof(Brush), typeof(FileListAppearance), new PropertyMetadata(new SolidColorBrush(Color.FromArgb(0xff, 0x40, 0x40, 0x40)), ItemForegroundBrushPropertyChanged));
+
+        private static void ItemForegroundBrushPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is FileListAppearance fileListAppearance)
+            {
+                fileListAppearance.ItemForegroundBrushChanged();
+            }
+        }
+
+        private void ItemForegroundBrushChanged()
+        {
+            hiddenItemForegroundBrush = null;
+            AppearanceChanged(this, EventArgs.Empty);
+        }
 
         #endregion
 
@@ -175,7 +223,21 @@ namespace File.Manager.Controls.Files
 
         // Using a DependencyProperty as the backing store for SelectedItemForegroundBrush.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty SelectedItemForegroundBrushProperty =
-            DependencyProperty.Register("SelectedItemForegroundBrush", typeof(Brush), typeof(FileListAppearance), new PropertyMetadata(new SolidColorBrush(Color.FromArgb(0xff, 0xff, 0x40, 0x40)), AppearancePropertyChanged));
+            DependencyProperty.Register("SelectedItemForegroundBrush", typeof(Brush), typeof(FileListAppearance), new PropertyMetadata(new SolidColorBrush(Color.FromArgb(0xff, 0xff, 0x40, 0x40)), SelectedItemForegroundBrushPropertyChanged));
+
+        private static void SelectedItemForegroundBrushPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is FileListAppearance fileListAppearance)
+            {
+                fileListAppearance.SelectedItemForegroundBrushChanged();
+            }
+        }
+
+        private void SelectedItemForegroundBrushChanged()
+        {
+            hiddenSelectedItemForegroundBrush = null;
+            AppearanceChanged(this, EventArgs.Empty);
+        }
 
         #endregion
 
@@ -294,5 +356,6 @@ namespace File.Manager.Controls.Files
         // Events
 
         public event EventHandler AppearanceChanged;
+        public event PropertyChangedEventHandler PropertyChanged;
     }
 }

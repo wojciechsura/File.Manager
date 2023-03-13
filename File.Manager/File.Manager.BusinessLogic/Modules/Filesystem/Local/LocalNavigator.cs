@@ -112,7 +112,7 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
                         SizeDisplay = Resources.Modules.Filesystem.Local.Strings.SizeDisplay_Directory,
                         Created = folder.CreationTime,
                         Modified = folder.LastWriteTime,
-                        Attributes = folder.Attributes.ToString()
+                        Attributes = folder.Attributes
                     };
                     newItems.Add(folderItem);
                 }
@@ -125,7 +125,7 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
                         Size = file.Length,
                         Created = file.CreationTime,
                         Modified = file.LastWriteTime,
-                        Attributes = file.Attributes.ToString()
+                        Attributes = file.Attributes
                     };
                     newItems.Add(fileItem);
                 }                

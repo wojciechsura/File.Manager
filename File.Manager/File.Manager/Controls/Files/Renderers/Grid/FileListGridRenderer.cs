@@ -1,4 +1,5 @@
-﻿using File.Manager.BusinessLogic.Models.Files;
+﻿using File.Manager.API.Filesystem.Models.Items.Listing;
+using File.Manager.BusinessLogic.Models.Files;
 using File.Manager.Types;
 using Fluent;
 using System;
@@ -7,6 +8,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics.Metrics;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -132,7 +134,11 @@ namespace File.Manager.Controls.Files.Renderers.Grid
         {
             drawingContext.PushClip(new RectangleGeometry(itemRect.ToRegionRect()));
 
-            var brush = fileItem.IsSelected ? host.Appearance.SelectedItemForegroundBrush : host.Appearance.ItemForegroundBrush;
+            Brush brush;
+            if (fileItem.IsHidden)
+                brush = fileItem.IsSelected ? host.Appearance.HiddenSelectedItemForegroundBrush : host.Appearance.HiddenItemForegroundBrush;
+            else
+                brush = fileItem.IsSelected ? host.Appearance.SelectedItemForegroundBrush : host.Appearance.ItemForegroundBrush;
 
             try
             {
@@ -428,6 +434,7 @@ namespace File.Manager.Controls.Files.Renderers.Grid
             host.ScrollMaximum = metrics.Item.ScrollMaximum;
             host.ScrollSmallChange = metrics.Item.ScrollSmallChange;
             host.ScrollLargeChange = metrics.Item.ScrollLargeChange;
+            host.ScrollViewportSize = metrics.Item.ScrollViewportSize;
         }
 
         public override void Render(DrawingContext drawingContext)

@@ -45,6 +45,8 @@ namespace File.Manager.Controls.Files
         
         int ScrollLargeChange { get; set; }
 
+        int ScrollViewportSize { get; set; }
+
         IInputElement InputElement { get; }
     }
 }
