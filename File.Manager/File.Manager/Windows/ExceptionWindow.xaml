@@ -4,21 +4,28 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:res="clr-namespace:File.Manager.Resources.Windows.ExceptionWindow;assembly=File.Manager.Resources"
-        xmlns:cres="clr-namespace:File.Manager.Resources.Common;assembly=File.Manager.Resources"
+        xmlns:cres="clr-namespace:File.Manager.Resources.Common;assembly=File.Manager.Resources" 
+        xmlns:cd="clr-namespace:File.Manager.Controls.Dialogs"
         mc:Ignorable="d"
+        SizeToContent="Height"
         Width="500" Height="400" ResizeMode="CanResize"
         WindowStartupLocation="CenterOwner"
         FocusManager.FocusedElement="{Binding ElementName=okButton}">
-    <DockPanel>
-        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button x:Name="okButton" Command="{Binding OkCommand}" Style="{StaticResource DialogButton}" Content="{x:Static cres:Strings.Ok}" />
-        </StackPanel>
-        <GroupBox Header="{x:Static res:Strings.Header}">
-            <DockPanel>
-                <Label DockPanel.Dock="Top" Margin="4" Content="{x:Static res:Strings.ExceptionDetails}"></Label>
-                <TextBox Margin="4" HorizontalAlignment="Stretch" Text="{Binding ExceptionText, Mode=OneWay}" IsReadOnly="True"
+    <cd:DialogHost>
+        <cd:DialogHost.Content>
+            <cd:ModernGroupBox HeaderText="{x:Static res:Strings.Header}">
+                <DockPanel>
+                    <Label DockPanel.Dock="Top" Margin="4" Content="{x:Static res:Strings.ExceptionDetails}" />
+                    <TextBox Margin="4" HorizontalAlignment="Stretch" Text="{Binding ExceptionText, Mode=OneWay}" IsReadOnly="True"
                          FontFamily="Consolas" VerticalAlignment="Stretch"/>
-            </DockPanel>
-        </GroupBox>
-    </DockPanel>
+                </DockPanel>
+            </cd:ModernGroupBox>
+        </cd:DialogHost.Content>
+        <cd:DialogHost.Buttons>
+            <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button x:Name="okButton" Command="{Binding OkCommand}" Style="{StaticResource DialogButton}" 
+                        Content="{x:Static cres:Strings.Ok}" />
+            </StackPanel>
+        </cd:DialogHost.Buttons>
+    </cd:DialogHost>
 </Window>

@@ -42,8 +42,7 @@
                     </sc:EditorPanel>
                 </cd:ModernGroupBox>
 
-                <cd:ModernGroupBox HeaderText="{x:Static res:Strings.Groupbox_Configuration_Title}"
-                                   Margin="{StaticResource NextModernGroupBoxMargin}">
+                <cd:ModernGroupBox HeaderText="{x:Static res:Strings.Groupbox_Configuration_Title}">
                     <sc:EditorPanel>
                         <Label Style="{StaticResource PrimaryLabel}" Content="{x:Static res:Strings.Label_FileMask}" 
                        VerticalAlignment="Center" />

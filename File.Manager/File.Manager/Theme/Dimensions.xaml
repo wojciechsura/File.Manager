@@ -25,9 +25,7 @@
 
     <Thickness x:Key="EditorPanelSubItem" Left="16" />
 
-    <!-- Controls -->
-
-    <Thickness x:Key="NextModernGroupBoxMargin" Left="0" Right="0" Top="16" Bottom="0" />
+    <!-- Controls -->    
 
     <Thickness x:Key="DialogHostContentPadding">16</Thickness>
     <Thickness x:Key="DialogHostButtonsPadding">16</Thickness>

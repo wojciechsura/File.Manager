@@ -5,6 +5,10 @@
         <ResourceDictionary Source="Controls.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
+    <Style TargetType="ProgressBar" BasedOn="{StaticResource {x:Type ProgressBar}}">
+        <Setter Property="Height" Value="23" />
+    </Style>
+    
     <Style TargetType="Label" x:Key="PrimaryLabel">
         <Setter Property="Foreground">
             <Setter.Value>

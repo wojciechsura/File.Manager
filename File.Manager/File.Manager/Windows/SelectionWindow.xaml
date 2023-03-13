@@ -9,38 +9,43 @@
         xmlns:res="clr-namespace:File.Manager.Resources.Windows.Selection;assembly=File.Manager.Resources"
         xmlns:cres="clr-namespace:File.Manager.Resources.Common;assembly=File.Manager.Resources"
         xmlns:p="clr-namespace:File.Manager.Controls.Panels" 
-        xmlns:sc="clr-namespace:Spooksoft.Wpf.Controls.Panels;assembly=Spooksoft.Wpf.Controls"
+        xmlns:sc="clr-namespace:Spooksoft.Wpf.Controls.Panels;assembly=Spooksoft.Wpf.Controls" 
+        xmlns:cd="clr-namespace:File.Manager.Controls.Dialogs"
         d:DataContext="{d:DesignInstance Type=vm:SelectionWindowViewModel}"
         mc:Ignorable="d"
-        Title="{Binding Title}" SizeToContent="Height" Width="400"
-        WindowStartupLocation="CenterOwner"
+        Title="{Binding Title}" SizeToContent="Height" Width="500"
+        WindowStartupLocation="CenterOwner" ResizeMode="NoResize"
         FocusManager.FocusedElement="{Binding ElementName=tbMask}">
-    <StackPanel Orientation="Vertical">
-        <GroupBox Header="{Binding Title}" Margin="{StaticResource DialogItemsExceptTopMargin}">
-            <sc:EditorPanel>
-                <RadioButton Margin="{StaticResource DialogItemsMargin}" Content="{x:Static res:Strings.Label_Mask}" 
+    <cd:DialogHost>
+        <cd:DialogHost.Content>
+            <cd:ModernGroupBox HeaderText="{Binding Title}">
+                <sc:EditorPanel>
+                    <RadioButton Margin="{StaticResource DialogItemsMargin}" Content="{x:Static res:Strings.Label_Mask}" 
                              VerticalAlignment="Center"
                              IsChecked="{Binding SelectionMethod, Converter={StaticResource RadioToEnumConverter}, ConverterParameter={x:Static t:SelectionMethod.Mask}}"/>
-                <TextBox x:Name="tbMask" Margin="{StaticResource DialogItemsMargin}" 
+                    <TextBox x:Name="tbMask" Margin="{StaticResource DialogItemsMargin}" 
                              Text="{Binding Mask, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                              VerticalAlignment="Center" HorizontalAlignment="Stretch"
                          IsEnabled="{Binding SelectionMethod, Converter={StaticResource EqualsToParameterToBoolConverter}, ConverterParameter={x:Static t:SelectionMethod.Mask}}" />
 
-                <RadioButton Margin="{StaticResource DialogItemsExceptTopMargin}" Content="{x:Static res:Strings.Label_RegularExpression}" 
+                    <RadioButton Margin="{StaticResource DialogItemsExceptTopMargin}" Content="{x:Static res:Strings.Label_RegularExpression}" 
                              VerticalAlignment="Center"
                              IsChecked="{Binding SelectionMethod, Converter={StaticResource RadioToEnumConverter}, ConverterParameter={x:Static t:SelectionMethod.RegularExpression}}"/>
-                <TextBox Margin="{StaticResource DialogItemsExceptTopMargin}"
+                    <TextBox Margin="{StaticResource DialogItemsExceptTopMargin}"
                          Text="{Binding RegularExpression, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                          VerticalAlignment="Center" HorizontalAlignment="Stretch" 
                          IsEnabled="{Binding SelectionMethod, Converter={StaticResource EqualsToParameterToBoolConverter}, ConverterParameter={x:Static t:SelectionMethod.RegularExpression}}"/>
-            </sc:EditorPanel>
-        </GroupBox>
+                </sc:EditorPanel>
+            </cd:ModernGroupBox>
 
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Style="{StaticResource DialogButton}" Command="{Binding OkCommand}" Content="{x:Static cres:Strings.Ok}" 
+        </cd:DialogHost.Content>
+        <cd:DialogHost.Buttons>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Style="{StaticResource DialogButton}" Command="{Binding OkCommand}" Content="{x:Static cres:Strings.Ok}" 
                         IsDefault="True" />
-            <Button Style="{StaticResource DialogButton}" Command="{Binding CancelCommand}" Content="{x:Static cres:Strings.Cancel}" 
+                <Button Style="{StaticResource DialogButton}" Command="{Binding CancelCommand}" Content="{x:Static cres:Strings.Cancel}" 
                         IsCancel="True" />
-        </StackPanel>
-    </StackPanel>
+            </StackPanel>
+        </cd:DialogHost.Buttons>
+    </cd:DialogHost>
 </Window>

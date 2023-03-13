@@ -9,41 +9,48 @@
         xmlns:sc="clr-namespace:Spooksoft.Wpf.Controls.Panels;assembly=Spooksoft.Wpf.Controls" 
         xmlns:vm="clr-namespace:File.Manager.BusinessLogic.ViewModels.DeleteConfiguration;assembly=File.Manager.BusinessLogic" 
         xmlns:m="clr-namespace:File.Manager.Markup"
-        xmlns:t="clr-namespace:File.Manager.BusinessLogic.Types;assembly=File.Manager.BusinessLogic"
+        xmlns:t="clr-namespace:File.Manager.BusinessLogic.Types;assembly=File.Manager.BusinessLogic" 
+        xmlns:cd="clr-namespace:File.Manager.Controls.Dialogs"
         d:DataContext="{d:DesignInstance Type=vm:DeleteConfigurationWindowViewModel}"
         mc:Ignorable="d"
         Title="{x:Static res:Strings.Title}" SizeToContent="WidthAndHeight" MinWidth="500"
-        WindowStartupLocation="CenterOwner"
+        WindowStartupLocation="CenterOwner" ResizeMode="NoResize"
         FocusManager.FocusedElement="{Binding ElementName=tbFileFilter}">
-    <StackPanel Orientation="Vertical">
-        <GroupBox Header="{x:Static res:Strings.Groupbox_Summary_Title}" Margin="{StaticResource DialogItemsMargin}">
-            <sc:EditorPanel>
-                <Label Style="{StaticResource FirstHeaderLabel}" Content="{Binding SummaryHeader}" />
-                <Label Style="{StaticResource FirstValueLabel}" MaxWidth="450">
-                    <TextBlock Text="{Binding SummaryValue}" />
-                </Label>
+    <cd:DialogHost>
+        <cd:DialogHost.Content>
+            <StackPanel Orientation="Vertical">
+                <cd:ModernGroupBox HeaderText="{x:Static res:Strings.Groupbox_Summary_Title}">
+                    <sc:EditorPanel>
+                        <Label Style="{StaticResource HeaderLabel}" Content="{Binding SummaryHeader}" />
+                        <Label Style="{StaticResource ValueLabel}" MaxWidth="450">
+                            <TextBlock Text="{Binding SummaryValue}" />
+                        </Label>
 
-                <Label Style="{StaticResource NextHeaderLabel}" Content="{x:Static res:Strings.Label_Address}" />
-                <Label Style="{StaticResource NextValueLabel}" MaxWidth="450">
-                    <TextBlock Text="{Binding Address}" />
-                </Label>
-            </sc:EditorPanel>
-        </GroupBox>
+                        <Label Style="{StaticResource HeaderLabel}" Content="{x:Static res:Strings.Label_Address}" />
+                        <Label Style="{StaticResource ValueLabel}" MaxWidth="450">
+                            <TextBlock Text="{Binding Address}" />
+                        </Label>
+                    </sc:EditorPanel>
+                </cd:ModernGroupBox>
 
-        <GroupBox Header="{x:Static res:Strings.Groupbox_Configuration_Title}" Margin="{StaticResource DialogItemsExceptTopMargin}">
-            <sc:EditorPanel>
-                <Label Style="{StaticResource FirstHeaderLabel}" Content="{x:Static res:Strings.Label_FileMask}" />
-                <TextBox x:Name="tbFileFilter" Margin="{StaticResource DialogItemsMargin}" 
+                <cd:ModernGroupBox HeaderText="{x:Static res:Strings.Groupbox_Configuration_Title}">
+                    <sc:EditorPanel>
+                        <Label Style="{StaticResource HeaderLabel}" Content="{x:Static res:Strings.Label_FileMask}" 
+                               VerticalAlignment="Center"/>
+                        <TextBox x:Name="tbFileFilter" Margin="{StaticResource DialogItemsMargin}" 
                          Text="{Binding FileMask, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                          VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
-            </sc:EditorPanel>
-        </GroupBox>
-
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Style="{StaticResource DialogButton}" Command="{Binding OkCommand}" Content="{x:Static cres:Strings.Ok}" 
+                    </sc:EditorPanel>
+                </cd:ModernGroupBox>
+            </StackPanel>
+        </cd:DialogHost.Content>
+        <cd:DialogHost.Buttons>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Style="{StaticResource DialogButton}" Command="{Binding OkCommand}" Content="{x:Static cres:Strings.Ok}" 
                     IsDefault="True" />
-            <Button Style="{StaticResource DialogButton}" Command="{Binding CancelCommand}" Content="{x:Static cres:Strings.Cancel}" 
+                <Button Style="{StaticResource DialogButton}" Command="{Binding CancelCommand}" Content="{x:Static cres:Strings.Cancel}" 
                     IsCancel="True" />
-        </StackPanel>
-    </StackPanel>
+            </StackPanel>
+        </cd:DialogHost.Buttons>
+    </cd:DialogHost>
 </Window>

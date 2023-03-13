@@ -9,26 +9,31 @@
         xmlns:sc="clr-namespace:Spooksoft.Wpf.Controls.Panels;assembly=Spooksoft.Wpf.Controls" 
         xmlns:vm="clr-namespace:File.Manager.BusinessLogic.ViewModels.NewFolderConfiguration;assembly=File.Manager.BusinessLogic" 
         xmlns:m="clr-namespace:File.Manager.Markup"
-        xmlns:t="clr-namespace:File.Manager.BusinessLogic.Types;assembly=File.Manager.BusinessLogic"
+        xmlns:t="clr-namespace:File.Manager.BusinessLogic.Types;assembly=File.Manager.BusinessLogic" 
+        xmlns:cd="clr-namespace:File.Manager.Controls.Dialogs"
         d:DataContext="{d:DesignInstance Type=vm:NewFolderConfigurationWindowViewModel}"
         mc:Ignorable="d"
         Title="{x:Static res:Strings.Title}" SizeToContent="WidthAndHeight" MinWidth="500"
-        WindowStartupLocation="CenterOwner"
+        WindowStartupLocation="CenterOwner" ResizeMode="NoResize"
         FocusManager.FocusedElement="{Binding ElementName=tbName}">
-    <StackPanel Orientation="Vertical">
-        <GroupBox Header="{x:Static res:Strings.Groupbox_Configuration_Title}" Margin="{StaticResource DialogItemsMargin}">
-            <sc:EditorPanel>
-                <Label Style="{StaticResource FirstHeaderLabel}" Content="{x:Static res:Strings.Label_Name}" />
-                <TextBox x:Name="tbName" Margin="{StaticResource DialogItemsMargin}" HorizontalAlignment="Stretch"
-                         Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-            </sc:EditorPanel>
-        </GroupBox>
-       
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Style="{StaticResource DialogButton}" Command="{Binding OkCommand}" Content="{x:Static cres:Strings.Ok}" 
+    <cd:DialogHost>
+        <cd:DialogHost.Content>
+            <cd:ModernGroupBox HeaderText="{x:Static res:Strings.Groupbox_Configuration_Title}">
+                <sc:EditorPanel>
+                    <Label Style="{StaticResource FirstHeaderLabel}" Content="{x:Static res:Strings.Label_Name}" 
+                           VerticalAlignment="Center"/>
+                    <TextBox x:Name="tbName" Margin="{StaticResource DialogItemsMargin}" HorizontalAlignment="Stretch"
+                             VerticalAlignment="Center" Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                </sc:EditorPanel>
+            </cd:ModernGroupBox>
+        </cd:DialogHost.Content>
+        <cd:DialogHost.Buttons>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Style="{StaticResource DialogButton}" Command="{Binding OkCommand}" Content="{x:Static cres:Strings.Ok}" 
                     IsDefault="True" />
-            <Button Style="{StaticResource DialogButton}" Command="{Binding CancelCommand}" Content="{x:Static cres:Strings.Cancel}" 
+                <Button Style="{StaticResource DialogButton}" Command="{Binding CancelCommand}" Content="{x:Static cres:Strings.Cancel}" 
                     IsCancel="True" />
-        </StackPanel>
-    </StackPanel>
+            </StackPanel>
+        </cd:DialogHost.Buttons>
+    </cd:DialogHost>
 </Window>

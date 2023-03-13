@@ -12,10 +12,9 @@
         xmlns:pc="clr-namespace:System.Windows;assembly=PresentationCore" xmlns:cd="clr-namespace:File.Manager.Controls.Dialogs"
         d:DataContext="{d:DesignInstance Type=vm:CopyMoveProgressWindowViewModel}"
         mc:Ignorable="d"
-        Title="{Binding Operation.Title}" SizeToContent="Height" Width="600"
-        ResizeMode="NoResize"
+        Title="{Binding Operation.Title}" SizeToContent="Height" Width="600"        
         Loaded="HandleWindowLoaded" Closing="Window_Closing"
-        WindowStartupLocation="CenterOwner"
+        WindowStartupLocation="CenterOwner" ResizeMode="NoResize"
         FocusManager.FocusedElement="{Binding ElementName=bCancel}">
     <cd:DialogHost>
         <cd:DialogHost.Content>
@@ -59,7 +58,7 @@
                         </Label>
 
                         <ProgressBar Margin="{StaticResource DialogItemsHorizontalOnlyMargin}" Value="{Binding Operation.Progress}"
-                                 IsIndeterminate="{Binding Operation.ProgressIndeterminate}" Height="23"/>
+                                 IsIndeterminate="{Binding Operation.ProgressIndeterminate}" />
                     </DockPanel>
 
                     <DockPanel Margin="{StaticResource DialogItemsExceptTopMargin}" HorizontalAlignment="Stretch">
@@ -77,8 +76,7 @@
                             </TextBlock>
                         </Label>
 
-                        <ProgressBar Margin="{StaticResource DialogItemsHorizontalOnlyMargin}" Value="{Binding Operation.FileProgress}" 
-                                     Height="23"/>
+                        <ProgressBar Margin="{StaticResource DialogItemsHorizontalOnlyMargin}" Value="{Binding Operation.FileProgress}" />
                     </DockPanel>
 
                 </StackPanel>

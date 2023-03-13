@@ -17,21 +17,17 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type dc:ModernGroupBox}">
-                    <Grid Margin="{TemplateBinding Padding}">
+                    <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="1*" />
                         </Grid.RowDefinitions>
-                        <TextBlock
-                            x:Name="Header"
-                            Grid.Row="0"
-                            Margin="0"
-                            FontSize="18"
-                            FontWeight="DemiBold"
-                            Text="{TemplateBinding HeaderText}" />
-
-                        <ui:Card Grid.Row="1" Margin="0,8,0,16">
+                        
+                        <TextBlock x:Name="Header" Grid.Row="0" Margin="0" FontSize="18" FontWeight="DemiBold"
+                                   Text="{TemplateBinding HeaderText}" />
+                        
+                        <ui:Card Grid.Row="1" Margin="0,8,0,16" VerticalAlignment="Stretch" 
+                                 HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
                             <ContentPresenter Content="{TemplateBinding Content}" />
                         </ui:Card>
                     </Grid>
@@ -58,20 +54,34 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type dc:DialogHost}">
-                    <StackPanel Orientation="Vertical">
-                        <Border Padding="{StaticResource DialogHostContentPadding}">
-                            <Border.Background>
-                                <SolidColorBrush Color="{DynamicResource SystemFillColorSolidNeutralBackground}" />
-                            </Border.Background>
-                            <ContentPresenter Content="{TemplateBinding Content}" />
-                        </Border>
-                        <Border Padding="{StaticResource DialogHostButtonsPadding}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="1*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        
+                        <ui:DynamicScrollViewer Grid.Row="0" 
+                                                HorizontalScrollBarVisibility="Hidden" 
+                                                VerticalScrollBarVisibility="Auto"
+                                                HorizontalAlignment="Stretch" 
+                                                VerticalAlignment="Stretch">
+                            <Border Padding="{StaticResource DialogHostContentPadding}">
+                                <Border.Background>
+                                    <SolidColorBrush Color="{DynamicResource SystemFillColorSolidNeutralBackground}" />
+                                </Border.Background>
+
+                                <ContentPresenter Content="{TemplateBinding Content}" />
+                            </Border>
+                        </ui:DynamicScrollViewer>
+
+                        <Border Grid.Row="1" Padding="{StaticResource DialogHostButtonsPadding}">
                             <Border.Background>
                                 <SolidColorBrush Color="{DynamicResource ControlFillColorDefault}" />
                             </Border.Background>
+                            
                             <ContentPresenter Content="{TemplateBinding Buttons}" />
                         </Border>
-                    </StackPanel>
+                    </Grid>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
