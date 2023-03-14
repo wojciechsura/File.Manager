@@ -12,28 +12,19 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
 {
     internal class LocalModule : FilesystemModule
     {
-        public static readonly string ModuleUid = "LOCAL";
-
-        private readonly ImageSource computerSmallIcon;
         private readonly ImageSource computerLargeIcon;
-
-        private readonly ImageSource desktopSmallIcon;
+        private readonly ImageSource computerSmallIcon;
         private readonly ImageSource desktopLargeIcon;
-
+        private readonly ImageSource desktopSmallIcon;
+        private readonly ImageSource documentsLargeIcon;
         private readonly ImageSource documentsSmallIcon;
-        private readonly ImageSource documentsLargeIcon;    
-
+        public static readonly string ModuleUid = "LOCAL";
         public LocalModule(IModuleHost host)
             : base(host)
         {
             (computerSmallIcon, computerLargeIcon) = OSServices.GetMyComputerIcon();
             (desktopSmallIcon, desktopLargeIcon) = OSServices.GetDesktopIcon();
             (documentsSmallIcon, documentsLargeIcon) = OSServices.GetDocumentsIcon();
-        }
-
-        public override bool SupportsAddress(string address)
-        {
-            return LocalNavigator.SupportsAddress(address);
         }
 
         public override FilesystemNavigator CreateNavigator()
@@ -62,6 +53,10 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
                 new LocalNavigationData(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), 2));
         }
 
+        public override bool SupportsAddress(string address)
+        {
+            return LocalNavigator.SupportsAddress(address);
+        }
         public override string Uid => ModuleUid;
     }
 }

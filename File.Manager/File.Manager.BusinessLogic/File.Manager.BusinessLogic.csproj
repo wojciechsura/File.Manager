@@ -6,6 +6,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Autofac" Version="7.0.0" />
+    <PackageReference Include="SharpZipLib" Version="1.4.2" />
     <PackageReference Include="SmartFormat" Version="3.2.1" />
     <PackageReference Include="Spooksoft.VisualStateManager" Version="1.2.0" />
   </ItemGroup>
