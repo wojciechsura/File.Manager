@@ -15,7 +15,7 @@ namespace File.Manager.BusinessLogic.Services.Icons
 
         public (ImageSource smallIcon, ImageSource largeIcon) GetFolderIcon()
         {
-            folderImage ??= IconGenerator.GetFolderIcon();
+            folderImage ??= OSServices.GetFolderIcon();
             return folderImage.Value;
         }
 
@@ -25,7 +25,7 @@ namespace File.Manager.BusinessLogic.Services.Icons
             if (iconCache.TryGetValue(extension, out (ImageSource smallIcon, ImageSource largeIcon) icons))
                 return icons;
 
-            icons = IconGenerator.GetFileIcon(extension);
+            icons = OSServices.GetFileIcon(extension);
             iconCache.Add(extension, icons);
 
             return icons;

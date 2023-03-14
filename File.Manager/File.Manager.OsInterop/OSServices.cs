@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 
 namespace File.Manager.OsInterop
 {
-    public class IconGenerator
+    public class OSServices
     {
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
         private struct SHFILEINFO
@@ -379,11 +379,8 @@ namespace File.Manager.OsInterop
             return (smallIcon, largeIcon);
         }
 
-        public static (ImageSource smallIcon, ImageSource largeIcon) GetMyComputerIcon()
+        private static (ImageSource smallIcon, ImageSource largeIcon) GetKnownIcon(IntPtr pidList)
         {
-            IntPtr pidList;
-            SHGetKnownFolderIDList(KnownFolderId.ComputerFolder, 0, IntPtr.Zero, out pidList);
-
             SHFILEINFO shinfo = new SHFILEINFO();
             SHGetFileInfo(pidList, 0, ref shinfo, (uint)Marshal.SizeOf(shinfo), (uint)(SHGFI.SHGFI_PIDL | SHGFI.SHGFI_ICON | SHGFI.SHGFI_SMALLICON | SHGFI.SHGFI_USEFILEATTRIBUTES));
             Icon icon = Icon.FromHandle(shinfo.hIcon);
@@ -415,6 +412,27 @@ namespace File.Manager.OsInterop
             DestroyIcon(info.hIcon);
 
             return (smallIcon, largeIcon);
+        }
+
+        public static (ImageSource smallIcon, ImageSource largeIcon) GetMyComputerIcon()
+        {
+            IntPtr pidList;
+            SHGetKnownFolderIDList(KnownFolderId.ComputerFolder, 0, IntPtr.Zero, out pidList);
+            return GetKnownIcon(pidList);
+        }        
+
+        public static (ImageSource smallIcon, ImageSource largeIcon) GetDesktopIcon()
+        {
+            IntPtr pidList;
+            SHGetKnownFolderIDList(KnownFolderId.Desktop, 0, IntPtr.Zero, out pidList);
+            return GetKnownIcon(pidList);
+        }
+
+        public static (ImageSource smallIcon, ImageSource largeIcon) GetDocumentsIcon()
+        {
+            IntPtr pidList;
+            SHGetKnownFolderIDList(KnownFolderId.Documents, 0, IntPtr.Zero, out pidList);
+            return GetKnownIcon(pidList);
         }
     }
 }

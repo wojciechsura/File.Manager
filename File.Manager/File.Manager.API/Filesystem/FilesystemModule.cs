@@ -11,17 +11,17 @@ namespace File.Manager.API.Filesystem
     {
         protected readonly IModuleHost host;
 
-        public FilesystemModule(IModuleHost host)
+        protected FilesystemModule(IModuleHost host)
         {
             this.host = host;
         }
 
-        public abstract bool SupportsAddress(string address);
         public abstract FilesystemNavigator CreateNavigator();
 
-        public abstract ImageSource SmallIcon { get; }
-        public abstract ImageSource LargeIcon { get; }
-        public abstract string DisplayName { get; }
+        public abstract IEnumerable<RootModuleEntry> GetRootEntries();
+
+        public abstract bool SupportsAddress(string address);
+
         public abstract string Uid { get; }
     }
 }

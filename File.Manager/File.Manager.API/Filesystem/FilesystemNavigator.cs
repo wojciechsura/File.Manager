@@ -36,7 +36,7 @@ namespace File.Manager.API.Filesystem
 
         // Public methods -----------------------------------------------------
 
-        public abstract void NavigateToRoot();
+        public abstract void NavigateFromEntry(object data);
 
         public abstract void NavigateToAddress(string address);
 
@@ -68,6 +68,7 @@ namespace File.Manager.API.Filesystem
         public abstract string Address { get; }
         
         public abstract IReadOnlyList<Item> Items { get; }
+
 
         public event EventHandler AddressChanged;
     }

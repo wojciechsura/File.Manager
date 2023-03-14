@@ -23,9 +23,10 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
 {
     public class LocalNavigator : FilesystemNavigator
     {
-        // Private constants --------------------------------------------------
+        // Constants ----------------------------------------------------------
 
-        private const string ROOT_ADDRESS = @"\\Local\";
+        public const string ROOT_ADDRESS = @"\\Local\";
+
         private readonly Regex driveRootAddress = new(@"^[a-zA-Z]:\\*$");
 
         // Private types ------------------------------------------------------
@@ -67,6 +68,7 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
 
         private List<Item> items;
         private string address;
+        private int? rootEntryId;
 
         // Private methods ----------------------------------------------------
 
@@ -88,7 +90,7 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
                 foreach (var drive in drives)
                 {
                     string driveAddress = drive.RootDirectory.FullName;
-                    (ImageSource smallIcon, ImageSource largeIcon) = IconGenerator.GetFileIcon(driveAddress);
+                    (ImageSource smallIcon, ImageSource largeIcon) = OSServices.GetFileIcon(driveAddress);
                     var driveItem = new LocalDriveItem(driveAddress, driveAddress)
                     {
                         SmallIcon = smallIcon,
@@ -178,7 +180,9 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
 
         public LocalNavigator()
         {
-            
+            rootEntryId = null;
+            address = null;
+            items = null;
         }
         
         public override void Dispose()
@@ -215,7 +219,7 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
             else if (item is UpFolderItem)
             {
                 if (address == ROOT_ADDRESS)
-                    Handler?.RequestReturnHome(new HomeFocusedItemData(LocalModule.ModuleUid));
+                    Handler?.RequestReturnHome(new HomeFocusedItemData(LocalModule.ModuleUid, rootEntryId));
                 else if (driveRootAddress.IsMatch(address))
                 {
                     var data = new LocalFocusedItemData(address);
@@ -237,9 +241,12 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
             }
         }
 
-        public override void NavigateToRoot()
+        public override void NavigateFromEntry(object data)
         {
-            TryNavigateToAddress(ROOT_ADDRESS);
+            var localNavigationData = (LocalNavigationData)data;
+
+            rootEntryId = localNavigationData.RootEntryId;
+            TryNavigateToAddress(localNavigationData.Address);
         }
 
         public override void NavigateToAddress(string address)
@@ -294,6 +301,11 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
                 throw new InvalidOperationException("Cannot create operator for the root folder");
             
             return new LocalOperator(address);
+        }
+
+        public static bool SupportsAddress(string address)
+        {
+            return (address == ROOT_ADDRESS) || System.IO.Directory.Exists(address);
         }
 
         // Public properties --------------------------------------------------

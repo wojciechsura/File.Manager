@@ -14,19 +14,26 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
     {
         public static readonly string ModuleUid = "LOCAL";
 
-        private readonly ImageSource smallIcon;
-        private readonly ImageSource largeIcon;
+        private readonly ImageSource computerSmallIcon;
+        private readonly ImageSource computerLargeIcon;
+
+        private readonly ImageSource desktopSmallIcon;
+        private readonly ImageSource desktopLargeIcon;
+
+        private readonly ImageSource documentsSmallIcon;
+        private readonly ImageSource documentsLargeIcon;    
 
         public LocalModule(IModuleHost host)
             : base(host)
         {
-            (smallIcon, largeIcon) = IconGenerator.GetMyComputerIcon();
+            (computerSmallIcon, computerLargeIcon) = OSServices.GetMyComputerIcon();
+            (desktopSmallIcon, desktopLargeIcon) = OSServices.GetDesktopIcon();
+            (documentsSmallIcon, documentsLargeIcon) = OSServices.GetDocumentsIcon();
         }
 
         public override bool SupportsAddress(string address)
         {
-            // TODO
-            throw new NotImplementedException();
+            return LocalNavigator.SupportsAddress(address);
         }
 
         public override FilesystemNavigator CreateNavigator()
@@ -34,9 +41,27 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
             return new LocalNavigator();
         }
 
-        public override ImageSource SmallIcon => smallIcon;
-        public override ImageSource LargeIcon => largeIcon;
-        public override string DisplayName => Resources.Modules.Filesystem.Local.Strings.DisplayName;
+        public override IEnumerable<RootModuleEntry> GetRootEntries()
+        {
+            yield return new RootModuleEntry(0,
+                Resources.Modules.Filesystem.Local.Strings.ComputerDisplayName,
+                computerSmallIcon,
+                computerLargeIcon,
+                new LocalNavigationData(LocalNavigator.ROOT_ADDRESS, 0));
+
+            yield return new RootModuleEntry(1,
+                Resources.Modules.Filesystem.Local.Strings.DesktopDisplayName,
+                desktopSmallIcon,
+                desktopLargeIcon,
+                new LocalNavigationData(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), 1));
+
+            yield return new RootModuleEntry(2,
+                Resources.Modules.Filesystem.Local.Strings.DocumentsDisplayName,
+                documentsSmallIcon,
+                documentsLargeIcon,
+                new LocalNavigationData(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), 2));
+        }
+
         public override string Uid => ModuleUid;
     }
 }

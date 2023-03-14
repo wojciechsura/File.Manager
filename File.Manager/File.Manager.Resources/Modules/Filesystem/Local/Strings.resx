@@ -117,8 +117,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="DisplayName" xml:space="preserve">
+  <data name="ComputerDisplayName" xml:space="preserve">
     <value>Computer</value>
+  </data>
+  <data name="DesktopDisplayName" xml:space="preserve">
+    <value>Desktop</value>
+  </data>
+  <data name="DocumentsDisplayName" xml:space="preserve">
+    <value>Documents</value>
   </data>
   <data name="Error_CannotOpenFile" xml:space="preserve">
     <value>Cannot open file {0}: {1}</value>

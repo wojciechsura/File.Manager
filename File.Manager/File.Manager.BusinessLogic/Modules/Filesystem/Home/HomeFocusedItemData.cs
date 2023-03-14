@@ -10,11 +10,16 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Home
 {
     class HomeFocusedItemData : FocusedItemData
     {
-        public HomeFocusedItemData(string moduleUid)
+        public HomeFocusedItemData(string? moduleUid, int? rootEntryId)
         {
             ModuleUid = moduleUid;
+            RootEntryId = rootEntryId;
         }
 
-        public string ModuleUid { get; }
+        /// <summary>UID of the module, which requests returning to the root location</summary>
+        public string? ModuleUid { get; }
+        
+        /// <summary>Id of module's RootModuleEntry item, which should get focused</summary>
+        public int? RootEntryId { get; }
     }
 }

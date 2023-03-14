@@ -24,15 +24,20 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Home
 
         private class ModuleFolderItem : FolderItem
         {
-            public ModuleFolderItem(FilesystemModule module)
-                : base(module.DisplayName, false)
-            {                
-                SmallIcon = module.SmallIcon;
-                LargeIcon = module.LargeIcon;
+            public ModuleFolderItem(FilesystemModule module, RootModuleEntry rootEntry)
+                : base(rootEntry.DisplayName, false)
+            {
                 Module = module;
+
+                SmallIcon = rootEntry.SmallIcon;
+                LargeIcon = rootEntry.LargeIcon;
+                Data = rootEntry.Data;
+                Id = rootEntry.Id;
             }
 
             public FilesystemModule Module { get; }
+            public object Data { get; }
+            public int Id { get; }
         }
 
         private void LoadItems()
@@ -43,8 +48,19 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Home
 
                 foreach (var module in moduleService.FilesystemModules)
                 {
-                    var folder = new ModuleFolderItem(module);
-                    items.Add(folder);
+                    var rootEntries = module.GetRootEntries().ToList();
+
+                    if (rootEntries
+                        .Select(re => re.Id)
+                        .Distinct()
+                        .Count() != rootEntries.Count)
+                        throw new InvalidOperationException("Root entries must have unique IDs per module!");
+
+                    foreach (var entry in rootEntries)
+                    {
+                        var folder = new ModuleFolderItem(module, entry);
+                        items.Add(folder);
+                    }
                 }
             }
             else 
@@ -71,7 +87,7 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Home
                 try
                 {
                     navigator = moduleFolderItem.Module.CreateNavigator();
-                    navigator.NavigateToRoot();
+                    navigator.NavigateFromEntry(moduleFolderItem.Data);
                     Handler?.RequestReplaceNavigator(navigator, null);
                 }
                 catch
@@ -86,11 +102,16 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Home
             }
         }
 
-        public override void NavigateToRoot()
+        public void NavigateToRoot()
         {
             address = ROOT_ADDRESS;
             OnAddressChanged();
             LoadItems();                   
+        }
+
+        public override void NavigateFromEntry(object data)
+        {
+            throw new InvalidOperationException("HomeNavigator is a root navigator and cannot navigate from entry.");
         }
 
         public override void NavigateToAddress(string address)
@@ -105,9 +126,8 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Home
 
         public override Item ResolveFocusedItem(FocusedItemData data)
         {
-            var homeData = data as HomeFocusedItemData;
-            if (homeData != null)
-                return items.FirstOrDefault(i => i.Module.Uid == homeData.ModuleUid);
+            if (data is HomeFocusedItemData homeData && homeData.ModuleUid != null && homeData.RootEntryId != null)
+                return items.FirstOrDefault(i => i.Module.Uid == homeData.ModuleUid && i.Id == homeData.RootEntryId);
 
             return null;
         }
