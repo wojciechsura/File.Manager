@@ -102,7 +102,10 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Zip
         private ZipFolderItem BuildCache(ZipFile zipFile)
         {
             var root = new ZipFolderItem(null, null);
-            var locationCache = new Dictionary<string, ZipFolderItem>();
+            var locationCache = new Dictionary<string, ZipFolderItem>()
+            {
+                { string.Empty, root }
+            };
 
             for (int i = 0; i < zipFile.Count; i++)
             {
