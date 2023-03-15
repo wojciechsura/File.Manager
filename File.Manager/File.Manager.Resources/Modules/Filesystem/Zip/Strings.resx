@@ -117,7 +117,16 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Error_DamagedZipFile" xml:space="preserve">
+    <value>Zip file is damaged!</value>
+  </data>
   <data name="Error_FailedToOpenZipFile" xml:space="preserve">
     <value>Failed to open zip file!</value>
+  </data>
+  <data name="SizeDisplay_Directory" xml:space="preserve">
+    <value>[SUB-DIR]</value>
+  </data>
+  <data name="SizeDisplay_UpDirectory" xml:space="preserve">
+    <value>[UP-DIR]</value>
   </data>
 </root>

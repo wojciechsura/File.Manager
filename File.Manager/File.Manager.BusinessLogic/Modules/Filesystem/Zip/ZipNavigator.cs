@@ -2,6 +2,7 @@
 using File.Manager.API.Filesystem;
 using File.Manager.API.Filesystem.Models.Focus;
 using File.Manager.API.Filesystem.Models.Items.Listing;
+using File.Manager.API.Tools;
 using File.Manager.API.Types;
 using File.Manager.Resources.Modules.Filesystem.Zip;
 using ICSharpCode.SharpZipLib.Zip;
@@ -10,6 +11,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -99,6 +101,20 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Zip
             return (match.Groups[1].Value, match.Groups[2].Value);
         }
 
+        private (string location, string filename) GetZipEntryLocation(string name)
+        {
+            if (name.EndsWith('/'))
+                name = name[..^1];
+
+            int lastSlash = name.LastIndexOf('/');
+
+            return lastSlash switch
+            {
+                -1 => (string.Empty, name),
+                _ => (name[0..lastSlash], name[(lastSlash + 1)..])
+            };
+        }
+
         private ZipFolderItem BuildCache(ZipFile zipFile)
         {
             var root = new ZipFolderItem(null, null);
@@ -107,70 +123,84 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Zip
                 { string.Empty, root }
             };
 
-            for (int i = 0; i < zipFile.Count; i++)
+            ZipFolderItem EnsureLocation(string location)
             {
-                var zipEntry = zipFile[i];
+                if (locationCache.TryGetValue(location, out ZipFolderItem result))
+                    return result;
 
-                System.Diagnostics.Debug.WriteLine($"Processing {zipEntry.Name}...");
-
-                string zipEntryName = zipEntry.Name.EndsWith('/') ? zipEntry.Name[..^1] : zipEntry.Name;
-
-                int lastSlash = zipEntryName.LastIndexOf('/');
-
-                string zipEntryFilename, zipEntryLocation;
-                if (lastSlash == -1)
+                var parts = location.Split('/');
+                var current = root;
+                foreach (var part in parts)
                 {
-                    zipEntryFilename = zipEntryName;
-                    zipEntryLocation = string.Empty;
-                }
-                else
-                {
-                    zipEntryFilename = zipEntryName[(lastSlash + 1)..];
-                    zipEntryLocation = zipEntryName[0..lastSlash];
-                }
-
-                if (!locationCache.TryGetValue(zipEntryLocation.ToLower(), out ZipFolderItem current))
-                {
-                    var pathParts = zipEntryLocation.Split('/');
-                    current = root;
-
-                    for (int j = 0; j < pathParts.Length; j++)
+                    var next = current.Items.FirstOrDefault(item => item.Name == part);
+                    if (next != null)
                     {
-                        var item = current.Items.FirstOrDefault(it => it.Name.ToLower() == pathParts[j].ToLower());
-
-                        if (item != null)
+                        if (next is ZipFolderItem zipFolderItem)
                         {
-                            if (item is ZipFolderItem zipFolderItem)
-                            {
-                                current = zipFolderItem;
-                            }
-                            else
-                                throw new InvalidOperationException("Cannot ensure path - there is a file, which conflicts with folder name!");
+                            current = zipFolderItem;
+                            continue;
+                        }
+                        else if (next is ZipFileItem)
+                        {
+                            throw new NavigationException(Strings.Error_DamagedZipFile);
                         }
                         else
-                        {
-                            // TODO fill additional fields if possible
-                            var zipFolderItem = new ZipFolderItem(current, pathParts[j]);
-                            current.Items.Add(zipFolderItem);
-
-                            current = zipFolderItem;
-                        }
+                            throw new InvalidOperationException("Invalid item!");
                     }
+
+                    // This generally shouldn't happen if all folders are
+                    // specified in the zip file as separate entries. If
+                    // we need to create folder this way, we will lose
+                    // chance to extract metadata about it.
+                    var nextFolder = new ZipFolderItem(current, part);
+                    nextFolder.SizeDisplay = Strings.SizeDisplay_Directory;
+                    current.Items.Add(nextFolder);
+
+                    current = nextFolder;
                 }
 
-                // We now should have proper list to add new item to.
-                if (zipEntry.IsFile)
-                {
-                    var zipFileItem = new ZipFileItem(current, zipEntryFilename);
-                    zipFileItem.Size = zipEntry.Size;
-                    zipFileItem.Created = zipEntry.DateTime;
-                    current.Items.Add(zipFileItem);
-                }
-                else
-                {
-                    var zipFolderItem = new ZipFolderItem(current, zipEntryFilename);
-                    current.Items.Add(zipFolderItem);
-                }
+                locationCache[location] = current;
+
+                return current;
+            }
+
+            foreach (var folder in zipFile
+                .Cast<ZipEntry>()
+                .Where(ze => !ze.IsFile)
+                .OrderBy(ze => ze.Name))
+            {
+                // Safety measure
+                if (folder.Name.Contains(".."))
+                    continue;
+
+                (string location, string name) = GetZipEntryLocation(folder.Name);
+
+                var parentFolder = EnsureLocation(location);
+
+                var item = new ZipFolderItem(parentFolder, name);
+                item.Modified = folder.DateTime;
+                item.SizeDisplay = Strings.SizeDisplay_Directory;
+                parentFolder.Items.Add(item);
+            }
+
+            foreach (var file in zipFile
+                .Cast<ZipEntry>()
+                .Where(ze => ze.IsFile)
+                .OrderBy(ze => ze.Name))
+            {
+                // Safety measure
+                if (file.Name.Contains(".."))
+                    continue;
+
+                (string location, string name) = GetZipEntryLocation(file.Name);
+
+                var parentFolder = EnsureLocation(location);
+
+                var item = new ZipFileItem(parentFolder, name);
+                item.Modified = file.DateTime;
+                item.Size = file.Size;
+                item.SizeDisplay = SizeTools.BytesToHumanReadable(file.Size);
+                parentFolder.Items.Add(item);
             }
 
             return root;

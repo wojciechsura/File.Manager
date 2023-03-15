@@ -152,6 +152,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
         void IFilesystemNavigatorHandler.RequestNavigateToAddress(string address, FocusedItemData? focusedItem)
         {
             int i = 0;
+
             while (i < moduleService.FilesystemModules.Count &&
                 !moduleService.FilesystemModules[i].SupportsAddress(address))
                 i++;

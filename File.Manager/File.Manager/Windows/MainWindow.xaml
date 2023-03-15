@@ -79,8 +79,10 @@
                 <ColumnDefinition Width="1*" />
             </Grid.ColumnDefinitions>
 
-            <c:Pane x:Name="pLeft" Grid.Column="0" DataContext="{Binding LeftPane}" Margin="{StaticResource DialogItemsMargin}" GotFocus="paneGotFocus"/>
-            <c:Pane x:Name="pRight" Grid.Column="1" DataContext="{Binding RightPane}" Margin="{StaticResource DialogItemsMargin}" GotFocus="paneGotFocus"/>
+            <c:Pane x:Name="pLeft" Grid.Column="0" DataContext="{Binding LeftPane}" Margin="{StaticResource DialogItemsMargin}" GotFocus="paneGotFocus"
+                    SnapsToDevicePixels="True" UseLayoutRounding="True" />
+            <c:Pane x:Name="pRight" Grid.Column="1" DataContext="{Binding RightPane}" Margin="{StaticResource DialogItemsMargin}" GotFocus="paneGotFocus"
+                    SnapsToDevicePixels="True" UseLayoutRounding="True" />
         </Grid>
         
     </DockPanel>

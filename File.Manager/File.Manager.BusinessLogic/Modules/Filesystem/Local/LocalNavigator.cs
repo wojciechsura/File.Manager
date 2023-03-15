@@ -27,7 +27,8 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
 
         public const string ROOT_ADDRESS = @"\\Local\";
 
-        private readonly Regex driveRootAddress = new(@"^[a-zA-Z]:\\*$");
+        private static readonly Regex driveRootAddress = new(@"^[a-zA-Z]:\\*$");
+        private static readonly Regex localAddressRegex = new(@"^[a-zA-Z]:\\.*$");
 
         // Private types ------------------------------------------------------
 
@@ -89,7 +90,7 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
                 }
             };
 
-            if (address == ROOT_ADDRESS)
+            if (address.ToLowerInvariant() == ROOT_ADDRESS.ToLowerInvariant())
             {
                 // Drives
 
@@ -247,7 +248,7 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
             }
             else if (item is UpFolderItem)
             {
-                if (address == ROOT_ADDRESS)
+                if (address.ToLowerInvariant() == ROOT_ADDRESS.ToLowerInvariant())
                     Handler?.RequestReturnHome(new HomeFocusedItemData(LocalModule.ModuleUid, rootEntryId));
                 else if (driveRootAddress.IsMatch(address))
                 {
@@ -297,7 +298,7 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
 
         public override LocationCapabilities GetLocationCapabilities()
         {
-            if (address == ROOT_ADDRESS)
+            if (address.ToLowerInvariant() == ROOT_ADDRESS.ToLowerInvariant())
             {
                 return (LocationCapabilities)0;
             }
@@ -313,7 +314,7 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
 
         public override IFilesystemOperator CreateOperatorForCurrentLocation()
         {
-            if (address == ROOT_ADDRESS)
+            if (address.ToLowerInvariant() == ROOT_ADDRESS.ToLowerInvariant())
                 throw new InvalidOperationException("Cannot create operator for the root folder");
             
             return new LocalOperator(address);
@@ -321,7 +322,13 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
 
         public static bool SupportsAddress(string address)
         {
-            return (address == ROOT_ADDRESS) || System.IO.Directory.Exists(address);
+            if (address.ToLowerInvariant() == ROOT_ADDRESS.ToLowerInvariant())
+                return true;
+
+            if (localAddressRegex.IsMatch(address))
+                return true;
+
+            return false;            
         }
 
         // Public properties --------------------------------------------------

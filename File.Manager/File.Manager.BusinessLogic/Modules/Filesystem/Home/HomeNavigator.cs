@@ -42,7 +42,7 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Home
 
         private void LoadItems()
         {
-            if (address == ROOT_ADDRESS)
+            if (address.ToLowerInvariant() == ROOT_ADDRESS.ToLowerInvariant())
             {
                 items.Clear();
 
@@ -116,7 +116,7 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Home
         public override Item ResolveFocusedItem(FocusedItemData data)
         {
             if (data is HomeFocusedItemData homeData && homeData.ModuleUid != null && homeData.RootEntryId != null)
-                return items.FirstOrDefault(i => i.Module.Uid == homeData.ModuleUid && i.Id == homeData.RootEntryId);
+                return items.FirstOrDefault(i => i.Module.Uid.ToLowerInvariant() == homeData.ModuleUid.ToLowerInvariant() && i.Id == homeData.RootEntryId);
 
             return null;
         }

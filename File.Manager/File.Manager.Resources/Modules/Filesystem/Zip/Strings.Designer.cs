@@ -61,11 +61,38 @@ namespace File.Manager.Resources.Modules.Filesystem.Zip {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Zip file is damaged!.
+        /// </summary>
+        public static string Error_DamagedZipFile {
+            get {
+                return ResourceManager.GetString("Error_DamagedZipFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Failed to open zip file!.
         /// </summary>
         public static string Error_FailedToOpenZipFile {
             get {
                 return ResourceManager.GetString("Error_FailedToOpenZipFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu [SUB-DIR].
+        /// </summary>
+        public static string SizeDisplay_Directory {
+            get {
+                return ResourceManager.GetString("SizeDisplay_Directory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu [UP-DIR].
+        /// </summary>
+        public static string SizeDisplay_UpDirectory {
+            get {
+                return ResourceManager.GetString("SizeDisplay_UpDirectory", resourceCulture);
             }
         }
     }
