@@ -31,14 +31,10 @@ namespace File.Manager.API.Filesystem
 
         protected FilesystemNavigator()
         {
-            
+
         }
 
         // Public methods -----------------------------------------------------
-
-        public abstract void NavigateFromEntry(object data);
-
-        public abstract void NavigateToAddress(string address);
 
         public abstract void Execute(Item item);
 

@@ -16,7 +16,9 @@ namespace File.Manager.API.Filesystem
             this.host = host;
         }
 
-        public abstract FilesystemNavigator CreateNavigator();
+        public abstract FilesystemNavigator CreateNavigator(string address);
+
+        public abstract FilesystemNavigator CreateNavigator(RootModuleEntryData data);
 
         public abstract IEnumerable<RootModuleEntry> GetRootEntries();
 

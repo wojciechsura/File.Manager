@@ -5,7 +5,7 @@ namespace File.Manager.API.Filesystem
     public interface IFilesystemNavigatorHandler
     {
         void NotifyChanged(FocusedItemData? focusedItem);
-        void RequestNavigateToAddress(string address);
+        void RequestNavigateToAddress(string address, FocusedItemData? focusedItem);
         void RequestReplaceNavigator(FilesystemNavigator newNavigator, FocusedItemData? focusedItem);
         void RequestReturnHome(FocusedItemData? focusedItem);
     }

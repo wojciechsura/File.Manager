@@ -36,7 +36,7 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Home
             }
 
             public FilesystemModule Module { get; }
-            public object Data { get; }
+            public RootModuleEntryData Data { get; }
             public int Id { get; }
         }
 
@@ -86,8 +86,7 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Home
                 FilesystemNavigator navigator = null;
                 try
                 {
-                    navigator = moduleFolderItem.Module.CreateNavigator();
-                    navigator.NavigateFromEntry(moduleFolderItem.Data);
+                    navigator = moduleFolderItem.Module.CreateNavigator(moduleFolderItem.Data);
                     Handler?.RequestReplaceNavigator(navigator, null);
                 }
                 catch
@@ -107,16 +106,6 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Home
             address = ROOT_ADDRESS;
             OnAddressChanged();
             LoadItems();                   
-        }
-
-        public override void NavigateFromEntry(object data)
-        {
-            throw new InvalidOperationException("HomeNavigator is a root navigator and cannot navigate from entry.");
-        }
-
-        public override void NavigateToAddress(string address)
-        {
-            throw new InvalidOperationException("HomeNavigator does not support navigating to address!");
         }
 
         public override void Refresh()

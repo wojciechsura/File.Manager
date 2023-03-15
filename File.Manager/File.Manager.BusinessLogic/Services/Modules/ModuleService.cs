@@ -1,6 +1,7 @@
 ﻿using File.Manager.API;
 using File.Manager.API.Filesystem;
 using File.Manager.BusinessLogic.Modules.Filesystem.Local;
+using File.Manager.BusinessLogic.Modules.Filesystem.Zip;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,8 @@ namespace File.Manager.BusinessLogic.Services.Modules
         {
             filesystemModules = new List<FilesystemModule>
             {
-                new LocalModule(moduleHost)
+                new LocalModule(moduleHost),
+                new ZipModule(moduleHost)
             };
 
             this.moduleHost = moduleHost;

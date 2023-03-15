@@ -14,6 +14,6 @@ namespace File.Manager.API.Filesystem.Models.Focus
     /// </summary>
     public abstract class FocusedItemData
     {
-
+        
     }
 }

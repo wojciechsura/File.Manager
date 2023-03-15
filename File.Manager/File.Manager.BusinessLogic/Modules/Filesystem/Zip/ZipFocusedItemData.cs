@@ -9,5 +9,11 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Zip
 {
     public class ZipFocusedItemData : FocusedItemData
     {
+        public ZipFocusedItemData(string name)
+        {
+            Filename = name;
+        }
+
+        public string Filename { get; }
     }
 }

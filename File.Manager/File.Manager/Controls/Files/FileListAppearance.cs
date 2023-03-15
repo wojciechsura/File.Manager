@@ -9,7 +9,7 @@ using System.Windows.Media;
 
 namespace File.Manager.Controls.Files
 {
-    public class FileListAppearance : DependencyObject, INotifyPropertyChanged
+    public class FileListAppearance : DependencyObject
     {
         // Private fields -----------------------------------------------------
 
@@ -356,6 +356,5 @@ namespace File.Manager.Controls.Files
         // Events
 
         public event EventHandler AppearanceChanged;
-        public event PropertyChangedEventHandler PropertyChanged;
     }
 }

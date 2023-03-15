@@ -149,7 +149,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
             UpdateItems(focusedItem);
         }
 
-        void IFilesystemNavigatorHandler.RequestNavigateToAddress(string address)
+        void IFilesystemNavigatorHandler.RequestNavigateToAddress(string address, FocusedItemData? focusedItem)
         {
             int i = 0;
             while (i < moduleService.FilesystemModules.Count &&
@@ -160,12 +160,11 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
             {
                 var module = moduleService.FilesystemModules[i];
 
-                var newNavigator = module.CreateNavigator();
+                var newNavigator = module.CreateNavigator(address);
 
                 try
                 {
-                    newNavigator.NavigateToAddress(address);
-                    ReplaceCurrentNavigator(newNavigator, null);
+                    ReplaceCurrentNavigator(newNavigator, focusedItem);
                 }
                 catch (NavigationException e)
                 {

@@ -72,6 +72,13 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
 
         // Private methods ----------------------------------------------------
 
+        private LocalNavigator()
+        {
+            this.rootEntryId = null;
+            this.items = null;
+            this.address = null;
+        }
+
         private List<Item> TryLoadItems(string address)
         {
             var newItems = new List<Item>
@@ -91,7 +98,14 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
                 {
                     string driveAddress = drive.RootDirectory.FullName;
                     (ImageSource smallIcon, ImageSource largeIcon) = OSServices.GetFileIcon(driveAddress);
-                    var driveItem = new LocalDriveItem(driveAddress, driveAddress)
+
+                    string displayName;
+                    if (drive.IsReady && !string.IsNullOrEmpty(drive.VolumeLabel))
+                        displayName = $"{driveAddress} ({drive.VolumeLabel})";
+                    else
+                        displayName = driveAddress;
+
+                    var driveItem = new LocalDriveItem(displayName, driveAddress)
                     {
                         SmallIcon = smallIcon,
                         LargeIcon = largeIcon,
@@ -174,17 +188,24 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
                 Handler?.NotifyChanged(null);
             else
                 throw new NavigationException(message);
-        }
+        }        
 
         // Public methods -----------------------------------------------------
 
-        public LocalNavigator()
-        {
-            rootEntryId = null;
-            address = null;
-            items = null;
+        public LocalNavigator(string address)
+            : this()
+        {           
+            TryNavigateToAddress(address);
         }
         
+        public LocalNavigator(RootModuleEntryData data)
+            : this()
+        {
+            var localNavigationData = (LocalModuleEntryData)data;
+            rootEntryId = localNavigationData.RootEntryId;
+            TryNavigateToAddress(localNavigationData.Address);
+        }
+
         public override void Dispose()
         {
             
@@ -205,6 +226,14 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
                 // Try to execute item with explorer
                 var path = System.IO.Path.Combine(address, fileItem.Filename);
 
+                // Handle zip files separately
+                if (System.IO.Path.GetExtension(fileItem.Filename).ToLowerInvariant() == ".zip")
+                {
+                    string address = $"{Zip.ZipNavigator.ROOT_ADDRESS}{path}>";
+                    Handler.RequestNavigateToAddress(address, null);
+                    return;
+                }
+
                 try
                 {
                     ProcessStartInfo psi = new ProcessStartInfo(path);
@@ -222,7 +251,7 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
                     Handler?.RequestReturnHome(new HomeFocusedItemData(LocalModule.ModuleUid, rootEntryId));
                 else if (driveRootAddress.IsMatch(address))
                 {
-                    var data = new LocalFocusedItemData(address);
+                    var data = new FilenameFocusedItemData(address);
                     TryExecuteOpeningFolder(ROOT_ADDRESS, data);
                 }
                 else
@@ -230,7 +259,7 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
                     string newAddress = Path.GetFullPath(Path.Combine(address, ".."));
 
                     string current = Path.GetFileName(Path.EndsInDirectorySeparator(address) ? address[..^1] : address);
-                    var data = new LocalFocusedItemData(current);
+                    var data = new FilenameFocusedItemData(current);
 
                     TryExecuteOpeningFolder(newAddress, data);
                 }
@@ -241,33 +270,20 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
             }
         }
 
-        public override void NavigateFromEntry(object data)
-        {
-            var localNavigationData = (LocalNavigationData)data;
-
-            rootEntryId = localNavigationData.RootEntryId;
-            TryNavigateToAddress(localNavigationData.Address);
-        }
-
-        public override void NavigateToAddress(string address)
-        {
-            TryNavigateToAddress(address);
-        }
-
         public override Item ResolveFocusedItem(FocusedItemData data)
         {
-            if (data is not LocalFocusedItemData localData)
+            if (data is not FilenameFocusedItemData localData)
                 return null;
 
             var filename = localData.Filename.ToLowerInvariant();
 
             foreach (var item in items)
             {
-                if (item is LocalFileItem fileItem && fileItem.Filename.ToLower() == filename)
+                if (item is LocalFileItem fileItem && fileItem.Filename.ToLowerInvariant() == filename)
                     return item;
-                else if (item is LocalFolderItem folderItem && folderItem.Filename.ToLower() == filename)
+                else if (item is LocalFolderItem folderItem && folderItem.Filename.ToLowerInvariant() == filename)
                     return item;
-                else if (item is LocalDriveItem driveItem && driveItem.Filename.ToLower() == filename)
+                else if (item is LocalDriveItem driveItem && driveItem.Filename.ToLowerInvariant() == filename)
                     return item;                
             }
 

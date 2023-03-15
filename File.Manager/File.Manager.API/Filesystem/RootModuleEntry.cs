@@ -13,7 +13,7 @@ namespace File.Manager.API.Filesystem
             string displayName, 
             ImageSource smallIcon, 
             ImageSource largeIcon, 
-            object data)
+            RootModuleEntryData data)
         {
             Id = id;
             DisplayName = displayName;
@@ -36,6 +36,6 @@ namespace File.Manager.API.Filesystem
 
         /// <summary>Any arbitrary data, which will be passed to the navigator when user
         /// chooses to open this entry.</summary>        
-        public object Data { get; }
+        public RootModuleEntryData Data { get; }
     }
 }

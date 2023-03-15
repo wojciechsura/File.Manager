@@ -27,9 +27,14 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
             (documentsSmallIcon, documentsLargeIcon) = OSServices.GetDocumentsIcon();
         }
 
-        public override FilesystemNavigator CreateNavigator()
+        public override FilesystemNavigator CreateNavigator(string address)
         {
-            return new LocalNavigator();
+            return new LocalNavigator(address);
+        }
+
+        public override FilesystemNavigator CreateNavigator(RootModuleEntryData data)
+        {
+            return new LocalNavigator(data);
         }
 
         public override IEnumerable<RootModuleEntry> GetRootEntries()
@@ -38,19 +43,19 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
                 Resources.Modules.Filesystem.Local.Strings.ComputerDisplayName,
                 computerSmallIcon,
                 computerLargeIcon,
-                new LocalNavigationData(LocalNavigator.ROOT_ADDRESS, 0));
+                new LocalModuleEntryData(LocalNavigator.ROOT_ADDRESS, 0));
 
             yield return new RootModuleEntry(1,
                 Resources.Modules.Filesystem.Local.Strings.DesktopDisplayName,
                 desktopSmallIcon,
                 desktopLargeIcon,
-                new LocalNavigationData(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), 1));
+                new LocalModuleEntryData(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), 1));
 
             yield return new RootModuleEntry(2,
                 Resources.Modules.Filesystem.Local.Strings.DocumentsDisplayName,
                 documentsSmallIcon,
                 documentsLargeIcon,
-                new LocalNavigationData(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), 2));
+                new LocalModuleEntryData(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), 2));
         }
 
         public override bool SupportsAddress(string address)
