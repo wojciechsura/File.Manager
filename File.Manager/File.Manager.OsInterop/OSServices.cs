@@ -360,6 +360,9 @@ namespace File.Manager.OsInterop
             out IntPtr ppidl);
 
         [DllImport("shell32.dll")]
+        public static extern void ILFree(IntPtr pidl);
+
+        [DllImport("shell32.dll")]
         private static extern int SHGetStockIconInfo(uint siid, uint uFlags, ref SHSTOCKICONINFO psii);
 
         public static (ImageSource smallIcon, ImageSource largeIcon) GetFileIcon(string filename)
@@ -412,27 +415,50 @@ namespace File.Manager.OsInterop
             DestroyIcon(info.hIcon);
 
             return (smallIcon, largeIcon);
+
         }
 
         public static (ImageSource smallIcon, ImageSource largeIcon) GetMyComputerIcon()
         {
-            IntPtr pidList;
-            SHGetKnownFolderIDList(KnownFolderId.ComputerFolder, 0, IntPtr.Zero, out pidList);
-            return GetKnownIcon(pidList);
-        }        
+            IntPtr pidList = IntPtr.Zero;
+            try
+            {
+                SHGetKnownFolderIDList(KnownFolderId.ComputerFolder, 0, IntPtr.Zero, out pidList);
+                return GetKnownIcon(pidList);
+            }
+            finally
+            {
+                ILFree(pidList);                
+            }
+        }
 
         public static (ImageSource smallIcon, ImageSource largeIcon) GetDesktopIcon()
-        {
-            IntPtr pidList;
-            SHGetKnownFolderIDList(KnownFolderId.Desktop, 0, IntPtr.Zero, out pidList);
-            return GetKnownIcon(pidList);
+        {            
+            IntPtr pidList = IntPtr.Zero;
+            try
+            {
+                SHGetKnownFolderIDList(KnownFolderId.Desktop, 0, IntPtr.Zero, out pidList);
+                return GetKnownIcon(pidList);
+
+            }
+            finally
+            {
+                ILFree(pidList);
+            }
         }
 
         public static (ImageSource smallIcon, ImageSource largeIcon) GetDocumentsIcon()
-        {
-            IntPtr pidList;
-            SHGetKnownFolderIDList(KnownFolderId.Documents, 0, IntPtr.Zero, out pidList);
-            return GetKnownIcon(pidList);
+        {            
+            IntPtr pidList = IntPtr.Zero;
+            try
+            {
+                SHGetKnownFolderIDList(KnownFolderId.Documents, 0, IntPtr.Zero, out pidList);
+                return GetKnownIcon(pidList);
+            }
+            finally
+            {
+                ILFree(pidList);
+            }
         }
     }
 }
