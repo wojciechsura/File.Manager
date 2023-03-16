@@ -21,9 +21,8 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Zip
     public class ZipNavigator : FilesystemNavigator
     {
         // Public constants ---------------------------------------------------
-
-        public const string ROOT_ADDRESS = @"\\Zip\";
-        public static readonly Regex ZipAddressRegex = new Regex(@"\\\\Zip\\([^>]+)>(.*)");
+        
+        public static readonly Regex ZipAddressRegex = new(@"\\\\Zip\\([^>]+)>(.*)");
 
         // Private types ------------------------------------------------------
 
@@ -50,9 +49,9 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Zip
 
             public List<Item> Items => items;
 
-            public string FullPath => Location + $"{Name}\\";
+            public string FullPath => string.IsNullOrEmpty(Location) ? Name : Location + $"/{Name}";
 
-            public string Location => Parent?.FullPath ?? string.Empty;
+            public string Location => Parent == null ? string.Empty : $"{Parent.FullPath}";
 
             public ZipFolderItem Parent { get; }
         }
@@ -101,26 +100,13 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Zip
             return (match.Groups[1].Value, match.Groups[2].Value);
         }
 
-        private (string location, string filename) GetZipEntryLocation(string name)
-        {
-            if (name.EndsWith('/'))
-                name = name[..^1];
-
-            int lastSlash = name.LastIndexOf('/');
-
-            return lastSlash switch
-            {
-                -1 => (string.Empty, name),
-                _ => (name[0..lastSlash], name[(lastSlash + 1)..])
-            };
-        }
-
         private ZipFolderItem BuildCache(ZipFile zipFile)
         {
-            var root = new ZipFolderItem(null, null);
+            var cacheRoot = new ZipFolderItem(null, null);
+
             var locationCache = new Dictionary<string, ZipFolderItem>()
             {
-                { string.Empty, root }
+                { string.Empty, cacheRoot }
             };
 
             ZipFolderItem EnsureLocation(string location)
@@ -129,7 +115,7 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Zip
                     return result;
 
                 var parts = location.Split('/');
-                var current = root;
+                var current = cacheRoot;
                 foreach (var part in parts)
                 {
                     var next = current.Items.FirstOrDefault(item => item.Name == part);
@@ -173,7 +159,7 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Zip
                 if (folder.Name.Contains(".."))
                     continue;
 
-                (string location, string name) = GetZipEntryLocation(folder.Name);
+                (string location, string name) = ZipPathTools.GetZipEntryLocation(folder.Name);
 
                 var parentFolder = EnsureLocation(location);
 
@@ -192,7 +178,7 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Zip
                 if (file.Name.Contains(".."))
                     continue;
 
-                (string location, string name) = GetZipEntryLocation(file.Name);
+                (string location, string name) = ZipPathTools.GetZipEntryLocation(file.Name);
 
                 var parentFolder = EnsureLocation(location);
 
@@ -203,7 +189,7 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Zip
                 parentFolder.Items.Add(item);
             }
 
-            return root;
+            return cacheRoot;
         }
 
         private void LoadItems()
@@ -270,8 +256,7 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Zip
 
         public override IFilesystemOperator CreateOperatorForCurrentLocation()
         {
-            // TODO
-            throw new NotImplementedException();
+            return new ZipOperator(zipFile, zipFilePath, current.FullPath);
         }
 
         public override void Dispose()
@@ -306,7 +291,11 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Zip
 
         public override LocationCapabilities GetLocationCapabilities()
         {
-            throw new NotImplementedException();
+            return LocationCapabilities.BufferedRead |
+                LocationCapabilities.BufferedWrite |
+                LocationCapabilities.Plan |
+                LocationCapabilities.CreateFolder |
+                LocationCapabilities.Delete;
         }
 
         public override void Refresh()
@@ -332,7 +321,7 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Zip
             return null;
         }
 
-        public override string Address => $"{ROOT_ADDRESS}{zipFilePath}>{current?.FullPath ?? ""}";
+        public override string Address => ZipPathTools.BuildAddress(zipFilePath, current?.FullPath ?? "");
 
         public override IReadOnlyList<Item> Items => items;
     }

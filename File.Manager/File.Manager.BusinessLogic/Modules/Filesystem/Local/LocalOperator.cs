@@ -22,7 +22,9 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
 
         // Private methods ----------------------------------------------------
 
-        private List<BasePlanItem> CreatePlanForFolderRecursive(string address, string fileMaskOverride, IReadOnlyList<Item> selectedItems)
+        private List<BasePlanItem> CreatePlanForFolderRecursive(string address, 
+            string fileMaskOverride, 
+            IReadOnlyList<Item> selectedItems)
         {
             var result = new List<BasePlanItem>();
 
@@ -80,8 +82,11 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
             this.currentPath = startPath;
         }
 
-        public OperationPlan BuildOperationPlanFromSelection(IReadOnlyList<Item>? selectedItems, string? fileMaskOverride)
+        public OperationPlan BuildOperationPlanFromSelection(IReadOnlyList<Item> selectedItems, string? fileMaskOverride)
         {
+            if (selectedItems == null)
+                throw new ArgumentNullException(nameof(selectedItems));
+
             var items = CreatePlanForFolderRecursive(startPath, fileMaskOverride, selectedItems);
             return new OperationPlan(items);
         }

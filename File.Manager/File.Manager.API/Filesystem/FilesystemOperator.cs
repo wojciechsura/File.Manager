@@ -12,7 +12,7 @@ namespace File.Manager.API.Filesystem
 {
     public interface IFilesystemOperator : IDisposable
     {
-        OperationPlan BuildOperationPlanFromSelection(IReadOnlyList<Item>? selectedItems, string? fileMaskOverride);
+        OperationPlan BuildOperationPlanFromSelection(IReadOnlyList<Item> selectedItems, string? fileMaskOverride);
 
         /// <summary>Creates folder with given name if one does not exist.</summary>
         bool CreateFolder(string name);
