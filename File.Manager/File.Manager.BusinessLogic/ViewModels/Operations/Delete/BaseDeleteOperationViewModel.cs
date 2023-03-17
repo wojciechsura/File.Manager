@@ -340,7 +340,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.Delete
             private (bool exit, DeleteWorkerResult) DeleteEmptyFolder(IFolderInfo folderInfo,
                 IFilesystemOperator filesystemOperator)
             {
-                if (!filesystemOperator.DeleteFolder(folderInfo.Name, true))
+                if (!filesystemOperator.DeleteEmptyFolder(folderInfo.Name))
                 {
                     return HandleSkipAbort(DeleteProblemKind.CannotDeleteFolder,
                         folderInfo.Name,

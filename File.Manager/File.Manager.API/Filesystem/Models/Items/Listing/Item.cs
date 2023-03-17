@@ -66,6 +66,9 @@ namespace File.Manager.API.Filesystem.Models.Items.Listing
 
         private protected Item(string name, bool isSelectable)
         {
+            if (name == null)
+                throw new ArgumentNullException("name");
+
             attributes = new();
             attributes[NameKey] = name;
             IsSelectable = isSelectable;

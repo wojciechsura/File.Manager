@@ -482,7 +482,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
                 IFilesystemOperator sourceOperator,
                 IFilesystemOperator destinationOperator)
             {
-                if (!sourceOperator.DeleteFolder(folderInfo.Name, true))
+                if (!sourceOperator.DeleteEmptyFolder(folderInfo.Name))
                 {
                     return HandleSkipAbort(CopyMoveProblemKind.CannotDeleteEmptyFolder,
                             sourceOperator,
@@ -586,19 +586,23 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
                 IFilesystemOperator destinationOperator,
                 ref string targetName)
             {
-                var fileExists = destinationOperator.FileExists(fileInfo.Name);
+                var fileExists = destinationOperator.FileExists(targetName);
 
                 if (fileExists == null)
                 {
                     return HandleSkipAbort(CopyMoveProblemKind.CannotCheckIfDestinationFileExists,
                             sourceOperator,
                             destinationOperator,
-                            fileInfo.Name);
+                            targetName);
                 }
 
                 if (fileExists == true)
                 {
-                    return HandleSkipOverwriteRenameAbort(CopyMoveProblemKind.DestinationFileAlreadyExists, fileInfo, sourceOperator, destinationOperator, ref targetName);
+                    return HandleSkipOverwriteRenameAbort(CopyMoveProblemKind.DestinationFileAlreadyExists, 
+                        fileInfo, 
+                        sourceOperator, 
+                        destinationOperator, 
+                        ref targetName);
                 }
 
                 return (false, null);
@@ -609,14 +613,14 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
                 IFilesystemOperator destinationOperator,
                 ref string targetName)
             {
-                var folderExists = destinationOperator.FolderExists(fileInfo.Name);
+                var folderExists = destinationOperator.FolderExists(targetName);
 
                 if (folderExists == null)
                 {
                     return HandleSkipAbort(CopyMoveProblemKind.CannotCheckIfDestinationFolderExists,
                             sourceOperator,
                             destinationOperator,
-                            fileInfo.Name);
+                            targetName);
                 }
 
                 if (folderExists == true)

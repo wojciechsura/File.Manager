@@ -116,7 +116,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
                 item.IsSelected = false;
             }
 
-            copyToPane.Refresh();
+            RefreshPanes();            
         }
 
         private (bool result, DeleteConfigurationModel model) ShowDeleteDialog(List<Item> items, string address)
@@ -160,7 +160,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
 
             dialogService.ShowDeleteProgress(operation);
 
-            deletePane.Refresh();
+            RefreshPanes();
         }
 
         private void DoDelete()
@@ -213,7 +213,8 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
                     return;
                 }
 
-                newFolderPane.Refresh();
+                RefreshPanes();
+
                 newFolderPane.SelectItem(model.Name);
             }
         }
@@ -290,6 +291,11 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
             }
         }
 
+        private void RefreshPanes()
+        {
+            leftPane.Refresh();
+            rightPane.Refresh();
+        }
 
         // Private properties -------------------------------------------------
 

@@ -119,11 +119,11 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
             return true;
         }
 
-        public bool DeleteFolder(string name, bool onlyIfEmpty)
+        public bool DeleteEmptyFolder(string name)
         {
             try
             {
-                Directory.Delete(System.IO.Path.Combine(currentPath, name), !onlyIfEmpty);
+                Directory.Delete(System.IO.Path.Combine(currentPath, name), false);
             }
             catch
             {

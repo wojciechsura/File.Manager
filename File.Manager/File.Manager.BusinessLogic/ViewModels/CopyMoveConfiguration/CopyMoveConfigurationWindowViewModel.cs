@@ -88,9 +88,10 @@ namespace File.Manager.BusinessLogic.ViewModels.CopyMoveConfiguration
             renameFolders = true;
             renameRecursive = false;
 
+            var fileMaskValid = Condition.ChainedLambda(this, vm => !string.IsNullOrEmpty(vm.FileMask), false);
             var useRenamingCondition = Condition.PropertyWatch(this, vm => vm.RenameFiles, false);
             var renameFromValidCondition = Condition.ChainedLambda(this, vm => IsValidRegex(RenameFrom), false);
-            var canConfirmCondition = !useRenamingCondition | (useRenamingCondition & renameFromValidCondition);
+            var canConfirmCondition = fileMaskValid & (!useRenamingCondition | (useRenamingCondition & renameFromValidCondition));
 
             OkCommand = new AppCommand(obj => DoOk(), canConfirmCondition);
             CancelCommand = new AppCommand(obj => DoCancel());

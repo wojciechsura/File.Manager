@@ -92,7 +92,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
                     long totalBytesCopied = context.CopiedSize + bytesCopied;
                     var millisecondsLeft = totalBytesCopied switch
                     {
-                        > 0 => (long)elapsed.TotalMilliseconds * (context.TotalSize - (context.CopiedSize + totalBytesCopied)) / totalBytesCopied,
+                        > 0 => (long)elapsed.TotalMilliseconds * (context.TotalSize - totalBytesCopied) / totalBytesCopied,
                         _ => 0,
                     };
 

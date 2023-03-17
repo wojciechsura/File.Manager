@@ -102,7 +102,7 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Zip
 
         private ZipFolderItem BuildCache(ZipFile zipFile)
         {
-            var cacheRoot = new ZipFolderItem(null, null);
+            var cacheRoot = new ZipFolderItem(null, string.Empty);
 
             var locationCache = new Dictionary<string, ZipFolderItem>()
             {
@@ -208,6 +208,32 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Zip
             OnAddressChanged();
         }
 
+        private void LoadFileStructureFromZip()
+        {
+            // Build structure
+
+            this.root = BuildCache(zipFile);
+            this.current = root;
+        }
+
+        private void NavigateToZipPath(string newPath)
+        {
+            // Locate inner folder if possible
+
+            var parts = newPath.Split('\\')
+                .Where(part => !string.IsNullOrEmpty(part));
+
+            current = root;
+            foreach (var part in parts)
+            {
+                var next = current.Items.FirstOrDefault(i => i.Name.ToLowerInvariant() == part.ToLowerInvariant());
+                if (next is not ZipFolderItem zipFolderItem)
+                    return;
+
+                current = zipFolderItem;
+            }
+        }
+
         // Public methods -----------------------------------------------------
 
         public ZipNavigator(string address)
@@ -226,26 +252,8 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Zip
                 throw new NavigationException(Strings.Error_FailedToOpenZipFile);
             }
 
-            // Build structure
-
-            this.root = BuildCache(zipFile);
-            this.current = root;
-
-            // Locate inner folder if possible
-
-            var parts = innerPath.Split('\\')
-                .Where(part => !string.IsNullOrEmpty(part));
-
-            current = root;
-            foreach (var part in parts)
-            {
-                var next = current.Items.FirstOrDefault(i => i.Name.ToLowerInvariant() == part.ToLowerInvariant());
-                if (next is not ZipFolderItem zipFolderItem)
-                    return;
-
-                current = zipFolderItem;
-            }
-
+            LoadFileStructureFromZip();
+            NavigateToZipPath(innerPath);
             LoadItems();
         }
 
@@ -300,6 +308,10 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Zip
 
         public override void Refresh()
         {
+            var storedPath = current.FullPath;
+
+            LoadFileStructureFromZip();
+            NavigateToZipPath(storedPath);
             LoadItems();
         }
 

@@ -50,6 +50,10 @@ namespace File.Manager.BusinessLogic.ViewModels.DeleteConfiguration
             this.selectedItems = input.SelectedItems;
             this.Address = input.Address;
 
+            fileMask = "*.*";
+
+            var canCloseCommand = Condition.ChainedLambda(this, vm => !string.IsNullOrEmpty(vm.FileMask), false);
+
             OkCommand = new AppCommand(obj => DoOk());
             CancelCommand = new AppCommand(obj => DoCancel());
         }

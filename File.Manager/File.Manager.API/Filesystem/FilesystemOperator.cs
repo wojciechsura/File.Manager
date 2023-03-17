@@ -21,7 +21,7 @@ namespace File.Manager.API.Filesystem
         bool DeleteFile(string name);
 
         /// <summary>Deletes folder with given name.</summary>
-        bool DeleteFolder(string name, bool onlyIfEmpty);
+        bool DeleteEmptyFolder(string name);
 
         /// <summary>Enters folder with given name in current location</summary>
         IFilesystemOperator EnterFolder(string name);

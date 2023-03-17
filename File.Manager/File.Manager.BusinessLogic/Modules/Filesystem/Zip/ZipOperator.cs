@@ -75,6 +75,10 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Zip
                     if (slashPos == -1)
                         slashPos = location.Length;
                     var subfolderName = location[path.Length..(slashPos)];
+
+                    if (selectedItems != null && selectedItems.FirstOrDefault(si => si.Name == subfolderName) == null)
+                        continue;
+
                     if (!foldersToProcess.Contains(subfolderName))
                     {
                         foldersToProcess.Add(subfolderName);
@@ -108,8 +112,8 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Zip
 
         public ZipOperator(ZipFile zipFile, string zipPath, string rootPath)
         {
-            this.zipFile = zipFile;
-            this.zipFilePath = zipPath;
+            this.zipFile = zipFile ?? throw new ArgumentNullException(nameof(zipFile));
+            this.zipFilePath = zipPath ?? throw new ArgumentNullException(nameof(zipPath));
 
             if (!string.IsNullOrEmpty(rootPath) && !rootPath.EndsWith('/'))
                 rootPath = $"{rootPath}/";
@@ -132,7 +136,7 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Zip
         {
             var subfolderPath = $"{rootPath}{name}/";
 
-            return zipFile
+            return !zipFile
                 .Cast<ZipEntry>()
                 .Any(ze => ze.Name.StartsWith(subfolderPath) && ze.Name.Length > subfolderPath.Length);
         }
@@ -161,7 +165,7 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Zip
             try
             {
                 string filePath = $"{rootPath}{name}";
-                var entry = zipFile.GetEntry(name);
+                var entry = zipFile.GetEntry(filePath);
 
                 if (!entry.IsFile)
                     return false;
@@ -179,21 +183,21 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Zip
             }
         }
 
-        public bool DeleteFolder(string name, bool onlyIfEmpty)
+        public bool DeleteEmptyFolder(string name)
         {
             try
             {
                 string folderPath = $"{rootPath}{name}/";
-                var entry = zipFile.GetEntry(name);
+                var entry = zipFile.GetEntry(folderPath);
 
                 if (entry.IsFile)
                     return false;
 
-                if (onlyIfEmpty && CheckIsSubfolderEmpty(name) != true)
+                if (CheckIsSubfolderEmpty(name) != true)
                     return false;
                 
                 zipFile.BeginUpdate();
-                zipFile.Delete(folderPath);
+                zipFile.Delete(entry);
                 zipFile.CommitUpdate();
 
                 return true;
