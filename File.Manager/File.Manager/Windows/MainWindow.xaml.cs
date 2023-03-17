@@ -54,5 +54,10 @@ namespace File.Manager.Windows
         {
             viewModel.NotifyActivated((sender as Pane)?.DataContext as PaneViewModel);
         }
+
+        private void Border_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            e.Handled = true;
+        }
     }
 }

@@ -228,6 +228,12 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
             return selectedItems;
         }
 
+        public Item GetFocusedItem()
+        {
+            return ((ItemViewModel)collectionView.CurrentItem).Item;
+        }
+
+
         public void Refresh()
         {
             navigator.Refresh();

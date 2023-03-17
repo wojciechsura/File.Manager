@@ -19,8 +19,10 @@ using File.Manager.Resources.Windows.MainWindow;
 using Spooksoft.VisualStateManager.Commands;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
+using System.Printing;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -93,6 +95,26 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
             }
 
             dialogService.ShowCopyMoveProgress(operation);
+        }
+
+        private void DoView()
+        {
+            var viewPane = ActivePane;
+
+            var capabilities = viewPane.Navigator.GetLocationCapabilities();
+            if (!capabilities.HasFlag(LocationCapabilities.BufferedRead))
+                return;
+
+            var focusedItem = viewPane.GetFocusedItem();
+            if (focusedItem is not FileItem)
+                return;
+
+            var filesystemOperator = viewPane.Navigator.CreateOperatorForCurrentLocation();
+            Stream stream = filesystemOperator.OpenFileForReading(focusedItem.Name);
+            if (stream == null)
+                return;
+
+            dialogService.ShowViewWindow(stream, focusedItem.Name);
         }
 
         private void DoCopyMove(DataTransferOperationType operationType)
@@ -350,6 +372,8 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
             rightPane = new PaneViewModel(this, moduleService, iconService, messagingService);
 
             SwitchPanesCommand = new AppCommand(obj => DoSwitchPanes());
+
+            ViewCommand = new AppCommand(obj => DoView());
             CopyCommand = new AppCommand(obj => DoCopyMove(DataTransferOperationType.Copy));
             MoveCommand = new AppCommand(obj => DoCopyMove(DataTransferOperationType.Move));
             NewFolderCommand = new AppCommand(obj => DoNewFolder());
@@ -387,6 +411,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
 
         public ICommand SwitchPanesCommand { get; }
 
+        public ICommand ViewCommand { get; }
         public ICommand CopyCommand { get; }
         public ICommand MoveCommand { get; }
         public ICommand NewFolderCommand { get; }

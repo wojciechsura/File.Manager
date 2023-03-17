@@ -8,6 +8,7 @@ using File.Manager.BusinessLogic.ViewModels.Operations.CopyMove;
 using File.Manager.BusinessLogic.ViewModels.Operations.Delete;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,5 +27,6 @@ namespace File.Manager.BusinessLogic.Services.Dialogs
         void ShowDeleteProgress(BaseDeleteOperationViewModel operation);
         (bool result, NewFolderConfigurationModel model) ShowNewFolderConfigurationDialog();
         (bool result, SelectionResultModel model) ShowSelectionDialog(SelectionOperationKind operationKind);
+        void ShowViewWindow(Stream stream, string filename);
     }
 }

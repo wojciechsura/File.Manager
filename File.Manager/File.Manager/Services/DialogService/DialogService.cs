@@ -13,6 +13,7 @@ using File.Manager.Windows;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -250,6 +251,15 @@ namespace File.Manager.Services.DialogService
                 PopDialog(dialog);
                 ActivateLastDialog();
             }
+        }
+
+        public void ShowViewWindow(Stream stream, string filename)
+        {
+            // Note: view window is not modal and therefore is not
+            // owner-managed, as other dialogs
+
+            var dialog = new ViewWindow(stream, filename);
+            dialog.Show();
         }
     }
 }

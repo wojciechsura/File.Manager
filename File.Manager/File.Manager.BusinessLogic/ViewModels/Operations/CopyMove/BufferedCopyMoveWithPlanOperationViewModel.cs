@@ -116,7 +116,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
 
                     ReportProgress(0, new CopyMoveProgress((int)((context.CopiedSize + bytesCopied) * 100 / context.TotalSize),
                         totalDescription,
-                        (int)(bytesCopied * 100 / fileInfo.Size),
+                        (int)(fileInfo.Size > 0 ? (bytesCopied * 100 / fileInfo.Size) : 100),
                         fileInfo.Name));
                 }
                 while (bytesRead > 0);
