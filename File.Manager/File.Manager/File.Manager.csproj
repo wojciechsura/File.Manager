@@ -54,9 +54,11 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Autofac" Version="7.0.0" />
+    <PackageReference Include="AvalonEdit" Version="6.3.0.90" />
     <PackageReference Include="Fluent.Ribbon" Version="9.0.4" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
+    <PackageReference Include="Spooksoft.HexEditor" Version="1.0.2" />
     <PackageReference Include="Spooksoft.Wpf.Controls" Version="1.0.6" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
     <PackageReference Include="WPF-UI" Version="2.0.3" />

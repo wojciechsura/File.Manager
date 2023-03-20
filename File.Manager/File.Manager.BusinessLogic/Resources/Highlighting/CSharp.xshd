@@ -1,0 +1,257 @@
+﻿<?xml version="1.0"?>
+<SyntaxDefinition name="C#" extensions=".cs" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+
+  <!-- Colors -->
+
+  <Color name="Comment" foreground="#008000" />
+  <Color name="Preprocessor" foreground="#808080" />
+  <Color name="UnknownPreprocessor" foreground="#a0a0a0" />
+  <Color name="String" foreground="#a31515" />
+  <Color name="Char" foreground="#a31515" />
+  <Color name="StringInterpolation" foreground="#000000" />
+  <Color name="Keywords" foreground="#3400ff" />
+  <Color name="FlowControlKeywords" foreground="#8f08c4" />
+  <Color name="MethodCall" foreground="#74531f" />
+
+  <!-- Rules -->
+
+  <RuleSet>
+    <Span color="Preprocessor" ruleSet="PreprocessorSet">
+      <Begin>\#</Begin>
+    </Span>
+
+    <Span color="Comment">
+      <Begin color="XmlDoc/DocComment">///(?!/)</Begin>
+      <RuleSet>
+        <Import ruleSet="XmlDoc/DocCommentSet"/>
+        <Import ruleSet="CommentMarkers/CommentMarkerSet"/>
+      </RuleSet>
+    </Span>
+
+    <Span color="Comment">
+      <Begin>//</Begin>
+      <RuleSet>
+        <Import ruleSet="CommentMarkers/CommentMarkerSet"/>
+      </RuleSet>
+    </Span>
+
+    <Span color="Comment" multiline="true">
+      <Begin>/\*</Begin>
+      <End>\*/</End>
+      <RuleSet>
+        <Import ruleSet="CommentMarkers/CommentMarkerSet"/>
+      </RuleSet>
+    </Span>
+
+    <Span color="Char">
+      <Begin>'</Begin>
+      <End>'</End>
+      <RuleSet>
+        <!-- span for escape sequences -->
+        <Span begin="\\" end="."/>
+      </RuleSet>
+    </Span>
+
+    <Span color="String">
+      <Begin>"</Begin>
+      <End>"</End>
+      <RuleSet>
+        <!-- span for escape sequences -->
+        <Span begin="\\" end="."/>
+      </RuleSet>
+    </Span>
+
+    <Span color="String" multiline="true">
+      <Begin>@"</Begin>
+      <End>"</End>
+      <RuleSet>
+        <!-- span for escape sequences -->
+        <Span begin='""' end=""/>
+      </RuleSet>
+    </Span>
+
+    <Span color="String">
+      <Begin>\$"</Begin>
+      <End>"</End>
+      <RuleSet>
+        <!-- span for escape sequences -->
+        <Span begin="\\" end="."/>
+        <Span begin="\{\{" end=""/>
+        <!-- string interpolation -->
+        <Span begin="{" end="}" color="StringInterpolation" ruleSet=""/>
+      </RuleSet>
+    </Span>
+
+    <!-- Exclude @-prefixed keywords -->
+    
+    <Rule>
+      @[\w\d_]+
+    </Rule>
+
+    <Keywords color="Keywords">
+      <Word>this</Word>
+      <Word>base</Word>
+
+      <Word>as</Word>
+      <Word>is</Word>
+      <Word>new</Word>
+      <Word>sizeof</Word>
+      <Word>typeof</Word>
+      <Word>stackalloc</Word>
+
+      <Word>true</Word>
+      <Word>false</Word>
+
+      <Word>yield</Word>
+      <Word>partial</Word>
+      <Word>global</Word>
+      <Word>where</Word>
+      <Word>select</Word>
+      <Word>group</Word>
+      <Word>by</Word>
+      <Word>into</Word>
+      <Word>from</Word>
+      <Word>ascending</Word>
+      <Word>descending</Word>
+      <Word>orderby</Word>
+      <Word>let</Word>
+      <Word>join</Word>
+      <Word>on</Word>
+      <Word>equals</Word>
+      <Word>var</Word>
+      <Word>dynamic</Word>
+      <Word>await</Word>
+
+      <Word>checked</Word>
+      <Word>unchecked</Word>
+
+      <Word>fixed</Word>
+      <Word>unsafe</Word>
+
+      <Word>bool</Word>
+      <Word>byte</Word>
+      <Word>char</Word>
+      <Word>decimal</Word>
+      <Word>double</Word>
+      <Word>enum</Word>
+      <Word>float</Word>
+      <Word>int</Word>
+      <Word>long</Word>
+      <Word>sbyte</Word>
+      <Word>short</Word>
+      <Word>struct</Word>
+      <Word>uint</Word>
+      <Word>ushort</Word>
+      <Word>ulong</Word>
+
+      <Word>class</Word>
+      <Word>interface</Word>
+      <Word>delegate</Word>
+      <Word>object</Word>
+      <Word>string</Word>
+      <Word>void</Word>
+
+      <Word>explicit</Word>
+      <Word>implicit</Word>
+      <Word>operator</Word>
+
+      <Word>params</Word>
+      <Word>ref</Word>
+      <Word>out</Word>
+
+      <Word>abstract</Word>
+      <Word>const</Word>
+      <Word>event</Word>
+      <Word>extern</Word>
+      <Word>override</Word>
+      <Word>readonly</Word>
+      <Word>sealed</Word>
+      <Word>static</Word>
+      <Word>virtual</Word>
+      <Word>volatile</Word>
+      <Word>async</Word>
+
+      <Word>public</Word>
+      <Word>protected</Word>
+      <Word>private</Word>
+      <Word>internal</Word>
+
+      <Word>namespace</Word>
+      <Word>using</Word>
+
+      <Word>get</Word>
+      <Word>set</Word>
+      <Word>add</Word>
+      <Word>remove</Word>
+
+      <Word>null</Word>
+      <Word>value</Word>
+
+      <Word>nameof</Word>
+    </Keywords>
+
+    <Keywords color="FlowControlKeywords">
+      <Word>else</Word>
+      <Word>if</Word>
+      <Word>switch</Word>
+      <Word>case</Word>
+      <Word>default</Word>
+      <Word>do</Word>
+      <Word>for</Word>
+      <Word>foreach</Word>
+      <Word>in</Word>
+      <Word>while</Word>
+      <Word>lock</Word>
+
+      <Word>break</Word>
+      <Word>continue</Word>
+      <Word>goto</Word>
+      <Word>return</Word>
+
+      <Word>try</Word>
+      <Word>throw</Word>
+      <Word>catch</Word>
+      <Word>finally</Word>
+    </Keywords>
+
+    <Rule color="MethodCall">
+      \b
+      [\d\w_]+  # an identifier
+      (?=\s*\() # followed by (
+    </Rule>
+
+  </RuleSet>
+
+  <RuleSet name="PreprocessorSet">
+    
+    <!-- Preprocessor directives allowing comments -->
+    
+    <Span>
+      <Begin>
+        (define|undef|if|elif|else|endif|line)\b
+      </Begin>
+      <RuleSet>
+        <Span color="Comment" ruleSet="CommentMarkers/CommentMarkerSet">
+          <Begin>//</Begin>
+        </Span>
+      </RuleSet>
+    </Span>
+    
+    <!-- Preprocessor directives disallowing comments -->
+    
+    <Span>
+      <Begin>
+        (region|endregion|error|warning|pragma)\b
+      </Begin>
+    </Span>
+    
+    <!-- Not recognized preprocessor directives -->
+    
+    <Span color="UnknownPreprocessor">
+      <Begin>
+        [^\s]+\b
+      </Begin>
+    </Span>
+  </RuleSet>
+  
+</SyntaxDefinition>

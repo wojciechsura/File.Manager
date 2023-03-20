@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+<!-- syntaxdefinition for PHP 2001 by Chad Smith & Mike Krueger -->
+<!-- converted to AvalonEdit format by Siegfried Pammer in 2010 -->
+<SyntaxDefinition name ="PHP" extensions = ".php" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+  
+  <!-- Colors -->
+  
+	<Color name="Comment" foreground="#008000" />
+  <Color name="String" foreground="#a31515" />  
+	<Color name="Keywords" foreground="#0000ff" />
+  <Color name="FlowControlKeywords" foreground="#8f08c4" />
+  
+  <!-- Rules -->
+  
+	<RuleSet>
+		<Span color="Comment">
+			<Begin>\#</Begin>
+		</Span>
+
+		<Span color="Comment">
+			<Begin>//</Begin>
+		</Span>
+
+		<Span color="Comment" multiline="true">
+			<Begin>/\*</Begin>
+			<End>\*/</End>
+		</Span>
+
+		<Span color="String" multiline="true">
+			<Begin>'</Begin>
+			<End>'</End>
+			<RuleSet>
+				<Span begin="\\" end="."/>
+			</RuleSet>
+		</Span>
+
+		<Span color="String" multiline="true">
+			<Begin>"</Begin>
+			<End>"</End>
+			<RuleSet>
+				<Span begin="\\" end="."/>
+			</RuleSet>
+		</Span>
+
+		<Keywords color="Keywords">
+			<Word>global</Word>
+			<Word>my</Word>
+			<Word>var</Word>
+
+      <Word>and</Word>
+			<Word>or</Word>
+			<Word>new</Word>
+			<Word>clone</Word>
+			<Word>instanceof</Word>
+			<Word>xor</Word>
+			<Word>true</Word>
+			<Word>false</Word>
+
+      <Word>require</Word>
+      <Word>include</Word>
+      <Word>require</Word>
+      <Word>include</Word>
+      <Word>function</Word>
+
+      <Word>int</Word>
+      <Word>integer</Word>
+      <Word>real</Word>
+      <Word>double</Word>
+      <Word>float</Word>
+      <Word>string</Word>
+      <Word>array</Word>
+      <Word>object</Word>
+
+      <Word>class</Word>
+      <Word>void</Word>
+
+      <Word>public</Word>
+      <Word>private</Word>
+    </Keywords>
+
+		<Keywords color="FlowControlKeywords">
+			<Word>else</Word>
+			<Word>else</Word>
+			<Word>switch</Word>
+			<Word>case</Word>
+			<Word>endif</Word>
+			<Word>elseif</Word>
+
+      <Word>do</Word>
+			<Word>for</Word>
+			<Word>foreach</Word>
+			<Word>while</Word>
+			<Word>endwhile</Word>
+			<Word>exit</Word>
+
+      <Word>break</Word>
+			<Word>continue</Word>
+			<Word>default</Word>
+			<Word>goto</Word>
+			<Word>return</Word>
+		</Keywords>
+	</RuleSet>
+</SyntaxDefinition>

@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<SyntaxDefinition name="HTML" extensions=".htm;.html" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+  
+  <Color foreground="#008000" name="Comment" />
+  <Color foreground="#b21515" name="HtmlTag" />
+  <Color foreground="#f18787" name="UnknownHtmlTag" />
+  <Color foreground="#b21515" name="Tags" />
+  <Color foreground="#ff3400" name="Attributes" />
+  <Color foreground="#0000ff" name="Assignment" />
+  <Color foreground="#0000ff" name="String" />
+  <Color foreground="#ff3400" name="Entities" />
+  <Color foreground="#ffac97" name="UnknownEntity" />
+  <Color foreground="#ff9f88" name="UnknownAttribute" />
+
+  <RuleSet ignoreCase="true">
+    
+    <Span color="Comment" multiline="true">
+      <Begin>&lt;!--</Begin>
+      <End>--&gt;</End>
+    </Span>
+
+    <Span ruleSet="JavaScriptSet" multiline="true">
+      <Begin color="HtmlTag">&lt;script[^&gt;]&gt;</Begin>
+      <End color="HtmlTag">&lt;/script&gt;</End>
+    </Span>
+
+    <Span ruleSet="CssSet" multiline="true">
+      <Begin color="HtmlTag">&lt;style[^>]*&gt;</Begin>
+      <End color="HtmlTag">&lt;/style&gt;</End>
+    </Span>
+
+    <Span color="HtmlTag" ruleSet="HtmlTagSet" multiline="true">
+      <Begin>&lt;</Begin>
+      <End>&gt;</End>
+    </Span>
+
+    <Rule color="Entities">&amp;(aacute|agrave|acirc|amp|atilde|aring|auml|aelig|ccedil|copy|eacute|egrave|ecirc|euml|iacute|igrave|icirc|iuml|eth|gt|lt|nbsp|ntilde|oacute|ograve|ocirc|otilde|ouml|oslash|quot|reg|szlig|uacute|ugrave|ucirc|uuml|yacute|thorn|trade|yuml|);</Rule>
+
+    <Rule color="UnknownEntity">&amp;\w+;</Rule>
+    
+  </RuleSet>
+
+  <RuleSet name="JavaScriptSet">
+    <Import ruleSet="JavaScript/" />
+  </RuleSet>
+
+  <RuleSet name="CssSet">
+    <Import ruleSet="CSS/" />
+  </RuleSet>
+
+  <RuleSet name="HtmlTagSet" ignoreCase="true">
+
+    <Rule color="Attributes">data(-[\d\w]+)?(?=(\s*=))</Rule>
+
+    <Rule color="Attributes">(abbr|accept-charset|accept|accesskey|action|align|alink|alt|applicationname|archive|axis|background|behavior|bgcolor|bgproperties|border|bordercolor|bordercolordark|bordercolorligh|borderstyle|caption|cellpadding|cellspacing|char|charoff|charset|checked|cite|class|classid|clear|code|codetype|color|cols|colspan|compact|content|coords|data|datetime|declare|defer|dir|direction|disabled|dynsrc|enctype|face|for|frame|frameborder|framespacing|gutter|headers|height|href|hreflang|hspace|http-equiv|icon|id|ismap|label|language|leftmargin|link|longdesc|loop|lowsrc|marginheight|marginwidth|maximizebutton|maxlength|media|method|methods|minimizebutton|multiple|name|nohref|noresize|noshade|nowrap|object|onabort|onblur|onchange|onclick|ondblclick|onerror|onfocus|onkeydown|onkeypress|onkeyup|onload|onmousedown|onmousemove|onmouseout|onmouseover|onmouseup|onreset|onselect|onsubmit|onunload|profile|prompt|readonly|rel|rev|rows|rowspan|rules|runat|scheme|scope|scrollamount|scrolldelay|scrolling|selected|shape|showintaskbar|singleinstance|size|span|src|standby|start|style|summary|sysmenu|tabindex|target|text|title|topmargin|type|urn|usemap|valign|value|valuetype|version|vlink|vrml|vspace|width|windowstate|wrap)(?=(\s*=))</Rule>
+
+    <Rule color="UnknownAttribute">[\d\w]+(?=(\s*=))</Rule>
+
+    <Rule color="Tags">(!doctype|a|abbr|acronym|address|applet|area|b|base|basefont|bgsound|bdo|big|blink|blockquote|body|br|button|caption|center|cite|code|col|colgroup|comment|dd|del|dfn|dir|div|dl|dt|em|embed|fieldset|font|form|frame|frameset|h|h1|h2|h3|h4|h5|h6|head|hr|hta:application|html|i|iframe|img|input|ins|isindex|kbd|label|legend|li|link|listing|map|marquee|menu|meta|multicol|nextid|nobr|noframes|noscript|object|ol|optgroup|option|p|param|plaintext|pre|q|s|samp|script|select|server|small|sound|spacer|span|strong|style|sub|sup|table|tbody|td|textarea|textflow|tfoot|th|thead|title|tr|tt|u|var|wbr|xmp)\b</Rule>
+
+    <Rule color="UnknownHtmlTag">[\d\w]+</Rule>
+
+    <Keywords color="Assignment">
+      <Word>=</Word>
+    </Keywords>
+
+    <Span color="String">
+      <Begin>"</Begin>
+      <End>"</End>
+    </Span>
+
+    <Span color="String">
+      <Begin>'</Begin>
+      <End>'</End>
+    </Span>
+
+  </RuleSet>  
+</SyntaxDefinition>

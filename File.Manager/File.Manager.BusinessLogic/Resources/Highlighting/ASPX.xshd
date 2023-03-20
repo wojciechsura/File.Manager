@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<SyntaxDefinition name="ASP/XHTML" extensions=".asp;.aspx;.asax;.asmx;.ascx;.master" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+  
+  <!-- Colors -->
+  
+	<Color name="ASPTags" foreground="Black" background="Yellow" />
+  
+  <!-- Rules -->
+  
+	<RuleSet ignoreCase="true">
+		<Span ruleSet="ASP" multiline="true">
+			<Begin color="ASPTags">&lt;%</Begin>
+			<End color="ASPTags">%&gt;</End>
+		</Span>
+		<Import ruleSet="HTML/" />
+	</RuleSet>
+  
+	<RuleSet name="ASP">
+		<Import ruleSet="C#/" />
+	</RuleSet>
+  
+</SyntaxDefinition>

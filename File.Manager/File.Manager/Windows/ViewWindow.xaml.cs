@@ -24,6 +24,11 @@ namespace File.Manager.Windows
     {
         private readonly ViewWindowViewModel viewModel;
 
+        void IViewWindowAccess.Close()
+        {
+            this.Close();
+        }
+
         public ViewWindow(Stream stream, string filename)
         {
             InitializeComponent();

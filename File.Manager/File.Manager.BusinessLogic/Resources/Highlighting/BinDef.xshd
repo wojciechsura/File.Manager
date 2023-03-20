@@ -1,0 +1,84 @@
+﻿<?xml version="1.0"?>
+<SyntaxDefinition name="C++" extensions=".c;.h;.cc;.cpp;.hpp" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+
+  <!-- Colors -->
+
+  <Color name="Keywords" foreground="#3400ff" />
+  <Color name="Operators" />
+  <Color name="BuiltinTypes" foreground="#3400ff" />
+  <Color name="ControlFlowKeywords" foreground="#8f08c4" />
+  <Color name="Comment" foreground="#008000" />
+  <Color name="String" foreground="#a31515" />  
+  <Color name="Character" foreground="#a31515" />
+  
+  <!-- Rules -->
+
+  <RuleSet ignoreCase="false">
+		<Keywords color="Keywords">
+			<Word>as</Word>
+      <Word>enum</Word>
+			<Word>struct</Word>
+      <Word>let</Word>
+      <Word>show</Word>
+      <Word>as</Word>
+      <Word>if</Word>
+      <Word>elseif</Word>
+      <Word>else</Word>
+    </Keywords>
+    
+		<Keywords color="BuiltinTypes">
+			<Word>byte</Word>
+      <Word>char</Word>
+      <Word>double</Word>
+      <Word>float</Word>
+      <Word>int</Word>
+      <Word>long</Word>
+      <Word>sbyte</Word>
+      <Word>short</Word>
+      <Word>skip</Word>
+      <Word>uint</Word>
+      <Word>ulong</Word>
+			<Word>ushort</Word>
+      <Word>string</Word>
+      <Word>bool</Word>
+    </Keywords>
+
+   
+		<Keywords color="Operators">
+			<Word>-</Word>
+			<Word>%</Word>
+			<Word>&amp;</Word>
+			<Word>*</Word>
+      <Word>/</Word>
+      <Word>^</Word>
+      <Word>|</Word>
+      <Word>+</Word>
+      <Word>=</Word>
+		</Keywords>
+        
+		<Span color="Comment">
+			<Begin>//</Begin>
+		</Span>
+    
+		<Span color="Comment" multiline="true">
+			<Begin>/\*</Begin>
+			<End>\*/</End>
+		</Span>
+    
+		<Span color="String">
+			<Begin>"</Begin>
+			<End>"</End>
+			<RuleSet>
+				<Span begin="\\" end="." />
+			</RuleSet>
+		</Span>
+    
+		<Span color="Character">
+			<Begin>'</Begin>
+			<End>'</End>
+			<RuleSet>
+				<Span begin="\\" end="." />
+			</RuleSet>
+		</Span>    
+	</RuleSet>
+</SyntaxDefinition>

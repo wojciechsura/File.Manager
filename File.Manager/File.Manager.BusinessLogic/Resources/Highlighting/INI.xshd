@@ -1,0 +1,42 @@
+﻿<?xml version="1.0"?>
+<SyntaxDefinition name="C#" extensions=".cs" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+
+  <!-- Colors -->
+
+  <Color name="Comment" foreground="#808080" />
+  <Color name="Section" foreground="#008010" />
+  <Color name="PropName" foreground="#1000a0" />
+  <Color name="PropValue" foreground="#ff8000" />
+  <Color name="String" foreground="#ff8000" />
+  
+  <!-- Rules -->
+
+  <RuleSet>
+    <Span color="Comment">
+      <Begin>;</Begin>
+    </Span>
+
+    <Span color="Section">
+      <Begin>\[</Begin>
+      <End>\]</End>
+    </Span>
+
+    <Rule color="PropName">
+      ^\s*[\d\w_]+(?=\s*=)
+    </Rule>
+
+    <Span color="String">
+      <Begin>"</Begin>
+      <End>"</End>
+      <RuleSet>
+        <!-- span for escape sequences -->
+        <Span begin="\\" end="."/>
+      </RuleSet>
+    </Span>
+
+    <Rule color="PropValue">
+      (?&lt;==\s*).+$
+    </Rule>
+    
+  </RuleSet>
+</SyntaxDefinition>

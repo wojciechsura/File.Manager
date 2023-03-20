@@ -1,0 +1,204 @@
+<?xml version="1.0"?>
+<SyntaxDefinition name="C++" extensions=".c;.h;.cc;.cpp;.hpp" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+
+  <!-- Colors -->
+
+  <Color name="CompoundKeywords" foreground="#3400ff" />
+  <Color name="This" foreground="#3400ff" />
+  <Color name="Operators" />
+  <Color name="Namespace" foreground="#3400ff" />
+  <Color name="Friend" foreground="#3400ff" />
+  <Color name="Modifiers" foreground="#3400ff" />
+  <Color name="BuiltinTypes" foreground="#3400ff" />
+  <Color name="BooleanConstants" foreground="#3400ff" />
+  <Color name="ControlFlowKeywords" foreground="#8f08c4" />
+  <Color name="Keywords" foreground="#3400ff" />
+  <Color name="Preprocessor" foreground="#808080" />
+  <Color name="IncludePreprocessorParam" foreground="#a31515" />
+  <Color name="Comment" foreground="#008000" />
+  <Color name="String" foreground="#a31515" />
+  <Color name="Character" foreground="#a31515" />
+  <Color name="MethodName" foreground="#74531f" />
+  
+  <!-- Rules -->
+  
+	<RuleSet ignoreCase="false">
+		<Keywords color="CompoundKeywords">
+			<Word>__abstract</Word>
+			<Word>__box</Word>
+			<Word>__delegate</Word>
+			<Word>__gc</Word>
+			<Word>__identifier</Word>
+			<Word>__nogc</Word>
+			<Word>__pin</Word>
+			<Word>__property</Word>
+			<Word>__sealed</Word>
+			<Word>__try_cast</Word>
+			<Word>__typeof</Word>
+			<Word>__value</Word>
+			<Word>__event</Word>
+			<Word>__hook</Word>
+			<Word>__raise</Word>
+			<Word>__unhook</Word>
+			<Word>__interface</Word>
+			<Word>ref class</Word>
+			<Word>ref struct</Word>
+			<Word>value class</Word>
+			<Word>value struct</Word>
+			<Word>interface class</Word>
+			<Word>interface struct</Word>
+			<Word>enum class</Word>
+			<Word>enum struct</Word>
+			<Word>delegate</Word>
+			<Word>event</Word>
+			<Word>property</Word>
+			<Word>abstract</Word>
+			<Word>override</Word>
+			<Word>sealed</Word>
+			<Word>generic</Word>
+			<Word>where</Word>
+			<Word>finally</Word>
+			<Word>for each</Word>
+			<Word>gcnew</Word>
+			<Word>in</Word>
+			<Word>initonly</Word>
+			<Word>literal</Word>
+			<Word>nullptr</Word>
+		</Keywords>
+    
+		<Keywords color="This">
+			<Word>this</Word>
+		</Keywords>
+    
+		<Keywords color="Operators">
+			<Word>and</Word>
+			<Word>and_eq</Word>
+			<Word>bitand</Word>
+			<Word>bitor</Word>
+			<Word>new</Word>
+			<Word>not</Word>
+			<Word>not_eq</Word>
+			<Word>or</Word>
+			<Word>or_eq</Word>
+			<Word>xor</Word>
+			<Word>xor_eq</Word>
+		</Keywords>
+    
+		<Keywords color="Namespace">
+			<Word>using</Word>
+			<Word>namespace</Word>
+		</Keywords>
+    
+		<Keywords color="Friend">
+			<Word>friend</Word>
+		</Keywords>
+    
+		<Keywords color="Modifiers">
+			<Word>private</Word>
+			<Word>protected</Word>
+			<Word>public</Word>
+			<Word>const</Word>
+			<Word>volatile</Word>
+			<Word>static</Word>
+		</Keywords>
+    
+		<Keywords color="BuiltinTypes">
+      <Word>bool</Word>
+      <Word>char</Word>
+      <Word>class</Word>
+      <Word>double</Word>
+      <Word>enum</Word>
+      <Word>float</Word>
+      <Word>int</Word>
+      <Word>long</Word>
+      <Word>short</Word>
+      <Word>signed</Word>
+      <Word>struct</Word>
+      <Word>union</Word>
+      <Word>unsigned</Word>
+      <Word>virtual</Word>
+      <Word>void</Word>
+    </Keywords>
+    
+		<Keywords color="BooleanConstants">
+			<Word>false</Word>
+			<Word>true</Word>
+		</Keywords>
+    
+		<Keywords color="ControlFlowKeywords">
+			<Word>do</Word>
+			<Word>for</Word>
+			<Word>while</Word>
+			<Word>break</Word>
+			<Word>continue</Word>
+			<Word>goto</Word>
+			<Word>return</Word>
+			<Word>catch</Word>
+			<Word>throw</Word>
+			<Word>try</Word>
+			<Word>case</Word>
+			<Word>else</Word>
+			<Word>if</Word>
+			<Word>switch</Word>
+			<Word>default</Word>
+		</Keywords>
+    
+		<Keywords color="Keywords">
+			<Word>asm</Word>
+			<Word>auto</Word>
+			<Word>compl</Word>
+			<Word>mutable</Word>
+			<Word>const_cast</Word>
+			<Word>delete</Word>
+			<Word>dynamic_cast</Word>
+			<Word>explicit</Word>
+			<Word>export</Word>
+			<Word>extern</Word>
+			<Word>inline</Word>
+			<Word>operator</Word>
+			<Word>register</Word>
+			<Word>reinterpret_cast</Word>
+			<Word>sizeof</Word>
+			<Word>static_cast</Word>
+			<Word>template</Word>
+			<Word>typedef</Word>
+			<Word>typeid</Word>
+			<Word>typename</Word>
+		</Keywords>
+    
+		<Span color="Preprocessor">
+			<Begin>\#</Begin>
+      <RuleSet>
+        <Span color="IncludePreprocessorParam" begin="&lt;" end="&gt;" />
+        <Span color="IncludePreprocessorParam" begin="&quot;" end="&quot;" />
+      </RuleSet>
+		</Span>
+    
+		<Span color="Comment">
+			<Begin>//</Begin>
+		</Span>
+    
+		<Span color="Comment" multiline="true">
+			<Begin>/\*</Begin>
+			<End>\*/</End>
+		</Span>
+    
+		<Span color="String">
+			<Begin>"</Begin>
+			<End>"</End>
+			<RuleSet>
+				<Span begin="\\" end="." />
+			</RuleSet>
+		</Span>
+    
+		<Span color="Character">
+			<Begin>'</Begin>
+			<End>'</End>
+			<RuleSet>
+				<Span begin="\\" end="." />
+			</RuleSet>
+		</Span>
+    
+		<Rule color="MethodName">[\d\w_]+(?=(\s*\())</Rule>
+	</RuleSet>
+</SyntaxDefinition>

@@ -1,0 +1,25 @@
+﻿<?xml version="1.0"?>
+<SyntaxDefinition name="CommentMarkers" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+
+  <!-- Colors -->
+
+  <Color name="CommentMarker" foreground="#ff0000" />
+
+  <!-- Rules -->
+
+  <RuleSet name="CommentMarkerSet">
+    <Keywords color="CommentMarker">
+      <Word>TODO</Word>
+      <Word>FIXME</Word>
+    </Keywords>
+    <Keywords color="CommentMarker">
+      <Word>HACK</Word>
+      <Word>UNDONE</Word>
+    </Keywords>
+  </RuleSet>
+
+  <RuleSet>
+    <Import ruleSet="CommentMarkerSet" />
+  </RuleSet>
+  
+</SyntaxDefinition>

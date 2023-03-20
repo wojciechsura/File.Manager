@@ -115,6 +115,8 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
                 return;
 
             dialogService.ShowViewWindow(stream, focusedItem.Name);
+
+            stream.Dispose();
         }
 
         private void DoCopyMove(DataTransferOperationType operationType)

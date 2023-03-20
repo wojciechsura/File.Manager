@@ -1,0 +1,133 @@
+<?xml version="1.0"?>
+<SyntaxDefinition name="Java" extensions=".java" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+  
+  <!-- Colors -->
+
+  <Color name="Keywords" foreground="#000080" fontWeight="bold" />
+  <Color name="ControlFlowKeywords" foreground="#800080" />
+  <Color name="String" foreground="#008000" />
+  <Color name="Character" foreground="#008000"  />
+  <Color name="Comment" foreground="#008000" />
+  <Color name="JavaDocTags" foreground="#808080" />
+  <Color name="Annotations" foreground="#808000" />
+  
+  <!-- Rules -->
+  
+  <RuleSet ignoreCase="false">
+    
+    <Keywords color="Keywords">
+      <Word>this</Word>
+      <Word>super</Word>
+
+      <Word>new</Word>
+      <Word>instanceof</Word>
+      <Word>true</Word>
+      <Word>false</Word>
+
+      <Word>boolean</Word>
+      <Word>double</Word>
+      <Word>int</Word>
+      <Word>short</Word>
+      <Word>long</Word>
+      <Word>float</Word>
+      <Word>byte</Word>
+      <Word>char</Word>
+
+      <Word>class</Word>
+      <Word>interface</Word>
+      <Word>object</Word>
+
+      <Word>void</Word>
+
+      <Word>abstract</Word>
+      <Word>const</Word>
+      <Word>static</Word>
+      <Word>final</Word>
+      <Word>native</Word>
+      <Word>extends</Word>
+      <Word>implements</Word>
+      <Word>volatile</Word>
+      <Word>transient</Word>
+      <Word>throws</Word>
+      <Word>strictfp</Word>
+      <Word>synchronized</Word>
+
+      <Word>public</Word>
+      <Word>protected</Word>
+      <Word>private</Word>
+
+      <Word>package</Word>
+      <Word>import</Word>
+
+      <Word>null</Word>
+    </Keywords>
+    
+    <Keywords color="ControlFlowKeywords">
+      <Word>else</Word>
+      <Word>if</Word>
+      <Word>switch</Word>
+      <Word>case</Word>
+
+      <Word>do</Word>
+      <Word>for</Word>
+      <Word>while</Word>
+
+      <Word>break</Word>
+      <Word>continue</Word>
+      <Word>default</Word>
+      <Word>goto</Word>
+      <Word>return</Word>
+
+      <Word>try</Word>
+      <Word>throw</Word>
+      <Word>catch</Word>
+      <Word>finally</Word>
+    </Keywords>
+
+    <Span color="Comment" ruleSet="JavaDocSet">
+      <Begin>//</Begin>
+    </Span>
+    
+    <Span color="Comment" ruleSet="JavaDocSet" multiline="true">
+      <Begin>/\*</Begin>
+      <End>\*/</End>
+    </Span>
+    
+    <Span color="String">
+      <Begin>"</Begin>
+      <End>"</End>
+      <RuleSet>
+        <Span begin="\\" end="." />
+      </RuleSet>
+    </Span>
+    
+    <Span color="Character">
+      <Begin>'</Begin>
+      <End>'</End>
+      <RuleSet>
+        <Span begin="\\" end="." />
+      </RuleSet>
+    </Span>
+
+    <Rule color="Annotations">@\w+</Rule>
+    
+  </RuleSet>
+  
+  <RuleSet name="JavaDocSet" ignoreCase="true">
+    <Import ruleSet="CommentMarkers/CommentMarkerSet"/>
+    <Keywords color="JavaDocTags">
+      <Word>@author</Word>
+      <Word>@version</Word>
+      <Word>@param</Word>
+      <Word>@return</Word>
+      <Word>@exception</Word>
+      <Word>@throws</Word>
+      <Word>@see</Word>
+      <Word>@since</Word>
+      <Word>@serial</Word>
+      <Word>@serialField</Word>
+      <Word>@serialData</Word>
+      <Word>@deprecated</Word>
+    </Keywords>
+  </RuleSet>
+</SyntaxDefinition>

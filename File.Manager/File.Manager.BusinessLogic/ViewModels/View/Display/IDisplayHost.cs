@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace File.Manager.BusinessLogic.ViewModels.View.Displays
+namespace File.Manager.BusinessLogic.ViewModels.View.Display
 {
-    internal class TextDisplayViewModel
+    public interface IDisplayHost
     {
+
     }
 }

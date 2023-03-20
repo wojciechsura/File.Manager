@@ -6,8 +6,10 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Autofac" Version="7.0.0" />
+    <PackageReference Include="AvalonEdit" Version="6.3.0.90" />
     <PackageReference Include="SharpZipLib" Version="1.4.2" />
     <PackageReference Include="SmartFormat" Version="3.2.1" />
+    <PackageReference Include="Spooksoft.HexEditor" Version="1.0.2" />
     <PackageReference Include="Spooksoft.VisualStateManager" Version="1.2.0" />
   </ItemGroup>
   <ItemGroup>
@@ -22,6 +24,57 @@
     <EditorConfigFiles Remove="D:\Dokumenty\Dev\VS\File.Manager\.editorconfig" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="Resources\Highlighting\ASPX.xshd" />
+    <None Remove="Resources\Highlighting\BinDef.xshd" />
+    <None Remove="Resources\Highlighting\CommentMarkers.xshd" />
+    <None Remove="Resources\Highlighting\CPP.xshd" />
+    <None Remove="Resources\Highlighting\CSharp.xshd" />
+    <None Remove="Resources\Highlighting\CSS.xshd" />
+    <None Remove="Resources\Highlighting\feature.xshd" />
+    <None Remove="Resources\Highlighting\HTML.xshd" />
+    <None Remove="Resources\Highlighting\INI.xshd" />
+    <None Remove="Resources\Highlighting\Java.xshd" />
+    <None Remove="Resources\Highlighting\JavaScript.xshd" />
+    <None Remove="Resources\Highlighting\json.xshd" />
+    <None Remove="Resources\Highlighting\MarkDown.xshd" />
+    <None Remove="Resources\Highlighting\ModeV2.xsd" />
+    <None Remove="Resources\Highlighting\Patch.xshd" />
+    <None Remove="Resources\Highlighting\PHP.xshd" />
+    <None Remove="Resources\Highlighting\PowerShell.xshd" />
+    <None Remove="Resources\Highlighting\Python.xshd" />
+    <None Remove="Resources\Highlighting\TSQL.xshd" />
+    <None Remove="Resources\Highlighting\VB-Mode.xshd" />
+    <None Remove="Resources\Highlighting\XML-Mode.xshd" />
+    <None Remove="Resources\Highlighting\XmlDoc.xshd" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Highlighting\ASPX.xshd" />
+    <EmbeddedResource Include="Resources\Highlighting\BinDef.xshd" />
+    <EmbeddedResource Include="Resources\Highlighting\CommentMarkers.xshd" />
+    <EmbeddedResource Include="Resources\Highlighting\CPP.xshd" />
+    <EmbeddedResource Include="Resources\Highlighting\CSharp.xshd" />
+    <EmbeddedResource Include="Resources\Highlighting\CSS.xshd" />
+    <EmbeddedResource Include="Resources\Highlighting\feature.xshd" />
+    <EmbeddedResource Include="Resources\Highlighting\HTML.xshd" />
+    <EmbeddedResource Include="Resources\Highlighting\INI.xshd" />
+    <EmbeddedResource Include="Resources\Highlighting\Java.xshd" />
+    <EmbeddedResource Include="Resources\Highlighting\JavaScript.xshd" />
+    <EmbeddedResource Include="Resources\Highlighting\json.xshd" />
+    <EmbeddedResource Include="Resources\Highlighting\MarkDown.xshd" />
+    <EmbeddedResource Include="Resources\Highlighting\ModeV2.xsd" />
+    <EmbeddedResource Include="Resources\Highlighting\Patch.xshd" />
+    <EmbeddedResource Include="Resources\Highlighting\PHP.xshd" />
+    <EmbeddedResource Include="Resources\Highlighting\PowerShell.xshd" />
+    <EmbeddedResource Include="Resources\Highlighting\Python.xshd" />
+    <EmbeddedResource Include="Resources\Highlighting\TSQL.xshd" />
+    <EmbeddedResource Include="Resources\Highlighting\VB-Mode.xshd" />
+    <EmbeddedResource Include="Resources\Highlighting\XML-Mode.xshd" />
+    <EmbeddedResource Include="Resources\Highlighting\XmlDoc.xshd" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="D:\Dokumenty\Dev\VS\File.Manager\.editorconfig" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Services\Highlighting\" />
   </ItemGroup>
 </Project>

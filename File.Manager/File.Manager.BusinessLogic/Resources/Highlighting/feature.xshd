@@ -1,0 +1,35 @@
+﻿<?xml version="1.0"?>
+<SyntaxDefinition name="Feature (Gherkin)" extensions=".feature" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+
+  <!-- Colors -->
+
+  <Color name="FirstLevel" foreground="Red" />
+  <Color name="SecondLevel" foreground="Green" />
+  <Color name="Rules" foreground="Blue" />
+  <Color name="Tag" foreground="Orange" />
+  <Color name="Comment" foreground="#808080" />
+  
+  <!-- Rules -->
+
+  <RuleSet ignoreCase="true">
+    <Rule color="FirstLevel">
+      ^\s*(Feature|Rule):?
+    </Rule>
+
+    <Rule color="SecondLevel">
+      ^\s*(Example|Scenario|Background):?
+    </Rule>
+    
+    <Rule color="Rules">
+      ^\s*(Given|When|Then|And|But|\*|Examples):?
+    </Rule>
+    
+    <Rule color="Tag">
+      ^\s*@.*$
+    </Rule>
+
+    <Rule color="Comment">
+      \#.*$
+    </Rule>
+  </RuleSet>
+</SyntaxDefinition>

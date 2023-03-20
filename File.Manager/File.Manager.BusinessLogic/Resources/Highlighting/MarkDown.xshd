@@ -1,0 +1,105 @@
+﻿<?xml version="1.0"?>
+<SyntaxDefinition name="MarkDown" extensions=".md" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+	
+  <!-- Colors -->
+  
+  <Color name="Heading" foreground="Maroon" />
+  <Color name="BlockQuote" foreground="DarkBlue" />
+  <Color name="HorizontalRule" underline="true" />
+  <Color name="ListItem" background="LightGray" />
+	<Color name="Emphasis" fontStyle="italic" />
+	<Color name="StrongEmphasis" fontWeight="bold" />
+	<Color name="Code" foreground="DarkGray" />
+	<Color name="Link" foreground="Blue" />
+	<Color name="Image" foreground="Green" />
+  <Color name="UrlRef" foreground="Blue" background="LightGray" />
+	<Color name="LineBreak" background="LightGray" />
+	
+  <!-- Rules -->
+  
+	<RuleSet ignoreCase="true">
+    <!-- Catching escaped characters -->
+    <Rule>
+      \\[\\`\*_\{\}\[\]\(\)\#\+\-\.\!]
+    </Rule>
+
+    <Rule color="Heading">
+      ^\#{1,6}.*$
+    </Rule>
+
+    <Span color="BlockQuote" multiline="true">
+      <Begin>^&gt;</Begin>
+      <End>^(?!&gt;)</End>
+    </Span>
+
+    <Rule color="HorizontalRule">
+      ^(\*[ ]*){3,}$
+    </Rule>
+
+    <Rule color="HorizontalRule">
+      ^(\-[ ]*){3,}$
+    </Rule>
+
+    <Rule color="ListItem">
+      ^([0-9]+\.|[\*\+\-])(?=[ ])
+    </Rule>
+    
+		<Rule color="StrongEmphasis">
+			\*\*(?![\* ]).*(?&lt;![ ])\*\*
+		</Rule>
+    
+		<Rule color="StrongEmphasis">
+			__(?![_ ]).*(?&lt;![ ])__
+		</Rule>
+    
+		<Rule color="Emphasis">
+      \*(?![\* ]).*(?&lt;![\* ])\*
+    </Rule>
+    
+		<Rule color="Emphasis">
+			_(?![_ ]).*(?&lt;![ ])_
+		</Rule>
+
+    <Rule color="Code">
+      ``.*``
+    </Rule>
+    
+		<Rule color="Code">
+			(?&lt;!`)`(?![`])[^`]*`
+		</Rule>
+    
+		<Span color="Code" multiline="true">
+			<Begin>^\t</Begin>
+			<End>^(?!\t)</End>
+		</Span>
+    
+		<Span color="Code" multiline="true">
+			<Begin>^[ ]{4}</Begin>
+			<End>^(?![ ]{4})</End>
+		</Span>
+   
+		<Rule color="Image">
+			\!\[.*\]\[.*\]
+		</Rule>
+
+    <Rule color="Image">
+      \!\[.*\]\(.*\)
+    </Rule>
+
+    <Rule color="Link">
+			\[.*\]\(.*\)
+		</Rule>
+    
+		<Rule color="Link">
+			\[.*\]\[.*\]
+		</Rule>
+
+    <Rule color="UrlRef">
+      ^ *\[([^\]]+)\]:.*$
+    </Rule>
+    
+		<Rule color="LineBreak">
+			[ ]{2}$
+		</Rule>
+	</RuleSet>
+</SyntaxDefinition>
