@@ -9,7 +9,7 @@
              xmlns:c="clr-namespace:File.Manager.Controls.Files"             
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance Type=vm:PaneViewModel}"
-             d:DesignHeight="450" d:DesignWidth="800" PreviewKeyDown="HandlePanePreviewKeyDown" GotFocus="HandlePaneGotFocus">
+             d:DesignHeight="450" d:DesignWidth="800" Focusable="True">
     <DockPanel>
         <TextBox DockPanel.Dock="Top" Text="{Binding Navigator.Address, Mode=OneWay}"
                  IsReadOnly="True" Padding="4" Margin="{StaticResource DialogItemsBottomMargin}" />

@@ -259,6 +259,7 @@ namespace File.Manager.Services.DialogService
             // owner-managed, as other dialogs
 
             var dialog = new ViewWindow(stream, filename);
+            dialog.Owner = Application.Current.MainWindow;
             dialog.Show();
         }
     }

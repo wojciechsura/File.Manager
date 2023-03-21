@@ -335,6 +335,8 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Zip
 
         public override string Address => ZipPathTools.BuildAddress(zipFilePath, current?.FullPath ?? "");
 
+        public override bool RestoreAddress => true;
+
         public override IReadOnlyList<Item> Items => items;
     }
 }

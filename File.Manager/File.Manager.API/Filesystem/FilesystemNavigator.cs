@@ -63,6 +63,8 @@ namespace File.Manager.API.Filesystem
 
         public abstract string Address { get; }
         
+        public abstract bool RestoreAddress { get; }
+
         public abstract IReadOnlyList<Item> Items { get; }
 
 

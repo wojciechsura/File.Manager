@@ -14,6 +14,6 @@
             SmallChange="{Binding ElementName=editor, Path=ScrollSmallChange}"/>
         
         <sc:HexEditorDisplay x:Name="editor" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
-                             Document="{Binding Document}" />
+                             Document="{Binding Document}" IsReadOnly="True" />
     </DockPanel>
 </UserControl>

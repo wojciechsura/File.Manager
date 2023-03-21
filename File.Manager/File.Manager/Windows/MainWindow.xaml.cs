@@ -50,14 +50,29 @@ namespace File.Manager.Windows
             DataContext = viewModel;
         }
 
-        private void paneGotFocus(object sender, RoutedEventArgs e)
+        private void HandlePaneGotFocus(object sender, RoutedEventArgs e)
         {
             viewModel.NotifyActivated((sender as Pane)?.DataContext as PaneViewModel);
         }
 
-        private void Border_PreviewKeyDown(object sender, KeyEventArgs e)
+        private void HandleBorderPreviewKeyDown(object sender, KeyEventArgs e)
         {
             e.Handled = true;
+        }
+
+        private void HandleWindowLoaded(object sender, RoutedEventArgs e)
+        {
+            Dispatcher.BeginInvoke(() =>
+            {
+                pLeft.Focus();
+            }, DispatcherPriority.ApplicationIdle);            
+        }
+
+        private void HandleWindowClosing(object sender, CancelEventArgs e)
+        {
+            bool cancel = e.Cancel;
+            viewModel.NotifyClosing(ref cancel);
+            e.Cancel= cancel;
         }
     }
 }

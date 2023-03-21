@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using Dev.Editor.BusinessLogic.Services.Highlighting;
 using File.Manager.API;
+using File.Manager.BusinessLogic.Services.Configuration;
 using File.Manager.BusinessLogic.Services.EventBus;
 using File.Manager.BusinessLogic.Services.Host;
 using File.Manager.BusinessLogic.Services.Icons;
@@ -34,6 +35,7 @@ namespace File.Manager.BusinessLogic.Dependencies
             builder.RegisterType<IconService>().As<IIconService>().SingleInstance();
             builder.RegisterType<HighlightingProvider>().As<IHighlightingProvider>().SingleInstance();
             builder.RegisterType<DisplayKindResolver>().As<IDisplayKindResolver>().SingleInstance();
+            builder.RegisterType<ConfigurationService>().As<IConfigurationService>().SingleInstance();
         }
     }
 }

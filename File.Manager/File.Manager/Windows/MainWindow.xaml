@@ -9,9 +9,8 @@
                 xmlns:main="clr-namespace:File.Manager.BusinessLogic.ViewModels.Main;assembly=File.Manager.BusinessLogic" xmlns:c1="clr-namespace:File.Manager.Controls.Files" xmlns:c="clr-namespace:File.Manager.Controls"
                 d:DataContext="{d:DesignInstance Type=main:MainWindowViewModel}"
                 mc:Ignorable="d"
-                Title="{x:Static res:Strings.Window_Title}" Height="450" Width="800" 
-                FocusManager.FocusedElement="{Binding ElementName=pLeft}"
-                x:Name="root">
+                Title="{x:Static res:Strings.Window_Title}" Height="450" Width="800"                
+                x:Name="root" Loaded="HandleWindowLoaded" Closing="HandleWindowClosing">
 
     <f:RibbonWindow.InputBindings>
         <KeyBinding Key="U" Modifiers="Ctrl" Command="{Binding Path=SwitchPanesCommand}" />
@@ -83,9 +82,9 @@
                     <ColumnDefinition Width="1*" />
                 </Grid.ColumnDefinitions>
 
-                <c:Pane x:Name="pLeft" Grid.Column="0" DataContext="{Binding LeftPane}" Margin="{StaticResource DialogItemsMargin}" GotFocus="paneGotFocus"
+                <c:Pane x:Name="pLeft" Grid.Column="0" DataContext="{Binding LeftPane}" Margin="{StaticResource DialogItemsMargin}" GotFocus="HandlePaneGotFocus"
                     SnapsToDevicePixels="True" UseLayoutRounding="True" />
-                <c:Pane x:Name="pRight" Grid.Column="1" DataContext="{Binding RightPane}" Margin="{StaticResource DialogItemsMargin}" GotFocus="paneGotFocus"
+                <c:Pane x:Name="pRight" Grid.Column="1" DataContext="{Binding RightPane}" Margin="{StaticResource DialogItemsMargin}" GotFocus="HandlePaneGotFocus"
                     SnapsToDevicePixels="True" UseLayoutRounding="True" />
             </Grid>
 

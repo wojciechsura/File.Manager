@@ -4,6 +4,8 @@ using File.Manager.BusinessLogic.Models.Dialogs.CopyMoveConfiguration;
 using File.Manager.BusinessLogic.Models.Dialogs.DeleteConfiguration;
 using File.Manager.BusinessLogic.Models.Dialogs.NewFolderConfiguration;
 using File.Manager.BusinessLogic.Models.Dialogs.Selection;
+using File.Manager.BusinessLogic.Modules.Filesystem.Home;
+using File.Manager.BusinessLogic.Services.Configuration;
 using File.Manager.BusinessLogic.Services.Dialogs;
 using File.Manager.BusinessLogic.Services.Icons;
 using File.Manager.BusinessLogic.Services.Messaging;
@@ -37,6 +39,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
         private readonly IMainWindowAccess access;
         private readonly IDialogService dialogService;
         private readonly IMessagingService messagingService;
+        private readonly IConfigurationService configurationService;
 
         private PaneViewModel leftPane;
         private PaneViewModel rightPane;
@@ -364,10 +367,12 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
             IModuleService moduleService, 
             IIconService iconService,
             IMessagingService messagingService,
-            IDialogService dialogService)
+            IDialogService dialogService,
+            IConfigurationService configurationService)
         {
             this.access = access;
             this.dialogService = dialogService;
+            this.configurationService = configurationService;
             this.messagingService = messagingService;
 
             leftPane = new PaneViewModel(this, moduleService, iconService, messagingService);
@@ -385,7 +390,10 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
             AddToSelectionCommand = new AppCommand(obj => DoChangeSelection(SelectionOperationKind.Add));
             RemoveFromSelectionCommand = new AppCommand(obj => DoChangeSelection(SelectionOperationKind.Remove));
 
-            activePane = leftPane;
+            // Restore addresses
+
+            leftPane.Navigate(configurationService.Configuration.Session.LeftPaneAddress.Value);
+            rightPane.Navigate(configurationService.Configuration.Session.RightPaneAddress.Value);
         }
 
         public void NotifyActivated(PaneViewModel paneViewModel)
@@ -395,6 +403,23 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
                 InactivePane.Active = false;
             if (ActivePane != null)
                 ActivePane.Active = true;
+        }
+
+        public void NotifyClosing(ref bool cancel)
+        {
+            if (leftPane.Navigator.RestoreAddress)
+                configurationService.Configuration.Session.LeftPaneAddress.Value = leftPane.Navigator.Address;
+            else
+                configurationService.Configuration.Session.LeftPaneAddress.Value = HomeNavigator.ROOT_ADDRESS;
+
+            if (rightPane.Navigator.RestoreAddress)
+                configurationService.Configuration.Session.RightPaneAddress.Value = rightPane.Navigator.Address;
+            else
+                configurationService.Configuration.Session.RightPaneAddress.Value = HomeNavigator.ROOT_ADDRESS;
+
+            configurationService.Save();
+
+            cancel = false;
         }
 
         // Public properties --------------------------------------------------

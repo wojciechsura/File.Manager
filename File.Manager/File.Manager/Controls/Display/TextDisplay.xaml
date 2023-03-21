@@ -9,5 +9,5 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <ae:TextEditor HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
                    Document="{Binding Document}" SyntaxHighlighting="{Binding Highlighting}"
-                   FontFamily="Consolas" FontSize="12" ShowLineNumbers="True" />
+                   FontFamily="Consolas" FontSize="12" ShowLineNumbers="True" IsReadOnly="True" />
 </UserControl>

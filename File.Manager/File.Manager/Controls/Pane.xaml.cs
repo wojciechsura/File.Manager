@@ -43,13 +43,24 @@ namespace File.Manager.Controls
                 viewModel.Access = this;
         }
 
-        private void HandlePanePreviewKeyDown(object sender, KeyEventArgs e)
+        protected override void OnPreviewKeyDown(KeyEventArgs e)
         {
             if (e.Key == Key.Tab)
             {
                 viewModel.NotifyTabPressed();
                 e.Handled = true;
             }
+            else
+            {
+                base.OnPreviewKeyDown(e);
+            }
+        }
+
+        protected override void OnGotFocus(RoutedEventArgs e)
+        {
+            base.OnGotFocus(e);
+            if (!flList.IsFocused)
+                flList.Focus();
         }
 
         // IPaneAccess implementation -----------------------------------------
@@ -74,12 +85,6 @@ namespace File.Manager.Controls
             };
 
             flList.Columns = columns;
-        }
-
-        private void HandlePaneGotFocus(object sender, RoutedEventArgs e)
-        {
-            if (!flList.IsFocused)
-                flList.Focus();
         }
     }
 }

@@ -9,7 +9,8 @@
     <PackageReference Include="AvalonEdit" Version="6.3.0.90" />
     <PackageReference Include="SharpZipLib" Version="1.4.2" />
     <PackageReference Include="SmartFormat" Version="3.2.1" />
-    <PackageReference Include="Spooksoft.HexEditor" Version="1.0.2" />
+    <PackageReference Include="Spooksoft.Configuration" Version="1.0.0" />
+    <PackageReference Include="Spooksoft.HexEditor" Version="1.0.3" />
     <PackageReference Include="Spooksoft.VisualStateManager" Version="1.2.0" />
   </ItemGroup>
   <ItemGroup>

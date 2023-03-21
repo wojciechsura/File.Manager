@@ -15,7 +15,7 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Home
 {
     public class HomeNavigator : FilesystemNavigator
     {
-        private const string ROOT_ADDRESS = @"\";
+        public const string ROOT_ADDRESS = @"\";
 
         private readonly List<ModuleFolderItem> items;
         private readonly IModuleService moduleService;
@@ -130,6 +130,8 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Home
             => throw new NotSupportedException("Creating operator for home module is not supported.");
 
         public override string Address => address;
+
+        public override bool RestoreAddress => true;
 
         public override IReadOnlyList<Item> Items => items;
     }

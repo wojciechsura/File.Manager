@@ -22,6 +22,7 @@ using System.ComponentModel;
 using File.Manager.BusinessLogic.Models.Files;
 using File.Manager.API.Filesystem.Models.Items.Listing;
 using File.Manager.Common.Wpf.Collections;
+using Spooksoft.Configuration;
 
 namespace File.Manager.BusinessLogic.ViewModels.Pane
 {
@@ -127,7 +128,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
             ReplaceCurrentNavigator(homeNavigator, data);
         }
 
-        public void DoExecuteCurrentItem(object item)
+        private void DoExecuteCurrentItem(object item)
         {
             if (item is not ItemViewModel itemViewModel)
                 throw new InvalidOperationException("Invalid item!");
@@ -142,25 +143,19 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
             }
         }
 
-        // IFilesystemNavigatorHandler implementation -------------------------
-
-        void IFilesystemNavigatorHandler.NotifyChanged(FocusedItemData focusedItem)
-        {            
-            UpdateItems(focusedItem);
-        }
-
-        void IFilesystemNavigatorHandler.RequestNavigateToAddress(string address, FocusedItemData? focusedItem)
+        private void DoNavigateToAddress(string address, FocusedItemData focusedItem)
         {
-            int i = 0;
-
-            while (i < moduleService.FilesystemModules.Count &&
-                !moduleService.FilesystemModules[i].SupportsAddress(address))
-                i++;
-
-            if (i < moduleService.FilesystemModules.Count)
+            // Special case, as there is no home module
+            if (address == HomeNavigator.ROOT_ADDRESS)
             {
-                var module = moduleService.FilesystemModules[i];
+                SetHomeNavigator(null);
+                return;
+            }
 
+            var module = moduleService.FilesystemModules.FirstOrDefault(s => s.SupportsAddress(address));
+
+            if (module != null)
+            {
                 var newNavigator = module.CreateNavigator(address);
 
                 try
@@ -176,6 +171,18 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
             {
                 messagingService.ShowError(String.Format(Resources.Controls.Pane.Strings.Message_AddressUnsupported, address));
             }
+        }
+
+        // IFilesystemNavigatorHandler implementation -------------------------
+
+        void IFilesystemNavigatorHandler.NotifyChanged(FocusedItemData focusedItem)
+        {            
+            UpdateItems(focusedItem);
+        }
+
+        void IFilesystemNavigatorHandler.RequestNavigateToAddress(string address, FocusedItemData? focusedItem)
+        {
+            DoNavigateToAddress(address, focusedItem);
         }
 
         void IFilesystemNavigatorHandler.RequestReplaceNavigator(FilesystemNavigator newNavigator, FocusedItemData focusedItem)
@@ -233,7 +240,6 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
             return ((ItemViewModel)collectionView.CurrentItem).Item;
         }
 
-
         public void Refresh()
         {
             navigator.Refresh();
@@ -251,6 +257,11 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
             }
 
             ItemsView.MoveCurrentToFirst();
+        }
+
+        public void Navigate(string address)
+        {
+            DoNavigateToAddress(address, null);
         }
 
         // Public properties --------------------------------------------------

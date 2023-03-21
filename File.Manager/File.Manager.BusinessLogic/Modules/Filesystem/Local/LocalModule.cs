@@ -19,6 +19,7 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
         private readonly ImageSource documentsLargeIcon;
         private readonly ImageSource documentsSmallIcon;
         public static readonly string ModuleUid = "LOCAL";
+
         public LocalModule(IModuleHost host)
             : base(host)
         {

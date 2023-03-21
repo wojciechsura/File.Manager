@@ -32,11 +32,8 @@ namespace File.Manager.BusinessLogic.ViewModels.View
         {
             DisplayKind? resolved = displayKindResolver.Resolve(filename);
 
-            // TODO Check if file is text
             if (resolved == null)
-            {
-                resolved = DisplayKind.Hex;
-            }
+                (resolved, stream) = displayKindResolver.ResolveManually(stream);
 
             return resolved switch
             {

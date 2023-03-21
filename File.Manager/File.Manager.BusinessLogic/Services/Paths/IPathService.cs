@@ -3,5 +3,6 @@
     public interface IPathService
     {
         string AppDataPath { get; }
+        string ConfigPath { get; }
     }
 }
