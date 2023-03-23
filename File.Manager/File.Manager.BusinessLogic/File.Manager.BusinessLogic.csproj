@@ -47,6 +47,10 @@
     <None Remove="Resources\Highlighting\VB-Mode.xshd" />
     <None Remove="Resources\Highlighting\XML-Mode.xshd" />
     <None Remove="Resources\Highlighting\XmlDoc.xshd" />
+    <None Remove="Resources\Images\Ftp\AddSession16.png" />
+    <None Remove="Resources\Images\Ftp\AddSession32.png" />
+    <None Remove="Resources\Images\Ftp\FtpSession16.png" />
+    <None Remove="Resources\Images\Ftp\FtpSession32.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Highlighting\ASPX.xshd" />
@@ -71,6 +75,10 @@
     <EmbeddedResource Include="Resources\Highlighting\VB-Mode.xshd" />
     <EmbeddedResource Include="Resources\Highlighting\XML-Mode.xshd" />
     <EmbeddedResource Include="Resources\Highlighting\XmlDoc.xshd" />
+    <EmbeddedResource Include="Resources\Images\Ftp\AddSession16.png" />
+    <EmbeddedResource Include="Resources\Images\Ftp\AddSession32.png" />
+    <EmbeddedResource Include="Resources\Images\Ftp\FtpSession16.png" />
+    <EmbeddedResource Include="Resources\Images\Ftp\FtpSession32.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="D:\Dokumenty\Dev\VS\File.Manager\.editorconfig" />

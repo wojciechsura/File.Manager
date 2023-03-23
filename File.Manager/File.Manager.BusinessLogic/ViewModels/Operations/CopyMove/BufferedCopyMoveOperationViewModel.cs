@@ -101,8 +101,8 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
 
             protected override (bool exit, CopyMoveWorkerResult result) RetrieveFolderContents(CopyMoveWorkerContext context,
                 IFolderInfo folderInfo,
-                IFilesystemOperator sourceFolderOperator,
-                IFilesystemOperator destinationFolderOperator,
+                FilesystemOperator sourceFolderOperator,
+                FilesystemOperator destinationFolderOperator,
                 ref IReadOnlyList<IBaseItemInfo> items)
             {
                 items = sourceFolderOperator.List(null, context.Configuration.FileMask);
@@ -168,8 +168,8 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
         public BufferedCopyMoveOperationViewModel(IDialogService dialogService,
             IMessagingService messagingService,
             DataTransferOperationType operationType,
-            IFilesystemOperator sourceOperator,
-            IFilesystemOperator destinationOperator,
+            FilesystemOperator sourceOperator,
+            FilesystemOperator destinationOperator,
             CopyMoveConfigurationModel configuration,
             IReadOnlyList<Item> selectedItems)
             : base(dialogService, 

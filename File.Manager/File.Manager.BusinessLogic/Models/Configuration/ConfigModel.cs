@@ -1,4 +1,5 @@
-﻿using File.Manager.BusinessLogic.Models.Configuration.Session;
+﻿using File.Manager.BusinessLogic.Models.Configuration.Ftp;
+using File.Manager.BusinessLogic.Models.Configuration.Session;
 using Spooksoft.Configuration;
 using System;
 using System.Collections.Generic;
@@ -16,8 +17,10 @@ namespace File.Manager.BusinessLogic.Models.Configuration
             : base(NAME)
         {
             Session = new SessionConfig(this);
+            Ftp = new FtpConfig(this);
         }
 
         public SessionConfig Session { get; }
+        public FtpConfig Ftp { get; }
     }
 }

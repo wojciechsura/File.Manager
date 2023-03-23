@@ -34,7 +34,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
 
         protected sealed class CopyMoveWorkerInput
         {
-            public CopyMoveWorkerInput(DataTransferOperationType operationType, IFilesystemOperator sourceOperator, IFilesystemOperator destinationOperator, CopyMoveConfigurationModel configuration, IReadOnlyList<Item> selectedItems)
+            public CopyMoveWorkerInput(DataTransferOperationType operationType, FilesystemOperator sourceOperator, FilesystemOperator destinationOperator, CopyMoveConfigurationModel configuration, IReadOnlyList<Item> selectedItems)
             {
                 OperationType = operationType;
                 SourceOperator = sourceOperator;
@@ -44,8 +44,8 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
             }
 
             public DataTransferOperationType OperationType { get; }
-            public IFilesystemOperator SourceOperator { get; }
-            public IFilesystemOperator DestinationOperator { get; }
+            public FilesystemOperator SourceOperator { get; }
+            public FilesystemOperator DestinationOperator { get; }
             public CopyMoveConfigurationModel Configuration { get; }
             public IReadOnlyList<Item> SelectedItems { get; }
         }
@@ -243,8 +243,8 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
             // Private methods ------------------------------------------------
 
             private (bool exit, CopyMoveWorkerResult result) HandleSkipAbort(CopyMoveProblemKind problemKind,
-                IFilesystemOperator sourceOperator,
-                IFilesystemOperator destinationOperator,
+                FilesystemOperator sourceOperator,
+                FilesystemOperator destinationOperator,
                 string itemName)
             {
                 var resolution = GetResolutionFor(problemKind,
@@ -265,8 +265,8 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
 
             private (bool exit, CopyMoveWorkerResult result) HandleSkipRenameAbort(CopyMoveProblemKind fileCopiedIntoItself,
                 IBaseItemInfo fileInfo,
-                IFilesystemOperator sourceOperator,
-                IFilesystemOperator destinationOperator,
+                FilesystemOperator sourceOperator,
+                FilesystemOperator destinationOperator,
                 ref string targetName)
             {
                 var resolution = GetResolutionFor(fileCopiedIntoItself,
@@ -294,8 +294,8 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
             }
 
             private (bool exit, CopyMoveWorkerResult result) HandleSkipIgnoreAbort(CopyMoveProblemKind problemKind,
-                IFilesystemOperator sourceOperator,
-                IFilesystemOperator destinationOperator,
+                FilesystemOperator sourceOperator,
+                FilesystemOperator destinationOperator,
                 string itemName)
             {
                 var resolution = GetResolutionFor(problemKind,
@@ -319,8 +319,8 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
 
             private (bool exit, CopyMoveWorkerResult result) HandleSkipOverwriteRenameAbort(CopyMoveProblemKind destinationFileAlreadyExists,
                 IFileInfo fileInfo,
-                IFilesystemOperator sourceOperator,
-                IFilesystemOperator destinationOperator,
+                FilesystemOperator sourceOperator,
+                FilesystemOperator destinationOperator,
                 ref string targetName)
             {
                 var resolution = GetResolutionFor(destinationFileAlreadyExists,
@@ -351,8 +351,8 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
 
             private (bool exit, CopyMoveWorkerResult result) HandleSkipRenameOverwriteWithAttributeChangeAbort(CopyMoveProblemKind problemKind,
                 IFileInfo fileInfo,
-                IFilesystemOperator sourceOperator,
-                IFilesystemOperator destinationOperator,
+                FilesystemOperator sourceOperator,
+                FilesystemOperator destinationOperator,
                 FileAttributes attribute,
                 ref string targetName,
                 ref FileAttributes? attributes)
@@ -396,8 +396,8 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
             }
 
             private (bool exit, CopyMoveWorkerResult result) HandleIgnoreAbort(CopyMoveProblemKind problemKind,
-                IFilesystemOperator sourceOperator,
-                IFilesystemOperator destinationOperator,
+                FilesystemOperator sourceOperator,
+                FilesystemOperator destinationOperator,
                 string targetName)
             {
                 var resolution = GetResolutionFor(problemKind,
@@ -417,8 +417,8 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
             }
 
             private (bool exit, CopyMoveWorkerResult result) RenameTargetFile(TContext context,
-                            IFilesystemOperator sourceOperator,
-                            IFilesystemOperator destinationOperator,
+                            FilesystemOperator sourceOperator,
+                            FilesystemOperator destinationOperator,
                             ref string targetName)
             {
                 if (context.Configuration.RenameFrom.IsMatch(targetName))
@@ -443,8 +443,8 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
             }
 
             private (bool exit, CopyMoveWorkerResult result) EnsureFileNotCopiedOnItself(IFileInfo fileInfo,
-                IFilesystemOperator sourceOperator,
-                IFilesystemOperator destinationOperator,
+                FilesystemOperator sourceOperator,
+                FilesystemOperator destinationOperator,
                 ref string targetName)
             {
                 if (sourceOperator.CurrentPath == destinationOperator.CurrentPath &&
@@ -461,8 +461,8 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
             }
 
             private (bool exit, CopyMoveWorkerResult result) EnsureFolderNotCopiedOnItself(IFolderInfo folderInfo,
-                IFilesystemOperator sourceOperator,
-                IFilesystemOperator destinationOperator,
+                FilesystemOperator sourceOperator,
+                FilesystemOperator destinationOperator,
                 ref string targetName)
             {
                 if (sourceOperator.CurrentPath == destinationOperator.CurrentPath &&
@@ -479,8 +479,8 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
             }
 
             private (bool exit, CopyMoveWorkerResult result) DeleteEmptySourceFolder(IFolderInfo folderInfo,
-                IFilesystemOperator sourceOperator,
-                IFilesystemOperator destinationOperator)
+                FilesystemOperator sourceOperator,
+                FilesystemOperator destinationOperator)
             {
                 if (!sourceOperator.DeleteEmptyFolder(folderInfo.Name))
                 {
@@ -494,8 +494,8 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
             }
 
             private (bool exit, CopyMoveWorkerResult result) CheckIfSourceSubfolderEmpty(IFolderInfo folderInfo,
-                IFilesystemOperator sourceOperator,
-                IFilesystemOperator destinationOperator,
+                FilesystemOperator sourceOperator,
+                FilesystemOperator destinationOperator,
                 ref bool folderEmpty)
             {
                 var subfolderEmpty = sourceOperator.CheckIsSubfolderEmpty(folderInfo.Name);
@@ -513,8 +513,8 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
             }
 
             private (bool exit, CopyMoveWorkerResult result) FindAvailableDestinationName(IBaseItemInfo item,
-                IFilesystemOperator sourceOperator,
-                IFilesystemOperator destinationOperator,
+                FilesystemOperator sourceOperator,
+                FilesystemOperator destinationOperator,
                 ref string newName)
             {
                 long i = 1;
@@ -558,8 +558,8 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
             }
 
             private (bool exit, CopyMoveWorkerResult result) EnsureSourceFileExists(IFileInfo fileInfo,
-                IFilesystemOperator sourceOperator,
-                IFilesystemOperator destinationOperator)
+                FilesystemOperator sourceOperator,
+                FilesystemOperator destinationOperator)
             {
                 var fileExists = sourceOperator.FileExists(fileInfo.Name);
 
@@ -582,8 +582,8 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
             }
 
             private (bool exit, CopyMoveWorkerResult result) EnsureDestinationFileDoesNotExist(IFileInfo fileInfo,
-                IFilesystemOperator sourceOperator,
-                IFilesystemOperator destinationOperator,
+                FilesystemOperator sourceOperator,
+                FilesystemOperator destinationOperator,
                 ref string targetName)
             {
                 var fileExists = destinationOperator.FileExists(targetName);
@@ -609,8 +609,8 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
             }
 
             private (bool exit, CopyMoveWorkerResult result) EnsureDestinationFolderDoesNotExist(IFileInfo fileInfo,
-                IFilesystemOperator sourceOperator,
-                IFilesystemOperator destinationOperator,
+                FilesystemOperator sourceOperator,
+                FilesystemOperator destinationOperator,
                 ref string targetName)
             {
                 var folderExists = destinationOperator.FolderExists(targetName);
@@ -636,8 +636,8 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
             }
 
             private (bool exit, CopyMoveWorkerResult result) CheckForOverwritingSpecialFile(IFileInfo fileInfo,
-                IFilesystemOperator sourceOperator,
-                IFilesystemOperator destinationOperator,
+                FilesystemOperator sourceOperator,
+                FilesystemOperator destinationOperator,
                 FileAttributes attribute,
                 CopyMoveProblemKind attributeProblemKind,
                 ref string targetName)
@@ -680,8 +680,8 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
             }
 
             private (bool exit, CopyMoveWorkerResult result) CopyAttributes(IFileInfo fileInfo,
-                IFilesystemOperator sourceOperator,
-                IFilesystemOperator destinationOperator,
+                FilesystemOperator sourceOperator,
+                FilesystemOperator destinationOperator,
                 string targetName)
             {
                 var attributes = sourceOperator.GetFileAttributes(fileInfo.Name);
@@ -706,8 +706,8 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
             }
 
             private (bool exit, CopyMoveWorkerResult result) OpenSourceFile(IFileInfo fileInfo,
-                IFilesystemOperator sourceOperator,
-                IFilesystemOperator destinationOperator,
+                FilesystemOperator sourceOperator,
+                FilesystemOperator destinationOperator,
                 ref Stream sourceStream)
             {
                 sourceStream = sourceOperator.OpenFileForReading(fileInfo.Name);
@@ -723,8 +723,8 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
             }
 
             private (bool exit, CopyMoveWorkerResult result) OpenDestinationFile(IFileInfo fileInfo,
-                IFilesystemOperator sourceOperator,
-                IFilesystemOperator destinationOperator,
+                FilesystemOperator sourceOperator,
+                FilesystemOperator destinationOperator,
                 string targetName,
                 ref Stream destinationStream)
             {
@@ -741,8 +741,8 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
             }
 
             private (bool exit, CopyMoveWorkerResult result) DeleteSourceFile(IFileInfo fileInfo,
-                IFilesystemOperator sourceOperator,
-                IFilesystemOperator destinationOperator)
+                FilesystemOperator sourceOperator,
+                FilesystemOperator destinationOperator)
             {
                 if (!sourceOperator.DeleteFile(fileInfo.Name))
                 {
@@ -756,8 +756,8 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
             }
 
             private (bool exit, CopyMoveWorkerResult result) CreateDestinationFolder(IFolderInfo folderInfo,
-                IFilesystemOperator sourceOperator,
-                IFilesystemOperator destinationOperator,
+                FilesystemOperator sourceOperator,
+                FilesystemOperator destinationOperator,
                 string targetName)
             {
                 if (!destinationOperator.CreateFolder(targetName))
@@ -772,9 +772,9 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
             }
 
             private (bool exit, CopyMoveWorkerResult result) EnterSourceFolder(IFolderInfo folderInfo,
-                IFilesystemOperator sourceOperator,
-                IFilesystemOperator destinationOperator,
-                ref IFilesystemOperator sourceFolderOperator)
+                FilesystemOperator sourceOperator,
+                FilesystemOperator destinationOperator,
+                ref FilesystemOperator sourceFolderOperator)
             {
                 sourceFolderOperator = sourceOperator.EnterFolder(folderInfo.Name);
 
@@ -791,10 +791,10 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
             }
 
             private (bool exit, CopyMoveWorkerResult result) EnterDestinationFolder(IFolderInfo folderInfo,
-                IFilesystemOperator sourceOperator,
-                IFilesystemOperator destinationOperator,
+                FilesystemOperator sourceOperator,
+                FilesystemOperator destinationOperator,
                 string targetName,
-                ref IFilesystemOperator destinationFolderOperator)
+                ref FilesystemOperator destinationFolderOperator)
             {
                 destinationFolderOperator = destinationOperator.EnterFolder(targetName);
 
@@ -813,8 +813,8 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
             private CopyMoveWorkerResult ProcessFile(TContext context,
                 IFileInfo fileInfo,
                 DataTransferOperationType operationType,
-                IFilesystemOperator sourceOperator,
-                IFilesystemOperator destinationOperator,
+                FilesystemOperator sourceOperator,
+                FilesystemOperator destinationOperator,
                 bool isRoot)
             {
                 try
@@ -922,10 +922,8 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
                     }
                     finally
                     {
-                        sourceStream?.Dispose();
-                        sourceStream = null;
-                        destinationStream?.Dispose();
-                        destinationStream = null;
+                        sourceOperator.CloseReadFile(sourceStream, fileInfo.Name);
+                        destinationOperator.CloseWrittenFile(destinationStream, fileInfo.Name);
 
                         if (cancelled)
                         {
@@ -953,8 +951,8 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
             private CopyMoveWorkerResult ProcessFolder(TContext context,
                 IFolderInfo folderInfo,
                 DataTransferOperationType operationType,
-                IFilesystemOperator sourceOperator,
-                IFilesystemOperator destinationOperator,
+                FilesystemOperator sourceOperator,
+                FilesystemOperator destinationOperator,
                 bool isRoot)
             {
                 bool exit;
@@ -983,13 +981,13 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
                 if (exit)
                     return result;
 
-                IFilesystemOperator sourceFolderOperator = null;
+                FilesystemOperator sourceFolderOperator = null;
 
                 (exit, result) = EnterSourceFolder(folderInfo, sourceOperator, destinationOperator, ref sourceFolderOperator);
                 if (exit)
                     return result;
 
-                IFilesystemOperator destinationFolderOperator = null;
+                FilesystemOperator destinationFolderOperator = null;
 
                 (exit, result) = EnterDestinationFolder(folderInfo, sourceOperator, destinationOperator, targetName, ref destinationFolderOperator);
                 if (exit)
@@ -1087,8 +1085,8 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
             protected CopyMoveWorkerResult ProcessItems(TContext context,
                 IReadOnlyList<IBaseItemInfo> items,
                 DataTransferOperationType operationType,
-                IFilesystemOperator sourceOperator,
-                IFilesystemOperator destinationOperator,
+                FilesystemOperator sourceOperator,
+                FilesystemOperator destinationOperator,
                 bool isRoot)
             {
                 foreach (var item in items)
@@ -1121,8 +1119,8 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
 
             protected abstract (bool exit, CopyMoveWorkerResult result) RetrieveFolderContents(TContext context,
                 IFolderInfo folderInfo,
-                IFilesystemOperator sourceFolderOperator,
-                IFilesystemOperator destinationFolderOperator,
+                FilesystemOperator sourceFolderOperator,
+                FilesystemOperator destinationFolderOperator,
                 ref IReadOnlyList<IBaseItemInfo> items);
 
             // Public properties ----------------------------------------------
@@ -1141,8 +1139,8 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
 
         // Protected fields ---------------------------------------------------
 
-        protected readonly IFilesystemOperator sourceOperator;
-        protected readonly IFilesystemOperator destinationOperator;
+        protected readonly FilesystemOperator sourceOperator;
+        protected readonly FilesystemOperator destinationOperator;
         protected readonly DataTransferOperationType operationType;
         protected readonly IReadOnlyList<Item> selectedItems;
         protected readonly CopyMoveConfigurationModel configuration;
@@ -1186,8 +1184,8 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
 
         public BaseCopyMoveOperationViewModel(IDialogService dialogService,
             IMessagingService messagingService,
-            IFilesystemOperator sourceOperator,
-            IFilesystemOperator destinationOperator,
+            FilesystemOperator sourceOperator,
+            FilesystemOperator destinationOperator,
             IReadOnlyList<Item> selectedItems,
             CopyMoveConfigurationModel configuration,
             DataTransferOperationType operationType)

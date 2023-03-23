@@ -13,13 +13,12 @@ using System.Threading.Tasks;
 
 namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
 {
-    internal class LocalOperator : IFilesystemOperator
+    internal class LocalOperator : FilesystemOperator
     {
         // Private fields -----------------------------------------------------
 
-        private readonly string startPath;
         private readonly string currentPath;
-
+        private readonly string startPath;
         // Private methods ----------------------------------------------------
 
         private List<BasePlanItem> CreatePlanForFolderRecursive(string address, 
@@ -82,7 +81,7 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
             this.currentPath = startPath;
         }
 
-        public OperationPlan BuildOperationPlanFromSelection(IReadOnlyList<Item> selectedItems, string? fileMaskOverride)
+        public override OperationPlan BuildOperationPlanFromSelection(IReadOnlyList<Item> selectedItems, string? fileMaskOverride)
         {
             if (selectedItems == null)
                 throw new ArgumentNullException(nameof(selectedItems));
@@ -91,7 +90,25 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
             return new OperationPlan(items);
         }
 
-        public bool CreateFolder(string name)
+        public override bool? CheckIsSubfolderEmpty(string name)
+        {
+            var targetPath = System.IO.Path.Combine(currentPath, name);
+
+            if (!Directory.Exists(targetPath))
+                return null;
+
+            try
+            {
+                var info = new DirectoryInfo(targetPath);
+                return !info.EnumerateFileSystemInfos().Any();
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public override bool CreateFolder(string name)
         {
             try
             {
@@ -105,21 +122,7 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
             return true;
         }
 
-        public bool DeleteFile(string name)
-        {
-            try
-            {
-                System.IO.File.Delete(System.IO.Path.Combine(currentPath, name));
-            }
-            catch
-            {
-                return false;
-            }
-
-            return true;
-        }
-
-        public bool DeleteEmptyFolder(string name)
+        public override bool DeleteEmptyFolder(string name)
         {
             try
             {
@@ -133,12 +136,26 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
             return true;
         }
 
-        public void Dispose()
+        public override bool DeleteFile(string name)
+        {
+            try
+            {
+                System.IO.File.Delete(System.IO.Path.Combine(currentPath, name));
+            }
+            catch
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public override void Dispose()
         {
 
         }
 
-        public IFilesystemOperator EnterFolder(string name)
+        public override FilesystemOperator EnterFolder(string name)
         {
             var targetPath = System.IO.Path.Combine(currentPath, name);
 
@@ -157,7 +174,7 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
             return new LocalOperator(targetPath);
         }
 
-        public bool? FileExists(string name)
+        public override bool? FileExists(string name)
         {
             try
             {
@@ -169,7 +186,7 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
             }
         }
 
-        public bool? FolderExists(string name)
+        public override bool? FolderExists(string name)
         {
             try
             {
@@ -181,50 +198,7 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
             }
         }
 
-        public IReadOnlyList<BaseOperatorItem> List()
-        {
-            var result = new List<BaseOperatorItem>();
-
-            var info = new DirectoryInfo(currentPath);
-
-            result.AddRange(info.GetDirectories()
-                .Select(directory => new OperatorFolderItem(directory.Name)));
-
-            result.AddRange(info.GetFiles()
-                .Select(file => new OperatorFileItem(file.Name,
-                    file.Length,
-                    file.Attributes.HasFlag(FileAttributes.ReadOnly),
-                    file.Attributes.HasFlag(FileAttributes.Hidden),
-                    file.Attributes.HasFlag(FileAttributes.System))));
-
-            return result;
-        }
-
-        public Stream OpenFileForReading(string name)
-        {
-            try
-            {
-                return new FileStream(Path.Combine(currentPath, name), FileMode.Open, FileAccess.Read);
-            }
-            catch
-            {
-                return null;
-            }
-        }
-
-        public Stream OpenFileForWriting(string name)
-        {
-            try
-            {
-                return new FileStream(Path.Combine(currentPath, name), FileMode.Create, FileAccess.Write);
-            }
-            catch
-            {
-                return null;    
-            }
-        }
-
-        public FileAttributes? GetFileAttributes(string targetName)
+        public override FileAttributes? GetFileAttributes(string targetName)
         {
             try
             {
@@ -237,21 +211,7 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
             }
         }
 
-        public bool SetFileAttributes(string targetName, FileAttributes attributes)
-        {
-            try
-            {
-                var fi = new FileInfo(Path.Combine(currentPath, targetName));
-                fi.Attributes = attributes;
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
-        public IReadOnlyList<BaseOperatorItem> List(IReadOnlyList<Item> selectedItems, string fileMaskOverride)
+        public override IReadOnlyList<BaseOperatorItem> List(IReadOnlyList<Item> selectedItems, string fileMaskOverride)
         {
             var result = new List<BaseOperatorItem>();
 
@@ -301,17 +261,11 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
 
         }
 
-        public bool? CheckIsSubfolderEmpty(string name)
+        public override Stream OpenFileForReading(string name)
         {
-            var targetPath = System.IO.Path.Combine(currentPath, name);
-
-            if (!Directory.Exists(targetPath))
-                return null;
-
             try
             {
-                var info = new DirectoryInfo(targetPath);
-                return !info.EnumerateFileSystemInfos().Any();
+                return new FileStream(Path.Combine(currentPath, name), FileMode.Open, FileAccess.Read);
             }
             catch
             {
@@ -319,6 +273,30 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
             }
         }
 
-        public string CurrentPath => currentPath;
+        public override Stream OpenFileForWriting(string name)
+        {
+            try
+            {
+                return new FileStream(Path.Combine(currentPath, name), FileMode.Create, FileAccess.Write);
+            }
+            catch
+            {
+                return null;    
+            }
+        }
+        public override bool SetFileAttributes(string targetName, FileAttributes attributes)
+        {
+            try
+            {
+                var fi = new FileInfo(Path.Combine(currentPath, targetName));
+                fi.Attributes = attributes;
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+        public override string CurrentPath => currentPath;
     }
 }

@@ -313,7 +313,7 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
             }
         }
 
-        public override IFilesystemOperator CreateOperatorForCurrentLocation()
+        public override FilesystemOperator CreateOperatorForCurrentLocation()
         {
             if (address.ToLowerInvariant() == ROOT_ADDRESS.ToLowerInvariant())
                 throw new InvalidOperationException("Cannot create operator for the root folder");

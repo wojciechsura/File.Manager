@@ -1,4 +1,5 @@
-﻿using File.Manager.BusinessLogic.Models.Dialogs.CopyMoveConfiguration;
+﻿using File.Manager.BusinessLogic.Models.Configuration.Ftp;
+using File.Manager.BusinessLogic.Models.Dialogs.CopyMoveConfiguration;
 using File.Manager.BusinessLogic.Models.Dialogs.DeleteConfiguration;
 using File.Manager.BusinessLogic.Models.Dialogs.NewFolderConfiguration;
 using File.Manager.BusinessLogic.Models.Dialogs.Selection;
@@ -28,5 +29,6 @@ namespace File.Manager.BusinessLogic.Services.Dialogs
         (bool result, NewFolderConfigurationModel model) ShowNewFolderConfigurationDialog();
         (bool result, SelectionResultModel model) ShowSelectionDialog(SelectionOperationKind operationKind);
         void ShowViewWindow(Stream stream, string filename);
+        (bool result, FtpSession model) ShowFtpSessionEditorDialog(FtpSession editedSession);
     }
 }

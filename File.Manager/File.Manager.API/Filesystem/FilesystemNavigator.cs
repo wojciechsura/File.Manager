@@ -46,7 +46,7 @@ namespace File.Manager.API.Filesystem
 
         public abstract LocationCapabilities GetLocationCapabilities();
 
-        public abstract IFilesystemOperator CreateOperatorForCurrentLocation();
+        public abstract FilesystemOperator CreateOperatorForCurrentLocation();
 
         public void SetHandler(IFilesystemNavigatorHandler handler) 
         {

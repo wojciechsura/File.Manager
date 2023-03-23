@@ -50,7 +50,10 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
 
             var newItems = new List<ItemViewModel>();
 
-            Item newSelectedItem = navigator.ResolveFocusedItem(data);
+            Item newSelectedItem = null;
+            if (data != null)
+                newSelectedItem = navigator.ResolveFocusedItem(data);
+
             ItemViewModel newSelectedItemViewModel = null;
 
             for (int i = 0; i < navigator.Items.Count; i++)

@@ -63,6 +63,7 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
         {
             return LocalNavigator.SupportsAddress(address);
         }
+
         public override string Uid => ModuleUid;
     }
 }

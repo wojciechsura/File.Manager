@@ -34,7 +34,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.Delete
 
         protected sealed class DeleteWorkerInput
         {
-            public DeleteWorkerInput(IFilesystemOperator filesystemOperator,
+            public DeleteWorkerInput(FilesystemOperator filesystemOperator,
                 DeleteConfigurationModel configuration, 
                 IReadOnlyList<Item> selectedItems)
             {
@@ -43,7 +43,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.Delete
                 SelectedItems = selectedItems;
             }
 
-            public IFilesystemOperator FilesystemOperator { get; }
+            public FilesystemOperator FilesystemOperator { get; }
             public DeleteConfigurationModel Configuration { get; }
             public IReadOnlyList<Item> SelectedItems { get; }
         }
@@ -183,7 +183,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.Delete
 
             private (bool exit, DeleteWorkerResult result) HandleSkipAbort(DeleteProblemKind problemKind,
                 string itemName,
-                IFilesystemOperator filesystemOperator)
+                FilesystemOperator filesystemOperator)
             {
                 var resolution = GetResolutionFor(problemKind,
                     filesystemOperator.CurrentPath,
@@ -202,7 +202,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.Delete
 
             private (bool exit, DeleteWorkerResult reuslt) HandleSkipDeleteWithAttributeChangeAbort(DeleteProblemKind problemKind,
                             string itemName,
-                            IFilesystemOperator filesystemOperator,
+                            FilesystemOperator filesystemOperator,
                             ref FileAttributes fileAttributes,
                             FileAttributes attribute)
             {
@@ -235,7 +235,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.Delete
             }
 
             private (bool exit, DeleteWorkerResult result) CheckIfSubfolderEmpty(IFolderInfo folderInfo,
-                IFilesystemOperator filesystemOperator,
+                FilesystemOperator filesystemOperator,
                 ref bool folderEmpty)
             {
                 var subfolderEmpty = filesystemOperator.CheckIsSubfolderEmpty(folderInfo.Name);
@@ -252,7 +252,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.Delete
             }
 
             private (bool exit, DeleteWorkerResult result) EnsureFileExists(IFileInfo fileInfo,
-                IFilesystemOperator filesystemOperator)
+                FilesystemOperator filesystemOperator)
             {
                 var fileExists = filesystemOperator.FileExists(fileInfo.Name);
                 if (fileExists == null)
@@ -283,7 +283,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.Delete
             }
 
             private (bool exit, DeleteWorkerResult result) CheckForDeletingSpecialFile(IFileInfo fileInfo,
-                IFilesystemOperator filesystemOperator)
+                FilesystemOperator filesystemOperator)
             {
                 (bool exit, DeleteWorkerResult result) ValidateAttribute(System.IO.FileAttributes fileAttributes, System.IO.FileAttributes attribute, DeleteProblemKind problemKind)
                 {
@@ -338,7 +338,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.Delete
             }
 
             private (bool exit, DeleteWorkerResult) DeleteEmptyFolder(IFolderInfo folderInfo,
-                IFilesystemOperator filesystemOperator)
+                FilesystemOperator filesystemOperator)
             {
                 if (!filesystemOperator.DeleteEmptyFolder(folderInfo.Name))
                 {
@@ -351,8 +351,8 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.Delete
             }
 
             private (bool exit, DeleteWorkerResult result) EnterFolder(IFolderInfo folderInfo,
-                IFilesystemOperator filesystemOperator,
-                ref IFilesystemOperator filesystemFolderOperator)
+                FilesystemOperator filesystemOperator,
+                ref FilesystemOperator filesystemFolderOperator)
             {
                 filesystemFolderOperator = filesystemOperator.EnterFolder(folderInfo.Name);
 
@@ -369,7 +369,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.Delete
 
             private DeleteWorkerResult ProcessFile(TContext context,
                 IFileInfo fileInfo,
-                IFilesystemOperator filesystemOperator)
+                FilesystemOperator filesystemOperator)
             {
                 bool exit;
                 DeleteWorkerResult result;
@@ -391,12 +391,12 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.Delete
 
             private DeleteWorkerResult ProcessFolder(TContext context,
                 IFolderInfo folderInfo,
-                IFilesystemOperator filesystemOperator)
+                FilesystemOperator filesystemOperator)
             {
                 bool exit;
                 DeleteWorkerResult result;
 
-                IFilesystemOperator folderOperator = null;
+                FilesystemOperator folderOperator = null;
 
                 (exit, result) = EnterFolder(folderInfo, filesystemOperator, ref folderOperator);
                 if (exit)
@@ -436,7 +436,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.Delete
 
             protected DeleteWorkerResult ProcessItems(TContext context,
                 IReadOnlyList<IBaseItemInfo> items,
-                IFilesystemOperator filesystemOperator)
+                FilesystemOperator filesystemOperator)
             {
                 foreach (var item in items)
                 {
@@ -461,7 +461,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.Delete
 
             protected abstract (bool exit, DeleteWorkerResult result) RetrieveFolderContents(TContext context,
                 IFolderInfo folderInfo,
-                IFilesystemOperator filesystemOperator,
+                FilesystemOperator filesystemOperator,
                 ref IReadOnlyList<IBaseItemInfo> items);
 
             protected GenericDeleteProblemResolution GetResolutionFor(DeleteProblemKind problemKind,
@@ -502,7 +502,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.Delete
 
             protected virtual (bool exit, DeleteWorkerResult result) DeleteFile(TContext context,
                 IFileInfo fileInfo,
-                IFilesystemOperator filesystemOperator)
+                FilesystemOperator filesystemOperator)
             {
                 if (!filesystemOperator.DeleteFile(fileInfo.Name))
                 {
@@ -537,7 +537,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.Delete
 
         // Protected fields ---------------------------------------------------
 
-        protected readonly IFilesystemOperator filesystemOperator;
+        protected readonly FilesystemOperator filesystemOperator;
         protected readonly IReadOnlyList<Item> selectedItems;
         protected readonly DeleteConfigurationModel configuration;
 
@@ -578,7 +578,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.Delete
 
         public BaseDeleteOperationViewModel(IDialogService dialogService,
             IMessagingService messagingService,
-            IFilesystemOperator filesystemOperator,
+            FilesystemOperator filesystemOperator,
             IReadOnlyList<Item> selectedItems,
             DeleteConfigurationModel configuration)
             : base(dialogService, messagingService)

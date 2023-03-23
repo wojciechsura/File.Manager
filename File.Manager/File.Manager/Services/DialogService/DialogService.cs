@@ -1,4 +1,5 @@
-﻿using File.Manager.BusinessLogic.Models.Dialogs.CopyMoveConfiguration;
+﻿using File.Manager.BusinessLogic.Models.Configuration.Ftp;
+using File.Manager.BusinessLogic.Models.Dialogs.CopyMoveConfiguration;
 using File.Manager.BusinessLogic.Models.Dialogs.DeleteConfiguration;
 using File.Manager.BusinessLogic.Models.Dialogs.NewFolderConfiguration;
 using File.Manager.BusinessLogic.Models.Dialogs.Selection;
@@ -261,6 +262,26 @@ namespace File.Manager.Services.DialogService
             var dialog = new ViewWindow(stream, filename);
             dialog.Owner = Application.Current.MainWindow;
             dialog.Show();
+        }
+
+        public (bool result, FtpSession model) ShowFtpSessionEditorDialog(FtpSession editedSession)
+        {
+            var dialog = new FtpSessionEditorWindow(editedSession);
+            dialog.Owner = GetOwnerWindow();
+            dialogWindows.Push(dialog);
+
+            try
+            {
+                if (dialog.ShowDialog() == true)
+                    return (true, dialog.Result);
+                else
+                    return (false, null);
+            }
+            finally
+            {
+                PopDialog(dialog);
+                ActivateLastDialog();
+            }
         }
     }
 }

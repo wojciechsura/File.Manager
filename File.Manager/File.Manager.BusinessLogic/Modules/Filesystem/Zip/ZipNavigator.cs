@@ -262,7 +262,7 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Zip
             return ZipAddressRegex.IsMatch(address);
         }
 
-        public override IFilesystemOperator CreateOperatorForCurrentLocation()
+        public override FilesystemOperator CreateOperatorForCurrentLocation()
         {
             return new ZipOperator(zipFile, zipFilePath, current.FullPath);
         }

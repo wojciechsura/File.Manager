@@ -126,8 +126,8 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Home
             return (LocationCapabilities)0;
         }
 
-        public override IFilesystemOperator CreateOperatorForCurrentLocation()
-            => throw new NotSupportedException("Creating operator for home module is not supported.");
+        public override FilesystemOperator CreateOperatorForCurrentLocation()
+            => throw new NotSupportedException("Creating operator for home navigator is not supported.");
 
         public override string Address => address;
 

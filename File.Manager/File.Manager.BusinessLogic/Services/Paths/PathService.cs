@@ -27,7 +27,7 @@ namespace File.Manager.BusinessLogic.Services.Paths
             configPath = Path.Combine(appDataPath, CONFIG_FILENAME);
 
             var executingAssembly = Assembly.GetEntryAssembly();
-            appExecutablePath = new Uri(executingAssembly.CodeBase).LocalPath;
+            appExecutablePath = new Uri(executingAssembly.Location).LocalPath;
         }
 
         public string AppDataPath => appDataPath;

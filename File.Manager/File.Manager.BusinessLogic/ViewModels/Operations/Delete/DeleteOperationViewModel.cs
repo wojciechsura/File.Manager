@@ -37,7 +37,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.Delete
 
             // Protected methods ----------------------------------------------
 
-            protected override (bool exit, DeleteWorkerResult result) DeleteFile(DeleteWorkerContext context, IFileInfo fileInfo, IFilesystemOperator filesystemOperator)
+            protected override (bool exit, DeleteWorkerResult result) DeleteFile(DeleteWorkerContext context, IFileInfo fileInfo, FilesystemOperator filesystemOperator)
             {
                 if (CancellationPending)
                     return (true, new CancelledDeleteWorkerResult());
@@ -57,7 +57,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.Delete
 
             protected override (bool exit, DeleteWorkerResult result) RetrieveFolderContents(DeleteWorkerContext context, 
                 IFolderInfo folderInfo, 
-                IFilesystemOperator filesystemOperator, 
+                FilesystemOperator filesystemOperator, 
                 ref IReadOnlyList<IBaseItemInfo> items)
             {
                 items = filesystemOperator.List(null, context.Configuration.FileMask);
@@ -115,7 +115,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.Delete
 
         public DeleteOperationViewModel(IDialogService dialogService,
             IMessagingService messagingService,
-            IFilesystemOperator filesystemOperator,
+            FilesystemOperator filesystemOperator,
             DeleteConfigurationModel configuration,
             IReadOnlyList<Item> selectedItems)
             : base(dialogService,

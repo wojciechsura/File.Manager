@@ -15,8 +15,22 @@ using System.Windows.Shapes;
 
 namespace File.Manager.BusinessLogic.Modules.Filesystem.Zip
 {
-    public class ZipOperator : IFilesystemOperator
+    public class ZipOperator : FilesystemOperator
     {
+        // Private types ------------------------------------------------------
+
+        private class StreamZipSource : IStaticDataSource
+        {
+            private readonly Stream stream;
+
+            public StreamZipSource(Stream stream)
+            {
+                this.stream = stream;
+            }
+
+            public Stream GetSource() => stream;            
+        }
+
         // Private fields -----------------------------------------------------
 
         private readonly string rootPath;
@@ -121,7 +135,7 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Zip
             this.rootPath = rootPath;
         }
 
-        public OperationPlan BuildOperationPlanFromSelection(IReadOnlyList<Item> selectedItems, string fileMaskOverride)
+        public override OperationPlan BuildOperationPlanFromSelection(IReadOnlyList<Item> selectedItems, string fileMaskOverride)
         {
             if (selectedItems == null)
                 throw new ArgumentNullException(nameof(selectedItems));
@@ -132,7 +146,7 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Zip
             return new OperationPlan(items);
         }
 
-        public bool? CheckIsSubfolderEmpty(string name)
+        public override bool? CheckIsSubfolderEmpty(string name)
         {
             var subfolderPath = $"{rootPath}{name}/";
 
@@ -141,7 +155,7 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Zip
                 .Any(ze => ze.Name.StartsWith(subfolderPath) && ze.Name.Length > subfolderPath.Length);
         }
 
-        public bool CreateFolder(string name)
+        public override bool CreateFolder(string name)
         {
             try
             {
@@ -160,7 +174,7 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Zip
             }
         }
 
-        public bool DeleteFile(string name)
+        public override bool DeleteFile(string name)
         {
             try
             {
@@ -183,7 +197,7 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Zip
             }
         }
 
-        public bool DeleteEmptyFolder(string name)
+        public override bool DeleteEmptyFolder(string name)
         {
             try
             {
@@ -208,38 +222,38 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Zip
             }
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
             // Nothing to do here. zipFile will get disposed with
             // its navigator.
         }
 
-        public IFilesystemOperator EnterFolder(string name)
+        public override FilesystemOperator EnterFolder(string name)
         {
             return new ZipOperator(zipFile, zipFilePath, $"{rootPath}{name}/");
         }
 
-        public bool? FileExists(string name)
+        public override bool? FileExists(string name)
         {
             var filePath = $"{rootPath}{name}";
             return zipFile.Cast<ZipEntry>()
                 .Any(e => e.Name == filePath && e.IsFile);
         }
 
-        public bool? FolderExists(string name)
+        public override bool? FolderExists(string name)
         {
             var folderPath = $"{rootPath}{name}/";
             return zipFile.Cast<ZipEntry>()
                 .Any(e => e.Name == folderPath && !e.IsFile);
         }
 
-        public FileAttributes? GetFileAttributes(string targetName)
+        public override FileAttributes? GetFileAttributes(string targetName)
         {
             // TODO handle attributes
             return (FileAttributes)0;
         }
 
-        public IReadOnlyList<BaseOperatorItem> List(IReadOnlyList<Item> selectedItems, string fileMaskOverride)
+        public override IReadOnlyList<BaseOperatorItem> List(IReadOnlyList<Item> selectedItems, string fileMaskOverride)
         {
             var zipEntries = zipFile.OfType<ZipEntry>();
 
@@ -306,7 +320,7 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Zip
             return result;
         }
 
-        public Stream OpenFileForReading(string name)
+        public override Stream OpenFileForReading(string name)
         {
             try
             {
@@ -324,13 +338,28 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Zip
             }
         }
 
-        public Stream OpenFileForWriting(string name)
+        public override Stream OpenFileForWriting(string name)
         {
-            string path = $"{rootPath}{name}";
-            return new ZipFileCreateStream(zipFile, path);
+            return new MemoryStream();            
         }
 
-        public bool SetFileAttributes(string targetName, FileAttributes attributes)
+        public override void CloseWrittenFile(Stream stream, string name)
+        {
+            var ms = (MemoryStream)stream;
+            ms.Seek(0, SeekOrigin.Begin);
+
+            var path = $"{rootPath}{name}";
+
+            var entry = new ZipEntry(path);
+
+            zipFile.BeginUpdate();
+            zipFile.Add(new StreamZipSource(ms), entry);
+            zipFile.CommitUpdate();            
+
+            base.CloseWrittenFile(stream, name);
+        }
+
+        public override bool SetFileAttributes(string targetName, FileAttributes attributes)
         {
             // TODO handle attributes
             return true;
@@ -338,6 +367,6 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Zip
 
         // Public properties --------------------------------------------------
 
-        public string CurrentPath => ZipPathTools.BuildAddress(zipFilePath, rootPath);
+        public override string CurrentPath => ZipPathTools.BuildAddress(zipFilePath, rootPath);
     }
 }
