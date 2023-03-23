@@ -23,7 +23,9 @@ namespace File.Manager.API.Types
         CreateFolder = 16,
         /// <summary>Supports deleting files and folders in the current location</summary>
         Delete = 32,
+        /// <summary>Provides custom editor for items</summary>
+        CustomEdit = 64,
         /// <summary>Supports planning copy/move/delete operations before processing</summary>        
-        Plan = 64
+        Plan = 128
     }
 }

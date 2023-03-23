@@ -74,6 +74,11 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Home
             items = new();
         }
 
+        public override bool CanCustomEdit(Item focusedItem) => false;
+
+        public override void CustomEdit(Item focusedItem) =>        
+            throw new NotSupportedException();        
+
         public override void Dispose()
         {
             
@@ -127,7 +132,7 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Home
         }
 
         public override FilesystemOperator CreateOperatorForCurrentLocation()
-            => throw new NotSupportedException("Creating operator for home navigator is not supported.");
+            => throw new NotSupportedException();
 
         public override string Address => address;
 

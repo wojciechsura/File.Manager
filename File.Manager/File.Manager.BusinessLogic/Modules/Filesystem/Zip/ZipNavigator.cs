@@ -257,10 +257,10 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Zip
             LoadItems();
         }
 
-        public static bool SupportsAddress(string address)
-        {
-            return ZipAddressRegex.IsMatch(address);
-        }
+        public override bool CanCustomEdit(Item focusedItem) => false;
+
+        public override void CustomEdit(Item focusedItem)
+            => throw new NotSupportedException();        
 
         public override FilesystemOperator CreateOperatorForCurrentLocation()
         {
@@ -332,6 +332,13 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Zip
 
             return null;
         }
+
+        public static bool SupportsAddress(string address)
+        {
+            return ZipAddressRegex.IsMatch(address);
+        }
+
+        // Public properties --------------------------------------------------
 
         public override string Address => ZipPathTools.BuildAddress(zipFilePath, current?.FullPath ?? "");
 

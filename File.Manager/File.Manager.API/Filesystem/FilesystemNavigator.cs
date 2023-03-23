@@ -59,6 +59,10 @@ namespace File.Manager.API.Filesystem
             this.handler = handler;
         }
 
+        public abstract bool CanCustomEdit(Item item);
+
+        public abstract void CustomEdit(Item item);        
+
         // Public properties --------------------------------------------------
 
         public abstract string Address { get; }

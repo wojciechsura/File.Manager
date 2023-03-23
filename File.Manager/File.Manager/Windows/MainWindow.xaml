@@ -15,6 +15,7 @@
     <f:RibbonWindow.InputBindings>
         <KeyBinding Key="U" Modifiers="Ctrl" Command="{Binding Path=SwitchPanesCommand}" />
         <KeyBinding Key="F3" Command="{Binding ViewCommand}" />
+        <KeyBinding Key="F4" Command="{Binding EditCommand}" />
         <KeyBinding Key="F5" Command="{Binding CopyCommand}" />
         <KeyBinding Key="F6" Command="{Binding MoveCommand}" />
         <KeyBinding Key="F7" Command="{Binding NewFolderCommand}" />
@@ -35,6 +36,7 @@
                                   LargeIcon="pack://application:,,,/File.Manager;component/Resources/Images/View32.png"
                                   Icon="pack://application:,,,/File.Manager;component/Resources/Images/View16.png"/>
                         <f:Button Header="{x:Static res:Strings.Ribbon_Button_Edit}" 
+                                  Command="{Binding EditCommand}"
                                   LargeIcon="pack://application:,,,/File.Manager;component/Resources/Images/Edit32.png"
                                   Icon="pack://application:,,,/File.Manager;component/Resources/Images/Edit16.png"/>
                         <f:Button Header="{x:Static res:Strings.Ribbon_Button_Copy}" 

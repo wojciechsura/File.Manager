@@ -122,6 +122,22 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
             stream.Dispose();
         }
 
+        private void DoEdit()
+        {
+            var editPane = ActivePane;
+
+            var capabilities = editPane.Navigator.GetLocationCapabilities();
+            if (capabilities.HasFlag(LocationCapabilities.CustomEdit))
+            {
+                var focusedItem = editPane.GetFocusedItem();
+                if (focusedItem is not FileItem)
+                    return;
+
+                if (editPane.Navigator.CanCustomEdit(focusedItem))
+                    editPane.Navigator.CustomEdit(focusedItem);
+            }
+        }
+
         private void DoCopyMove(DataTransferOperationType operationType)
         {
             var copyFromPane = ActivePane;
@@ -381,6 +397,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
             SwitchPanesCommand = new AppCommand(obj => DoSwitchPanes());
 
             ViewCommand = new AppCommand(obj => DoView());
+            EditCommand = new AppCommand(obj => DoEdit());
             CopyCommand = new AppCommand(obj => DoCopyMove(DataTransferOperationType.Copy));
             MoveCommand = new AppCommand(obj => DoCopyMove(DataTransferOperationType.Move));
             NewFolderCommand = new AppCommand(obj => DoNewFolder());
@@ -439,6 +456,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
         public ICommand SwitchPanesCommand { get; }
 
         public ICommand ViewCommand { get; }
+        public ICommand EditCommand { get; }
         public ICommand CopyCommand { get; }
         public ICommand MoveCommand { get; }
         public ICommand NewFolderCommand { get; }

@@ -13,7 +13,7 @@
         xmlns:cd="clr-namespace:File.Manager.Controls.Dialogs"
         d:DataContext="{d:DesignInstance Type=vm:DeleteProgressWindowViewModel}"
         mc:Ignorable="d"
-        Title="{Binding Operation.Title}" SizeToContent="Height" Width="600"        
+        Title="{x:Static res:Strings.Title}" SizeToContent="Height" Width="600"        
         Loaded="HandleWindowLoaded" Closing="Window_Closing"
         WindowStartupLocation="CenterOwner" ResizeMode="NoResize"
         FocusManager.FocusedElement="{Binding ElementName=bCancel}">

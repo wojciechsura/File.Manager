@@ -25,7 +25,7 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Zip
 
         public override FilesystemNavigator CreateNavigator(RootModuleEntryData data)
         {
-            throw new NotSupportedException("Zip module does not support root-level entries");
+            throw new NotSupportedException();
         }
 
         public override IEnumerable<RootModuleEntry> GetRootEntries()

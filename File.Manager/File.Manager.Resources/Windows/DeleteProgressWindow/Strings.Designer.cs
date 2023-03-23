@@ -95,5 +95,14 @@ namespace File.Manager.Resources.Windows.DeleteProgressWindow {
                 return ResourceManager.GetString("Question_CancelOperationInProgress", resourceCulture);
             }
         }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Deleting....
+        /// </summary>
+        public static string Title {
+            get {
+                return ResourceManager.GetString("Title", resourceCulture);
+            }
+        }
     }
 }

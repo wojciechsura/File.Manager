@@ -208,6 +208,11 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
             TryNavigateToAddress(localNavigationData.Address);
         }
 
+        public override bool CanCustomEdit(Item focusedItem) => false;
+
+        public override void CustomEdit(Item focusedItem)
+            => throw new NotSupportedException();        
+
         public override void Dispose()
         {
             

@@ -109,8 +109,29 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Ftp
             LoadItems();
         }
 
+        public override bool CanCustomEdit(Item item)
+        {
+            return item is SessionItem;
+        }
+
+        public override void CustomEdit(Item item)
+        {
+            var session = (SessionItem)item;
+
+            var ftpSession = configurationService.Configuration.Ftp.Sessions.FirstOrDefault(s => s.SessionName.Value.ToLowerInvariant() == session.Name.ToLowerInvariant());
+            if (ftpSession != null)
+            {
+                (bool result, ftpSession) = dialogService.ShowFtpSessionEditorDialog(ftpSession);
+                if (result)
+                {
+                    LoadItems();
+                    Handler.NotifyChanged(new FtpSessionFocusedItemData(ftpSession.SessionName.Value));
+                }
+            }
+        }
+
         public override FilesystemOperator CreateOperatorForCurrentLocation()
-            => throw new NotSupportedException("Creating operator for FTP sessions navigator is not supported.");
+            => new FtpSessionOperator(configurationService);
 
         public override void Dispose()
         {
@@ -135,7 +156,7 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Ftp
 
         public override LocationCapabilities GetLocationCapabilities()
         {
-            throw new NotImplementedException();
+            return LocationCapabilities.CustomEdit | LocationCapabilities.Delete;
         }
 
         public override void Refresh()
@@ -160,7 +181,6 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Ftp
 
             return false;
         }
-
 
         public override string Address => ROOT_ADDRESS;
 
