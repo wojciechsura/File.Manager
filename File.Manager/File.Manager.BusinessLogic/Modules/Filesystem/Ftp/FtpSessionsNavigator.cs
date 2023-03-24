@@ -11,6 +11,7 @@ using File.Manager.BusinessLogic.Services.Dialogs;
 using File.Manager.BusinessLogic.Services.Messaging;
 using File.Manager.Common.Helpers;
 using File.Manager.Resources.Modules.Filesystem.Ftp;
+using FluentFTP;
 using SmartFormat.Utilities;
 using System;
 using System.Collections.Generic;
@@ -47,6 +48,14 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Ftp
                 : base(Strings.Name_NewSession)
             {
 
+            }
+        }
+
+        private class OutputLogger : IFtpLogger
+        {
+            public void Log(FtpLogEntry entry)
+            {
+                System.Diagnostics.Debug.WriteLine($"{entry.Message}");
             }
         }
 
@@ -123,6 +132,7 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Ftp
                     client.Host = session.Host.Value;
                     client.Port = session.Port.Value;
                     client.Credentials = new System.Net.NetworkCredential(credentials.Username, credentials.Password);
+                    client.Logger = new OutputLogger();
 
                     var profile = client.AutoConnect();
                     if (profile == null)

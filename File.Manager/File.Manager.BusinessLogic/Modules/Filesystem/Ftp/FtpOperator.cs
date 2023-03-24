@@ -45,7 +45,8 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Ftp
 
         private bool InternalCheckSubfolderEmpty(string folderPath)
         {
-            return !ftpClient.GetListing(folderPath).Any(i => i.Type == FtpObjectType.File || (i.Type == FtpObjectType.Directory && i.SubType == FtpObjectSubType.SubDirectory) || (i.Type == FtpObjectType.Link));
+            ftpClient.SetWorkingDirectory(folderPath);
+            return !ftpClient.GetListing().Any(i => i.Type == FtpObjectType.File || (i.Type == FtpObjectType.Directory && i.SubType == FtpObjectSubType.SubDirectory) || (i.Type == FtpObjectType.Link));
         }
 
         private void EnsureWorkingDirectory()
@@ -121,7 +122,7 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Ftp
             try
             {
                 EnsureWorkingDirectory();
-                return ftpClient.FileExists(name);
+                return ftpClient.GetListing().Any(e => e.Name == name && e.Type == FtpObjectType.File);
             }
             catch
             {
@@ -134,7 +135,7 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Ftp
             try
             {
                 EnsureWorkingDirectory();
-                return ftpClient.DirectoryExists(name);
+                return ftpClient.GetListing().Any(e => e.Name == name && e.Type == FtpObjectType.Directory);
             }
             catch
             {
