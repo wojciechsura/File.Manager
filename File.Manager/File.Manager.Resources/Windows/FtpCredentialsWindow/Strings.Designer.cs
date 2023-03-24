@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace File.Manager.Resources.Modules.Filesystem.Ftp {
+namespace File.Manager.Resources.Windows.FtpCredentialsWindow {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace File.Manager.Resources.Modules.Filesystem.Ftp {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("File.Manager.Resources.Modules.Filesystem.Ftp.Strings", typeof(Strings).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("File.Manager.Resources.Windows.FtpCredentialsWindow.Strings", typeof(Strings).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,83 +61,38 @@ namespace File.Manager.Resources.Modules.Filesystem.Ftp {
         }
         
         /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Failed to navigate to directory {0}. Error: {1}.
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Credentials.
         /// </summary>
-        public static string Error_FailedToNavigateToDirectory {
+        public static string Groupbox_Credentials {
             get {
-                return ResourceManager.GetString("Error_FailedToNavigateToDirectory", resourceCulture);
+                return ResourceManager.GetString("Groupbox_Credentials", resourceCulture);
             }
         }
         
         /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Failed to open FTP session. Error: {0}.
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Password.
         /// </summary>
-        public static string Error_FailedToOpenFtpSession {
+        public static string Label_Password {
             get {
-                return ResourceManager.GetString("Error_FailedToOpenFtpSession", resourceCulture);
+                return ResourceManager.GetString("Label_Password", resourceCulture);
             }
         }
         
         /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Ftp.
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu User name.
         /// </summary>
-        public static string FtpDisplayName {
+        public static string Label_Username {
             get {
-                return ResourceManager.GetString("FtpDisplayName", resourceCulture);
+                return ResourceManager.GetString("Label_Username", resourceCulture);
             }
         }
         
         /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Session is already opened..
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Enter credentials.
         /// </summary>
-        public static string Information_SessionAlreadyExists {
+        public static string Title {
             get {
-                return ResourceManager.GetString("Information_SessionAlreadyExists", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Add session....
-        /// </summary>
-        public static string Name_NewSession {
-            get {
-                return ResourceManager.GetString("Name_NewSession", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Falied to connect to host..
-        /// </summary>
-        public static string Reason_FailedToConnect {
-            get {
-                return ResourceManager.GetString("Reason_FailedToConnect", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu [SUB-DIR].
-        /// </summary>
-        public static string SizeDisplay_Directory {
-            get {
-                return ResourceManager.GetString("SizeDisplay_Directory", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu [SESSION].
-        /// </summary>
-        public static string SizeDisplay_Session {
-            get {
-                return ResourceManager.GetString("SizeDisplay_Session", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        /// Wyszukuje zlokalizowany ciąg podobny do ciągu [UP-DIR].
-        /// </summary>
-        public static string SizeDisplay_UpDirectory {
-            get {
-                return ResourceManager.GetString("SizeDisplay_UpDirectory", resourceCulture);
+                return ResourceManager.GetString("Title", resourceCulture);
             }
         }
     }

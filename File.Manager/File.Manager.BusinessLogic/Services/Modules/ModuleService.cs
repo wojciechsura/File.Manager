@@ -5,6 +5,7 @@ using File.Manager.BusinessLogic.Modules.Filesystem.Local;
 using File.Manager.BusinessLogic.Modules.Filesystem.Zip;
 using File.Manager.BusinessLogic.Services.Configuration;
 using File.Manager.BusinessLogic.Services.Dialogs;
+using File.Manager.BusinessLogic.Services.Messaging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,19 +20,24 @@ namespace File.Manager.BusinessLogic.Services.Modules
         private readonly IModuleHost moduleHost;
         private readonly IConfigurationService configurationService;
         private readonly IDialogService dialogService;
+        private readonly IMessagingService messagingService;
 
-        public ModuleService(IModuleHost moduleHost, IConfigurationService configurationService, IDialogService dialogService)
+        public ModuleService(IModuleHost moduleHost, 
+            IConfigurationService configurationService, 
+            IDialogService dialogService,
+            IMessagingService messagingService)
         {
             filesystemModules = new List<FilesystemModule>
             {
                 new LocalModule(moduleHost),
                 new ZipModule(moduleHost),
-                new FtpModule(moduleHost, configurationService, dialogService)
+                new FtpModule(moduleHost, configurationService, messagingService, dialogService)
             };
 
             this.moduleHost = moduleHost;
             this.configurationService = configurationService;
             this.dialogService = dialogService;
+            this.messagingService = messagingService;
         }
 
         public IReadOnlyList<FilesystemModule> FilesystemModules => filesystemModules;

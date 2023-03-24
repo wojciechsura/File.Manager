@@ -1,6 +1,7 @@
 ﻿using File.Manager.BusinessLogic.Models.Configuration.Ftp;
 using File.Manager.BusinessLogic.Models.Dialogs.CopyMoveConfiguration;
 using File.Manager.BusinessLogic.Models.Dialogs.DeleteConfiguration;
+using File.Manager.BusinessLogic.Models.Dialogs.FtpCredentials;
 using File.Manager.BusinessLogic.Models.Dialogs.NewFolderConfiguration;
 using File.Manager.BusinessLogic.Models.Dialogs.Selection;
 using File.Manager.BusinessLogic.Types;
@@ -30,5 +31,6 @@ namespace File.Manager.BusinessLogic.Services.Dialogs
         (bool result, SelectionResultModel model) ShowSelectionDialog(SelectionOperationKind operationKind);
         void ShowViewWindow(Stream stream, string filename);
         (bool result, FtpSession model) ShowFtpSessionEditorDialog(FtpSession editedSession);
+        (bool result, FtpCredentialsModel model) ShowFtpCredentialsDialog(string username);
     }
 }

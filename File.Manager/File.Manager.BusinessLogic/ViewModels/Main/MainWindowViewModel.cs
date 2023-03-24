@@ -424,12 +424,12 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
 
         public void NotifyClosing(ref bool cancel)
         {
-            if (leftPane.Navigator.RestoreAddress)
+            if (leftPane.Navigator.RestoreLocationAfterRestart)
                 configurationService.Configuration.Session.LeftPaneAddress.Value = leftPane.Navigator.Address;
             else
                 configurationService.Configuration.Session.LeftPaneAddress.Value = HomeNavigator.ROOT_ADDRESS;
 
-            if (rightPane.Navigator.RestoreAddress)
+            if (rightPane.Navigator.RestoreLocationAfterRestart)
                 configurationService.Configuration.Session.RightPaneAddress.Value = rightPane.Navigator.Address;
             else
                 configurationService.Configuration.Session.RightPaneAddress.Value = HomeNavigator.ROOT_ADDRESS;

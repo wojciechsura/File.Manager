@@ -1,13 +1,17 @@
-﻿using File.Manager.API.Filesystem;
+﻿using File.Manager.API.Exceptions.Filesystem;
+using File.Manager.API.Filesystem;
 using File.Manager.API.Filesystem.Models.Focus;
 using File.Manager.API.Filesystem.Models.Items.Listing;
 using File.Manager.API.Types;
 using File.Manager.BusinessLogic.Models.Configuration.Ftp;
+using File.Manager.BusinessLogic.Models.Dialogs.FtpCredentials;
 using File.Manager.BusinessLogic.Modules.Filesystem.Home;
 using File.Manager.BusinessLogic.Services.Configuration;
 using File.Manager.BusinessLogic.Services.Dialogs;
+using File.Manager.BusinessLogic.Services.Messaging;
 using File.Manager.Common.Helpers;
 using File.Manager.Resources.Modules.Filesystem.Ftp;
+using SmartFormat.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,8 +35,10 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Ftp
             public SessionItem(FtpSession session)
                 : base(session.SessionName.Value, true)
             {
-                
+                this.Session = session;
             }
+
+            public FtpSession Session { get; }
         }
 
         private class AddSessionItem : FileItem
@@ -53,6 +59,9 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Ftp
 
         private readonly IConfigurationService configurationService;
         private readonly IDialogService dialogService;
+        private readonly IMessagingService messagingService;
+        private readonly IActiveFtpSessions activeFtpSessions;
+
         private List<Item> items;
 
         // Private methods ----------------------------------------------------
@@ -68,7 +77,8 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Ftp
                 var item = new SessionItem(session)
                 {
                     SmallIcon = ftpSessionSmallIcon,
-                    LargeIcon = ftpSessionLargeIcon
+                    LargeIcon = ftpSessionLargeIcon,
+                    SizeDisplay = Strings.SizeDisplay_Session
                 };
 
                 items.Add(item);
@@ -93,12 +103,64 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Ftp
             }
         }
 
+        private void DoStartSession(FtpSession session)
+        {
+            (bool result, FtpCredentialsModel credentials) = dialogService.ShowFtpCredentialsDialog(session.Username.Value);
+            if (result)
+            {
+                // Check, if there is no existing session for this host and user name
+                if (activeFtpSessions.ActiveSessions.ContainsKey((session.Host.Value.ToLowerInvariant(), credentials.Username.ToLowerInvariant())))
+                {
+                    messagingService.Inform(Strings.Information_SessionAlreadyExists);
+                    return;
+                }
+
+                // Try to open FTP session
+
+                try
+                {
+                    FluentFTP.FtpClient client = new FluentFTP.FtpClient();
+                    client.Host = session.Host.Value;
+                    client.Port = session.Port.Value;
+                    client.Credentials = new System.Net.NetworkCredential(credentials.Username, credentials.Password);
+
+                    var profile = client.AutoConnect();
+                    if (profile == null)
+                        throw new NavigationException(String.Format(Strings.Error_FailedToOpenFtpSession, Strings.Reason_FailedToConnect));
+
+                    var navigator = new FtpNavigator(client, 
+                        session.SessionName.Value, 
+                        (session.Host.Value, credentials.Username), 
+                        activeFtpSessions,
+                        configurationService,
+                        dialogService,
+                        messagingService);
+
+                    Handler.RequestReplaceNavigator(navigator, null);
+                }
+                catch (NavigationException)
+                {
+                    throw;
+                }
+                catch (Exception e)
+                {
+                    throw new NavigationException(String.Format(Strings.Error_FailedToOpenFtpSession, e.Message));
+                }
+            }
+        }
+
+
         // Public methods -----------------------------------------------------
 
-        public FtpSessionsNavigator(IConfigurationService configurationService, IDialogService dialogService)
+        public FtpSessionsNavigator(IConfigurationService configurationService, 
+            IDialogService dialogService,
+            IMessagingService messagingService,
+            IActiveFtpSessions activeFtpSessions)
         {
             this.configurationService = configurationService;
             this.dialogService = dialogService;
+            this.messagingService = messagingService;
+            this.activeFtpSessions = activeFtpSessions;
             var assembly = Assembly.GetExecutingAssembly();
 
             ftpSessionSmallIcon = ResourceHelper.FromEmbeddedResource(assembly, @"File.Manager.BusinessLogic.Resources.Images.Ftp.FtpSession16.png");
@@ -148,10 +210,12 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Ftp
             {
                 DoAddSession();
             }
-            else
+            else if (item is SessionItem sessionItem)
             {
-                throw new NotImplementedException();
+                DoStartSession(sessionItem.Session);
             }
+            else
+                throw new InvalidOperationException("Unsupported item!");
         }
 
         public override LocationCapabilities GetLocationCapabilities()
@@ -186,6 +250,6 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Ftp
 
         public override IReadOnlyList<Item> Items => items;
 
-        public override bool RestoreAddress => true;
+        public override bool RestoreLocationAfterRestart => true;
     }
 }

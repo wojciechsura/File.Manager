@@ -341,7 +341,7 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Local
 
         public override IReadOnlyList<Item> Items => items;
 
-        public override bool RestoreAddress => true;
+        public override bool RestoreLocationAfterRestart => true;
 
         public override string Address => address;
     }
