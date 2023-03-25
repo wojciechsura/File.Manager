@@ -232,7 +232,13 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
                 CannotCheckIfDestinationFolderExists,
                 [LocalizedDescription(nameof(Strings.CopyMove_Question_DestinationFolderAlreadyExists), typeof(Strings))]
                 [AvailableCopyMoveResolutions(SingleCopyMoveProblemResolution.Skip, SingleCopyMoveProblemResolution.SkipAll, SingleCopyMoveProblemResolution.Abort)]
-                DestinationFolderAlreadyExists
+                DestinationFolderAlreadyExists,
+                [LocalizedDescription(nameof(Strings.CopyMove_Question_CannotCloseSourceStream), typeof(Strings))]
+                [AvailableCopyMoveResolutions(SingleCopyMoveProblemResolution.Skip, SingleCopyMoveProblemResolution.SkipAll, SingleCopyMoveProblemResolution.Abort)]
+                CannotCloseSourceStream,
+                [LocalizedDescription(nameof(Strings.CopyMove_Question_CannotCloseDestinationStream), typeof(Strings))]
+                [AvailableCopyMoveResolutions(SingleCopyMoveProblemResolution.Skip, SingleCopyMoveProblemResolution.SkipAll, SingleCopyMoveProblemResolution.Abort)]
+                CannotCloseDestinationStream
             }
 
             // Private fields -------------------------------------------------
@@ -810,6 +816,40 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
                 return (false, null);
             }
 
+            private (bool exit, CopyMoveWorkerResult result) CloseSourceStream(Stream sourceStream,
+                IFileInfo fileInfo,
+                FilesystemOperator sourceOperator,
+                FilesystemOperator destinationOperator,
+                string targetName)
+            {
+                if (!sourceOperator.CloseReadFile(sourceStream, fileInfo.Name))
+                {
+                    return HandleSkipAbort(CopyMoveProblemKind.CannotCloseSourceStream,
+                        sourceOperator,
+                        destinationOperator,
+                        fileInfo.Name);                    
+                }
+
+                return (false, null);
+            }
+
+            private (bool exit, CopyMoveWorkerResult result) CloseDestinationStream(Stream destinationStream,
+                IFileInfo fileInfo,
+                FilesystemOperator sourceOperator,
+                FilesystemOperator destinationOperator,
+                string targetName)
+            {
+                if (!destinationOperator.CloseWrittenFile(destinationStream, targetName))
+                {
+                    return HandleSkipAbort(CopyMoveProblemKind.CannotCloseDestinationStream,
+                        sourceOperator,
+                        destinationOperator,
+                        targetName);
+                }
+
+                return (false, null);
+            } 
+
             private CopyMoveWorkerResult ProcessFile(TContext context,
                 IFileInfo fileInfo,
                 DataTransferOperationType operationType,
@@ -893,15 +933,20 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
                         if (exit)
                             return result;
 
+                        (exit, result) = CloseSourceStream(sourceStream, fileInfo, sourceOperator, destinationOperator, targetName);
+                        if (exit)
+                            return result;
+
+                        (exit, result) = CloseDestinationStream(destinationStream, fileInfo, sourceOperator, destinationOperator, targetName);
+                        if (exit)
+                            return result;
+                        
                         (exit, result) = CopyAttributes(fileInfo, sourceOperator, destinationOperator, targetName);
                         if (exit)
                             return result;
                     }
                     catch
                     {
-                        destinationStream?.Dispose();
-                        destinationStream = null;
-
                         // Try to delete partially-copied file
                         destinationOperator.DeleteFile(targetName);
 
@@ -918,13 +963,10 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
                                 return new AbortedCopyMoveWorkerResult();
                             default:
                                 throw new InvalidOperationException("Invalid resolution!");
-                        }
+                        }                        
                     }
                     finally
-                    {
-                        sourceOperator.CloseReadFile(sourceStream, fileInfo.Name);
-                        destinationOperator.CloseWrittenFile(destinationStream, fileInfo.Name);
-
+                    {                       
                         if (cancelled)
                         {
                             // Try to remove file, which was not copied

@@ -198,7 +198,13 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Ftp
             try
             {
                 EnsureWorkingDirectory();
-                return ftpClient.OpenRead(name);
+                var ms = new MemoryStream();
+                var result = ftpClient.DownloadStream(ms, name);
+                if (!result)
+                    return null;
+
+                ms.Seek(0, SeekOrigin.Begin);
+                return ms;
             }
             catch
             {
@@ -211,11 +217,25 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Ftp
             try
             {
                 EnsureWorkingDirectory();
-                return ftpClient.OpenWrite(name);
+                var ms = new MemoryStream();
+                return ms;
             }
             catch
             {
                 return null;
+            }
+        }
+
+        public override bool CloseWrittenFile(Stream stream, string name)
+        {
+            try
+            {
+                ftpClient.UploadStream(stream, name);
+                return true;
+            }
+            catch
+            { 
+                return false; 
             }
         }
 

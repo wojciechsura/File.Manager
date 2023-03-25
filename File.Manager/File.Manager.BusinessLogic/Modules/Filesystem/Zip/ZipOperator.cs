@@ -343,20 +343,28 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Zip
             return new MemoryStream();            
         }
 
-        public override void CloseWrittenFile(Stream stream, string name)
+        public override bool CloseWrittenFile(Stream stream, string name)
         {
-            var ms = (MemoryStream)stream;
-            ms.Seek(0, SeekOrigin.Begin);
+            try
+            {
+                var ms = (MemoryStream)stream;
+                ms.Seek(0, SeekOrigin.Begin);
 
-            var path = $"{rootPath}{name}";
+                var path = $"{rootPath}{name}";
 
-            var entry = new ZipEntry(path);
+                var entry = new ZipEntry(path);
 
-            zipFile.BeginUpdate();
-            zipFile.Add(new StreamZipSource(ms), entry);
-            zipFile.CommitUpdate();            
+                zipFile.BeginUpdate();
+                zipFile.Add(new StreamZipSource(ms), entry);
+                zipFile.CommitUpdate();
 
-            base.CloseWrittenFile(stream, name);
+                base.CloseWrittenFile(stream, name);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         public override bool SetFileAttributes(string targetName, FileAttributes attributes)

@@ -141,6 +141,12 @@
   <data name="CopyMove_Question_CannotCheckIfSubfolderIsEmpty" xml:space="preserve">
     <value>Cannot check if subfolder "{2}" in location "{0}" is empty.</value>
   </data>
+  <data name="CopyMove_Question_CannotCloseDestinationStream" xml:space="preserve">
+    <value>Cannot close destination stream for file "{2}" in location "{1}".</value>
+  </data>
+  <data name="CopyMove_Question_CannotCloseSourceStream" xml:space="preserve">
+    <value>Cannot close source stream for file "{2}" in location "{0}".</value>
+  </data>
   <data name="CopyMove_Question_CannotCopyFile" xml:space="preserve">
     <value>Cannot copy file "{0}" from "{1}" to "{2}".</value>
   </data>

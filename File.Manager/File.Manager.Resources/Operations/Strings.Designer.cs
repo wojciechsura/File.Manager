@@ -133,6 +133,24 @@ namespace File.Manager.Resources.Operations {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot close destination stream for file &quot;{2}&quot; in location &quot;{1}&quot;..
+        /// </summary>
+        public static string CopyMove_Question_CannotCloseDestinationStream {
+            get {
+                return ResourceManager.GetString("CopyMove_Question_CannotCloseDestinationStream", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot close source stream for file &quot;{2}&quot; in location &quot;{0}&quot;..
+        /// </summary>
+        public static string CopyMove_Question_CannotCloseSourceStream {
+            get {
+                return ResourceManager.GetString("CopyMove_Question_CannotCloseSourceStream", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cannot copy file &quot;{0}&quot; from &quot;{1}&quot; to &quot;{2}&quot;..
         /// </summary>
         public static string CopyMove_Question_CannotCopyFile {

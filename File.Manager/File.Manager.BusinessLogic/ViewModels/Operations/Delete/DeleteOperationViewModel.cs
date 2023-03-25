@@ -1,6 +1,7 @@
 ﻿using File.Manager.API.Filesystem;
 using File.Manager.API.Filesystem.Models.Items;
 using File.Manager.API.Filesystem.Models.Items.Listing;
+using File.Manager.API.Tools;
 using File.Manager.BusinessLogic.Models.Dialogs.DeleteConfiguration;
 using File.Manager.BusinessLogic.Services.Dialogs;
 using File.Manager.BusinessLogic.Services.Messaging;
@@ -48,7 +49,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.Delete
                 context.DeletedSize += fileInfo.Size;
 
                 (_, string elapsedString) = EvalElapsed(startTime);
-                var partialDescription = string.Format(Strings.Delete_Info_PartialDescription, context.DeletedFiles, context.DeletedSize, elapsedString);
+                var partialDescription = string.Format(Strings.Delete_Info_PartialDescription, context.DeletedFiles, SizeTools.BytesToHumanReadable(context.DeletedSize), elapsedString);
 
                 ReportProgress(0, new DeleteProgress(0, partialDescription));
 

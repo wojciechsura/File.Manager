@@ -43,17 +43,19 @@ namespace File.Manager.API.Filesystem
         /// <summary>Returns stream for existing file allowing reading.</summary>
         public abstract Stream OpenFileForReading(string name);
 
-        public virtual void CloseReadFile(Stream stream, string name)
+        public virtual bool CloseReadFile(Stream stream, string name)
         {
             stream.Dispose();
+            return true;
         }
 
         /// <summary>Returns stream for new file for writing.</summary>
         public abstract Stream OpenFileForWriting(string name);
 
-        public virtual void CloseWrittenFile(Stream stream, string name)
+        public virtual bool CloseWrittenFile(Stream stream, string name)
         {
             stream.Dispose();
+            return true;
         }
 
         public abstract bool SetFileAttributes(string targetName, FileAttributes attributes);
