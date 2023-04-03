@@ -86,5 +86,37 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
+
+    <Style x:Key="TransparentButton" TargetType="Button">
+        <Style.Setters>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="ContentBorder" TextBlock.Foreground="{TemplateBinding Foreground}"
+                                        TextBlock.FontSize="10" Margin="0">
+                            <Grid x:Name="ContentGrid" Margin="2,2,2,2" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <ContentPresenter />
+                            </Grid>
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Trigger.Setters>
+                                    <Setter TargetName="ContentGrid" Property="Margin">
+                                        <Setter.Value>
+                                            <Thickness Top="3" Left="3" Right="1" Bottom="1" />
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger.Setters>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="ContentBorder" Property="TextElement.Foreground" Value="{DynamicResource SystemAccentColorPrimaryBrush}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style.Setters>
+    </Style>
+
 </ResourceDictionary>

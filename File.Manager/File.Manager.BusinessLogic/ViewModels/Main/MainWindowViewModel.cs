@@ -334,6 +334,11 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
             }
         }
 
+        private void DoShowQuickSearch()
+        {
+            activePane.ToggleQuickSearch();
+        }
+
         private void RefreshPanes()
         {
             leftPane.Refresh();
@@ -407,6 +412,8 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
             AddToSelectionCommand = new AppCommand(obj => DoChangeSelection(SelectionOperationKind.Add));
             RemoveFromSelectionCommand = new AppCommand(obj => DoChangeSelection(SelectionOperationKind.Remove));
 
+            ShowQuickSearchCommand = new AppCommand(obj => DoShowQuickSearch());
+
             // Restore addresses
 
             leftPane.Navigate(configurationService.Configuration.Session.LeftPaneAddress.Value);
@@ -465,5 +472,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
         public ICommand InvertSelectionCommand { get; }
         public ICommand AddToSelectionCommand { get; }
         public ICommand RemoveFromSelectionCommand { get; }
+
+        public ICommand ShowQuickSearchCommand { get; }
     }
 }

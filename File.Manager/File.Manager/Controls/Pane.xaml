@@ -9,14 +9,37 @@
              xmlns:c="clr-namespace:File.Manager.Controls.Files"             
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance Type=vm:PaneViewModel}"
-             d:DesignHeight="450" d:DesignWidth="800" Focusable="True">
+             d:DesignHeight="450" d:DesignWidth="800" Focusable="True" PreviewTextInput="HandlePaneTextInput"
+             PreviewKeyDown="HandlePanePreviewKeyDown">
+    <UserControl.Resources>
+        <Style TargetType="Label" x:Key="QuickSearchContent">
+            <Setter Property="Width" Value="200" />
+            <Setter Property="FontSize" Value="21" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+        </Style>
+    </UserControl.Resources>
     <DockPanel>
         <TextBox DockPanel.Dock="Top" Text="{Binding Navigator.Address, Mode=OneWay}"
                  IsReadOnly="True" Padding="4" Margin="{StaticResource DialogItemsBottomMargin}" />
         <ScrollBar DockPanel.Dock="Right" Orientation="Vertical" Minimum="0" Maximum="{Binding ElementName=flList, Path=ScrollMaximum}"
                    SmallChange="{Binding ElementName=flList, Path=ScrollSmallChange}" LargeChange="{Binding ElementName=flList, Path=ScrollLargeChange}"
                    Value="{Binding ElementName=flList, Path=ScrollPosition, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ViewportSize="{Binding ElementName=flList, Path=ScrollViewportSize}"/>
-        <c:FileList x:Name="flList" SnapsToDevicePixels="True" FilesSource="{Binding ItemsView}"
-                    IsActive="{Binding Active, Mode=TwoWay}" ExecuteCurrentItemCommand="{Binding ExecuteCurrentItemCommand}" />
+        <Grid>
+            <c:FileList x:Name="flList" SnapsToDevicePixels="True" FilesSource="{Binding ItemsView}"
+                        HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                        IsActive="{Binding Active, Mode=TwoWay}" ExecuteCurrentItemCommand="{Binding ExecuteCurrentItemCommand}" />
+
+            <StackPanel Orientation="Vertical" HorizontalAlignment="Right" VerticalAlignment="Top"
+                        Background="{DynamicResource ControlFillColorDefaultBrush}"
+                        Visibility="{Binding QuickSearchVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <Label Margin="{StaticResource DialogItemsExceptBottomMargin}" Content="{x:Static res:Strings.Label_QuickSearch}" />
+                <StackPanel Orientation="Horizontal" Margin="{StaticResource DialogItemsMargin}">
+                    <Label Style="{StaticResource QuickSearchContent}" Content="{Binding QuickSearchText}" />
+                    <Button Width="23" Command="{Binding HideQuickSearchCommand}" 
+                            Style="{StaticResource TransparentButton}" FontFamily="Marlett">r</Button>
+                </StackPanel>
+                <Border Background="{DynamicResource SystemAccentColorPrimaryBrush}" Height="4" />
+            </StackPanel>
+        </Grid>
     </DockPanel>
 </UserControl>

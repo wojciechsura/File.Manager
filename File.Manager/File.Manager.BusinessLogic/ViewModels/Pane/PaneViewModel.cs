@@ -42,6 +42,9 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
         private IPaneAccess access;
         private bool active;
 
+        private bool quickSearchVisible;
+        private string quickSearchText;
+
         // Private methods ----------------------------------------------------
 
         private void UpdateItems(FocusedItemData data)
@@ -176,6 +179,45 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
             }
         }
 
+        private void PerformQuickSearch(string quickSearchText)
+        {
+            int i = 0;
+
+            var searchText = quickSearchText.ToLowerInvariant();
+
+            // Pass 1. Search for item, which starts with given string
+
+            while (i < items.Count && !items[i].Name.ToLowerInvariant().StartsWith(searchText))
+                i++;
+
+            if (i >= items.Count)
+            {
+                i = 0;
+
+                // Pass 2. Search for item, which contains given string
+
+                while (i < items.Count && !items[i].Name.ToLowerInvariant().Contains(searchText))
+                    i++;
+            }
+
+            if (i >= items.Count)
+            {
+                // Fallback
+
+                i = 0;
+            }
+
+            collectionView.MoveCurrentTo(items[i]);
+        }
+
+        private void HandleQuickSearchTextChanged()
+        {
+            if (QuickSearchVisible)
+            {
+                PerformQuickSearch(QuickSearchText);
+            }
+        }
+
         // IFilesystemNavigatorHandler implementation -------------------------
 
         void IFilesystemNavigatorHandler.NotifyChanged(FocusedItemData focusedItem)
@@ -208,9 +250,11 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
             this.messagingService = messagingService;
 
             items = new();
-            collectionView = new(items);            
+            collectionView = new(items);
+            quickSearchVisible = false;
 
             ExecuteCurrentItemCommand = new AppCommand(DoExecuteCurrentItem);
+            HideQuickSearchCommand = new AppCommand(obj => HideQuickSearch());
 
             SetHomeNavigator(null);
             UpdateItems(null);
@@ -267,6 +311,25 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
             DoNavigateToAddress(address, null);
         }
 
+        public void ToggleQuickSearch()
+        {
+            if (!QuickSearchVisible)
+            {
+                QuickSearchText = "";
+                QuickSearchVisible = true;
+            }
+            else
+            {
+                QuickSearchVisible = false;
+                QuickSearchText = "";
+            }
+        }
+
+        public void HideQuickSearch()
+        {
+            QuickSearchVisible = false;
+        }
+
         // Public properties --------------------------------------------------
 
         public IEnumerable<ItemViewModel> Items => items;
@@ -296,5 +359,19 @@ namespace File.Manager.BusinessLogic.ViewModels.Pane
         }
 
         public ICommand ExecuteCurrentItemCommand { get; }
+
+        public ICommand HideQuickSearchCommand { get; }
+
+        public bool QuickSearchVisible
+        {
+            get => quickSearchVisible;
+            set => Set(ref quickSearchVisible, value);
+        }
+
+        public string QuickSearchText
+        {
+            get => quickSearchText;
+            set => Set(ref quickSearchText, value, changeHandler: HandleQuickSearchTextChanged);
+        }
     }
 }

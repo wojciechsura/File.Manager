@@ -153,6 +153,9 @@
   <data name="Ribbon_Button_NewFolder" xml:space="preserve">
     <value>New Folder F7</value>
   </data>
+  <data name="Ribbon_Button_QuickSearch" xml:space="preserve">
+    <value>Jump to item</value>
+  </data>
   <data name="Ribbon_Button_RemoveFromSelection" xml:space="preserve">
     <value>Remove from selection</value>
   </data>
@@ -164,6 +167,9 @@
   </data>
   <data name="Ribbon_Group_Selection" xml:space="preserve">
     <value>Selection</value>
+  </data>
+  <data name="Ribbon_Group_Tools" xml:space="preserve">
+    <value>Tools</value>
   </data>
   <data name="Ribbon_Tab_Home" xml:space="preserve">
     <value>Home</value>

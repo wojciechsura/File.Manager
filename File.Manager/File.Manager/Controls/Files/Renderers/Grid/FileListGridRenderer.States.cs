@@ -67,7 +67,7 @@ namespace File.Manager.Controls.Files.Renderers.Grid
 
 			public override void OnKeyDown(KeyEventArgs e)
 			{
-				if (e.Key == Key.Up)
+				if (e.Key == Key.Up && Keyboard.Modifiers == ModifierKeys.None)
 				{
 					if (renderer.FilesSource != null)
 					{
@@ -87,7 +87,7 @@ namespace File.Manager.Controls.Files.Renderers.Grid
 
 					e.Handled = true;
 				}
-				else if (e.Key == Key.PageUp)
+				else if (e.Key == Key.PageUp && Keyboard.Modifiers == ModifierKeys.None)
 				{
 					if (renderer.FilesSource != null)
 					{
@@ -110,7 +110,7 @@ namespace File.Manager.Controls.Files.Renderers.Grid
 
                     e.Handled = true;
                 }
-                else if (e.Key == Key.Home)
+                else if (e.Key == Key.Home && Keyboard.Modifiers == ModifierKeys.None)
 				{
 					if (renderer.FilesSource != null)
 					{
@@ -121,7 +121,7 @@ namespace File.Manager.Controls.Files.Renderers.Grid
 
                     e.Handled = true;
                 }
-                else if (e.Key == Key.Down)
+                else if (e.Key == Key.Down && Keyboard.Modifiers == ModifierKeys.None)
 				{
 					if (renderer.FilesSource != null)
 					{
@@ -141,7 +141,7 @@ namespace File.Manager.Controls.Files.Renderers.Grid
 
 					e.Handled = true;
 				}
-				else if (e.Key == Key.PageDown)
+				else if (e.Key == Key.PageDown && Keyboard.Modifiers == ModifierKeys.None)
 				{
 					if (renderer.FilesSource != null)
 					{
@@ -165,7 +165,7 @@ namespace File.Manager.Controls.Files.Renderers.Grid
 
                     e.Handled = true;
                 }
-                else if (e.Key == Key.End)
+                else if (e.Key == Key.End && Keyboard.Modifiers == ModifierKeys.None)
 				{
 					if (renderer.FilesSource != null)
 					{
@@ -176,7 +176,7 @@ namespace File.Manager.Controls.Files.Renderers.Grid
 
                     e.Handled = true;
                 }
-                else if (e.Key == Key.Space)
+                else if (e.Key == Key.Space && Keyboard.Modifiers == ModifierKeys.None)
 				{
 					if (renderer.FilesSource != null && renderer.FilesSource.CurrentItem != null)
 					{						
@@ -191,7 +191,7 @@ namespace File.Manager.Controls.Files.Renderers.Grid
 
                     e.Handled = true;
                 }
-                else if (e.Key == Key.Insert)
+                else if (e.Key == Key.Insert && Keyboard.Modifiers == ModifierKeys.None)
 				{
 					if (renderer.FilesSource != null && renderer.FilesSource.CurrentItem != null)
 					{
@@ -208,7 +208,7 @@ namespace File.Manager.Controls.Files.Renderers.Grid
 						renderer.host.RequestInvalidateVisual();
 					}
 				}
-				else if (e.Key == Key.Enter)
+				else if (e.Key == Key.Enter && Keyboard.Modifiers == ModifierKeys.None)
 				{
 					if (renderer.FilesSource != null && renderer.FilesSource.CurrentItem != null)
 					{

@@ -169,6 +169,15 @@ namespace File.Manager.Resources.Windows.MainWindow {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Jump to item.
+        /// </summary>
+        public static string Ribbon_Button_QuickSearch {
+            get {
+                return ResourceManager.GetString("Ribbon_Button_QuickSearch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Remove from selection.
         /// </summary>
         public static string Ribbon_Button_RemoveFromSelection {
@@ -201,6 +210,15 @@ namespace File.Manager.Resources.Windows.MainWindow {
         public static string Ribbon_Group_Selection {
             get {
                 return ResourceManager.GetString("Ribbon_Group_Selection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Tools.
+        /// </summary>
+        public static string Ribbon_Group_Tools {
+            get {
+                return ResourceManager.GetString("Ribbon_Group_Tools", resourceCulture);
             }
         }
         

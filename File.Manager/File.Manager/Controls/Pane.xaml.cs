@@ -2,6 +2,7 @@
 using File.Manager.BusinessLogic.Models.Files;
 using File.Manager.BusinessLogic.Types;
 using File.Manager.BusinessLogic.ViewModels.Pane;
+using File.Manager.Common.Helpers;
 using File.Manager.Tools;
 using System;
 using System.Collections.Generic;
@@ -43,12 +44,40 @@ namespace File.Manager.Controls
                 viewModel.Access = this;
         }
 
+        private void HandlePanePreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Escape)
+            {
+                viewModel.HideQuickSearch();
+                e.Handled = true;
+            }
+            else if (e.Key == Key.Enter)
+            {
+                viewModel.HideQuickSearch();
+                // Let the event pass to the file list
+            }
+        }
+
+        private void HandlePaneTextInput(object sender, TextCompositionEventArgs e)
+        {
+            if (viewModel.QuickSearchVisible)
+            {
+                viewModel.QuickSearchText = (viewModel.QuickSearchText + e.Text).ApplyControlChars();
+            }
+        }
+
+        // Protected methods --------------------------------------------------
+
         protected override void OnPreviewKeyDown(KeyEventArgs e)
         {
             if (e.Key == Key.Tab)
             {
                 viewModel.NotifyTabPressed();
                 e.Handled = true;
+            }
+            else if (Keyboard.IsKeyDown(Key.LeftAlt) && e.IsDown && (e.Key >= Key.A && e.Key <= Key.Z))
+            {
+
             }
             else
             {

@@ -23,6 +23,7 @@
         <KeyBinding Key="Multiply" Command="{Binding InvertSelectionCommand}" />
         <KeyBinding Key="Add" Command="{Binding AddToSelectionCommand}" />
         <KeyBinding Key="Subtract" Command="{Binding RemoveFromSelectionCommand}" />
+        <KeyBinding Key="Space" Modifiers="Ctrl" Command="{Binding ShowQuickSearchCommand}" />
     </f:RibbonWindow.InputBindings>
 
     <Grid x:Name="gHost">
@@ -74,6 +75,13 @@
                               LargeIcon="pack://application:,,,/File.Manager;component/Resources/Images/InvertSelection32.png"
                               Icon="pack://application:,,,/File.Manager;component/Resources/Images/InvertSelection16.png"/>
 
+                    </f:RibbonGroupBox>
+
+                    <f:RibbonGroupBox Header="{x:Static res:Strings.Ribbon_Group_Tools}">
+                        <f:Button Header="{x:Static res:Strings.Ribbon_Button_QuickSearch}"
+                                  Command="{Binding ShowQuickSearchCommand}"
+                                  LargeIcon="pack://application:,,,/File.Manager;component/Resources/Images/Search32.png"
+                                  Icon="pack://application:,,,/File.Manager;component/Resources/Images/Search16.png"/>
                     </f:RibbonGroupBox>
                 </f:RibbonTabItem>
             </f:Ribbon>
