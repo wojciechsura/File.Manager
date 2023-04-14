@@ -416,8 +416,10 @@ namespace File.Manager.BusinessLogic.ViewModels.Main
 
             // Restore addresses
 
-            leftPane.Navigate(configurationService.Configuration.Session.LeftPaneAddress.Value);
-            rightPane.Navigate(configurationService.Configuration.Session.RightPaneAddress.Value);
+            if (!string.IsNullOrEmpty(configurationService.Configuration.Session.LeftPaneAddress.Value))
+                leftPane.Navigate(configurationService.Configuration.Session.LeftPaneAddress.Value);
+            if (!string.IsNullOrEmpty(configurationService.Configuration.Session.RightPaneAddress.Value))
+                rightPane.Navigate(configurationService.Configuration.Session.RightPaneAddress.Value);
         }
 
         public void NotifyActivated(PaneViewModel paneViewModel)
