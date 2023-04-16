@@ -193,15 +193,11 @@ namespace File.Manager.Controls.Files.Renderers.Grid
             }
         }
 
-        private double PxToDip(double pixels) => pixels / host.PixelsPerDip;
-
-        private double DipToPx(double dip) => dip * host.PixelsPerDip;
-
         private (int remainingWidthPx, int starSum) EvalColumnWidthStats()
         {
             int availableWidthPx = host.Bounds.Width;
 
-            int requiredAbsoluteWidthPx = (int)DipToPx(Columns
+            int requiredAbsoluteWidthPx = (int)(Columns
                 .Where(c => c.WidthKind == FileListColumnWidthKind.Dip)
                 .Sum(c => c.Width));
 
@@ -233,12 +229,12 @@ namespace File.Manager.Controls.Files.Renderers.Grid
 
                         case FileListColumnWidthKind.Dip:
                             {
-                                columnWidth = (int)DipToPx(Math.Max(MIN_COLUMN_WIDTH_DIP, Columns[i].Width));
+                                columnWidth = (int)(Math.Max(MIN_COLUMN_WIDTH_DIP, Columns[i].Width));
                                 break;
                             }
                         case FileListColumnWidthKind.Star:
                             {
-                                columnWidth = (int)DipToPx(Math.Max(MIN_COLUMN_WIDTH_DIP, remainingWidthPx * Columns[i].Width / starSum));
+                                columnWidth = (int)(Math.Max(MIN_COLUMN_WIDTH_DIP, remainingWidthPx * Columns[i].Width / starSum));
                                 break;
                             }
                         default:
@@ -295,7 +291,7 @@ namespace File.Manager.Controls.Files.Renderers.Grid
 
             ValidateCharacterMetrics();
 
-            int selectionMargin = (int)DipToPx(SELECTION_HORIZONTAL_MARGIN_DP + SELECTION_LINE_THICKNESS_DP);
+            int selectionMargin = (int)(SELECTION_HORIZONTAL_MARGIN_DP + SELECTION_LINE_THICKNESS_DP);
 
             int headerBoundsTop = host.Bounds.Top;
             int headerBoundsLeft = host.Bounds.Left;
@@ -321,7 +317,7 @@ namespace File.Manager.Controls.Files.Renderers.Grid
             ValidateCharacterMetrics();
             ValidateHeaderMetrics();
 
-            int horizontalColumnMarginPx = (int)DipToPx(characterMetrics.CharWidth * COLUMN_HORIZONTAL_MARGIN_EM);
+            int horizontalColumnMarginPx = (int)(characterMetrics.CharWidth * COLUMN_HORIZONTAL_MARGIN_EM);
 
             if (Columns == null)
             {
@@ -365,15 +361,15 @@ namespace File.Manager.Controls.Files.Renderers.Grid
             ValidateCharacterMetrics();
             ValidateHeaderMetrics();
 
-            int selectionVerticalMargin = (int)DipToPx(SELECTION_VERTICAL_MARGIN_DP);
-            int selectionHorizontalMargin = (int)DipToPx(SELECTION_HORIZONTAL_MARGIN_DP);
-            int selectionLineThickness = (int)DipToPx(SELECTION_LINE_THICKNESS_DP);
-            int selectionCornerRadius = (int)DipToPx(SELECTION_CORNER_RADIUS_DP);
+            int selectionVerticalMargin = (int)(SELECTION_VERTICAL_MARGIN_DP);
+            int selectionHorizontalMargin = (int)(SELECTION_HORIZONTAL_MARGIN_DP);
+            int selectionLineThickness = (int)(SELECTION_LINE_THICKNESS_DP);
+            int selectionCornerRadius = (int)(SELECTION_CORNER_RADIUS_DP);
 
-            int verticalMargin = (int)DipToPx(characterMetrics.CharHeight * ROW_VERTICAL_MARGIN_EM);
-            int itemSpacing = (int)DipToPx(characterMetrics.CharWidth * ROW_ITEM_SPACING_EM);
+            int verticalMargin = (int)(characterMetrics.CharHeight * ROW_VERTICAL_MARGIN_EM);
+            int itemSpacing = (int)(characterMetrics.CharWidth * ROW_ITEM_SPACING_EM);
 
-            int iconSizePx = (int)DipToPx(ICON_SIZE);
+            int iconSizePx = (int)(ICON_SIZE);
             int itemHeight = (int)(2 * verticalMargin + 2 * (selectionVerticalMargin + selectionLineThickness) + Math.Max(iconSizePx, characterMetrics.CharHeight));
 
             PixelRectangle itemArea = new PixelRectangle(host.Bounds.Left,
@@ -410,7 +406,7 @@ namespace File.Manager.Controls.Files.Renderers.Grid
 
         // Public methods -----------------------------------------------------
 
-        public FileListGridRendererMetrics(IFileListRendererHost host)            
+        public FileListGridRendererMetrics(IFileListRendererHost host)
         {
             this.host = host;
         }
