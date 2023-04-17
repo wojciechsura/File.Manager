@@ -16,11 +16,71 @@ namespace File.Manager.Controls.Files
 {
     internal abstract class FileListRenderer
     {
+        // Protected types ----------------------------------------------------
+
+        protected class GlyphRunInfo
+        {
+            private readonly GlyphTypeface glyphTypeface;
+            private readonly double fontSize;
+
+            public GlyphRunInfo(GlyphTypeface glyphTypeface, double fontSize, double x)
+            {
+                this.glyphTypeface = glyphTypeface;
+                this.fontSize = fontSize;
+                StartX = x;
+                CurrentX = x;
+            }
+
+            public void AddGlyph(char c)
+            {
+                if (glyphTypeface.CharacterToGlyphMap.TryGetValue(c, out ushort glyphIndex))
+                {
+                    var advanceWidth = glyphTypeface.AdvanceWidths[glyphIndex] * fontSize;
+                    GlyphIndices.Add(glyphIndex);
+                    AdvanceWidths.Add(advanceWidth);
+
+                    CurrentX += advanceWidth;
+                }
+            }
+
+            public void Draw(DrawingContext drawingContext, float pixelsPerDip, Brush brush, double y)
+            {
+                if (GlyphIndices.Any() && AdvanceWidths.Any())
+                {
+                    var glyphRun = new GlyphRun(glyphTypeface,
+                        bidiLevel: 0,
+                        isSideways: false,
+                        renderingEmSize: fontSize,
+                        pixelsPerDip: pixelsPerDip,
+                        glyphIndices: GlyphIndices,
+                        baselineOrigin: new Point(Math.Round(StartX),
+                            Math.Round(glyphTypeface.Baseline * fontSize + y)),
+                        advanceWidths: AdvanceWidths,
+                        glyphOffsets: null,
+                        characters: null,
+                        deviceFontName: null,
+                        clusterMap: null,
+                        caretStops: null,
+                        language: null);
+
+                    drawingContext.DrawGlyphRun(brush, glyphRun);
+                }
+            }
+
+            public List<ushort> GlyphIndices { get; } = new List<ushort>();
+            public List<double> AdvanceWidths { get; } = new List<double>();
+            public double CurrentX { get; set; }
+            public double StartX { get; }
+        }
+
         // Private fields -----------------------------------------------------
 
         private FileListColumnCollection columns;
         private ICollectionView filesSource;
-        
+
+        private Typeface typeface;
+        private GlyphTypeface glyphTypeface;
+
         // A workaround for ObservableCollection's Reset event
         // not carying information about actual change. There seems
         // to be no other way to properly remove/add event handlers
@@ -160,6 +220,20 @@ namespace File.Manager.Controls.Files
             OnFilesSourceChanged();
         }
 
+        private bool EnsureGlyphTypeface()
+        {
+            if (typeface != null && glyphTypeface != null)
+                return true;
+
+            typeface = new Typeface(host.FontFamily, host.FontStyle, host.FontWeight, host.FontStretch);
+            if (typeface.TryGetGlyphTypeface(out glyphTypeface))
+                return true;
+
+            typeface = null;
+            glyphTypeface = null;
+            return false;
+        }
+
         // Protected fields ---------------------------------------------------
 
         protected readonly IFileListRendererHost host;
@@ -195,6 +269,19 @@ namespace File.Manager.Controls.Files
         protected virtual void HandleItemPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
 
+        }
+
+        protected void DrawText(DrawingContext drawingContext, Brush brush, string text, double x, double y)
+        {
+            if (!EnsureGlyphTypeface())
+                return;
+
+            var run = new GlyphRunInfo(glyphTypeface, host.FontSize, x);
+
+            foreach (var c in text)
+                run.AddGlyph(c);
+
+            run.Draw(drawingContext, (float)host.PixelsPerDip, brush, y);
         }
 
         // Public methods -----------------------------------------------------
@@ -236,6 +323,14 @@ namespace File.Manager.Controls.Files
         public virtual void OnMouseWheel(MouseWheelEventArgs e)
         {
             
+        }
+
+        public virtual void NotifyFontChanged()
+        {
+            typeface = null;
+            glyphTypeface = null;
+
+            host.RequestInvalidateVisual();
         }
 
         public abstract void Render(DrawingContext drawingContext);

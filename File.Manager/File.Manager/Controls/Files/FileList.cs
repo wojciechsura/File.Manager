@@ -439,6 +439,7 @@ namespace File.Manager.Controls.Files
 
         private void FontFamilyChanged()
         {
+            renderer.NotifyFontChanged();
             renderer.NotifyMetricsChanged();
         }
 
@@ -464,6 +465,7 @@ namespace File.Manager.Controls.Files
 
         private void FontStyleChanged()
         {
+            renderer.NotifyFontChanged();
             renderer.NotifyMetricsChanged();
         }
 
@@ -489,6 +491,7 @@ namespace File.Manager.Controls.Files
 
         private void FontWeightChanged()
         {
+            renderer.NotifyFontChanged();
             renderer.NotifyMetricsChanged();
         }
 
@@ -514,6 +517,7 @@ namespace File.Manager.Controls.Files
 
         private void FontStretchChanged()
         {
+            renderer.NotifyFontChanged();
             renderer.NotifyMetricsChanged();
         }
 
@@ -541,6 +545,7 @@ namespace File.Manager.Controls.Files
 
         private void FontSizeChanged()
         {
+            renderer.NotifyFontChanged();
             renderer.NotifyMetricsChanged();
         }
 

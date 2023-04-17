@@ -87,15 +87,11 @@ namespace File.Manager.Controls.Files.Renderers.Grid
                             new Point(headerRect.Left, headerRect.Bottom));
                     }
 
-                    var text = new FormattedText(Columns[i].Header,
-                        CultureInfo.InvariantCulture,
-                        FlowDirection.LeftToRight,
-                        typeface,
-                        host.FontSize,
+                    DrawText(drawingContext,
                         host.Appearance.HeaderForegroundBrush,
-                        host.PixelsPerDip);
-
-                    drawingContext.DrawText(text, metrics.Column.Columns[i].TitlePosition.ToPoint());
+                        Columns[i].Header,
+                        metrics.Column.Columns[i].TitlePosition.X,
+                        metrics.Column.Columns[i].TitlePosition.Y);
                 }
                 finally
                 {
@@ -117,17 +113,13 @@ namespace File.Manager.Controls.Files.Renderers.Grid
                 null => string.Empty
             };
 
-            PixelPoint valuePosition = new PixelPoint(itemRect.Left + metrics.Column.HorizontalMarginPx,
+            PixelPoint valuePosition = new(itemRect.Left + metrics.Column.HorizontalMarginPx,
                 itemRect.Top + (itemRect.Height - metrics.Character.CharHeight) / 2);
-
-            var valueText = new FormattedText(sValue, CultureInfo.InvariantCulture,
-                FlowDirection.LeftToRight,
-                typeface,
-                host.FontSize,
+            DrawText(drawingContext,
                 foregroundBrush,
-                host.PixelsPerDip);
-
-            drawingContext.DrawText(valueText, valuePosition.ToPoint());
+                sValue,
+                valuePosition.X,
+                valuePosition.Y);
         }
 
         private void DrawCell(DrawingContext drawingContext, Typeface typeface, IFileListItem fileItem, int col, PixelRectangle itemRect)
@@ -178,15 +170,11 @@ namespace File.Manager.Controls.Files.Renderers.Grid
             PixelPoint filenamePosition = new PixelPoint(iconRect.Right + metrics.Item.ItemSpacing,
                 itemRect.Top + (itemRect.Height - metrics.Character.CharHeight) / 2);
 
-            var filenameText = new FormattedText(fileItem.Name,
-                CultureInfo.InvariantCulture,
-                FlowDirection.LeftToRight,
-                typeface,
-                host.FontSize,
+            DrawText(drawingContext,
                 foregroundBrush,
-                host.PixelsPerDip);
-
-            drawingContext.DrawText(filenameText, filenamePosition.ToPoint());
+                fileItem.Name,
+                filenamePosition.X,
+                filenamePosition.Y);
         }
 
         private void DrawItem(DrawingContext drawingContext, Typeface typeface, int itemIndex, IFileListItem fileItem)
