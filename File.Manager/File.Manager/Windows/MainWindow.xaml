@@ -9,6 +9,7 @@
                 xmlns:main="clr-namespace:File.Manager.BusinessLogic.ViewModels.Main;assembly=File.Manager.BusinessLogic" xmlns:c1="clr-namespace:File.Manager.Controls.Files" xmlns:c="clr-namespace:File.Manager.Controls"
                 d:DataContext="{d:DesignInstance Type=main:MainWindowViewModel}"
                 mc:Ignorable="d"
+                Icon="/Resources/Images/icon.ico"
                 Title="{x:Static res:Strings.Window_Title}" Height="450" Width="800"                
                 x:Name="root" Loaded="HandleWindowLoaded" Closing="HandleWindowClosing">
 

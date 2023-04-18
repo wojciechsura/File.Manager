@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net6.0-windows</TargetFramework>
     <OutputType>WinExe</OutputType>
@@ -19,6 +19,7 @@
     <None Remove="Resources\Images\Delete32.png" />
     <None Remove="Resources\Images\Edit16.png" />
     <None Remove="Resources\Images\Edit32.png" />
+    <None Remove="Resources\Images\icon.ico" />
     <None Remove="Resources\Images\InvertSelection16.png" />
     <None Remove="Resources\Images\InvertSelection32.png" />
     <None Remove="Resources\Images\Move16.png" />
@@ -41,6 +42,7 @@
     <Resource Include="Resources\Images\Delete32.png" />
     <Resource Include="Resources\Images\Edit16.png" />
     <Resource Include="Resources\Images\Edit32.png" />
+    <Resource Include="Resources\Images\icon.ico" />
     <Resource Include="Resources\Images\InvertSelection16.png" />
     <Resource Include="Resources\Images\InvertSelection32.png" />
     <Resource Include="Resources\Images\Move16.png" />
