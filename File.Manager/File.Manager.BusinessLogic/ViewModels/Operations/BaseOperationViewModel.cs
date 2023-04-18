@@ -26,7 +26,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations
 
             protected string GetTimeSpanString(TimeSpan left)
             {
-                return left.Days > 0 ? left.ToString("d'd'\\, hh\\:mm\\:ss") : left.ToString("hh\\:mm\\:ss");
+                return left.Days > 0 ? left.ToString("dd \"d,\" hh\\:mm\\:ss") : left.ToString("hh\\:mm\\:ss");
             }
 
             protected (long totalSize, int totalFiles) EvaluatePlanTotalsRecursive(IReadOnlyList<BasePlanItem> items)

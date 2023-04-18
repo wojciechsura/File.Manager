@@ -19,7 +19,7 @@
                 <Label Style="{StaticResource DialogHeader}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Content="{x:Static res:Strings.Label_Header}" 
                        Margin="{StaticResource DialogItemsBottomMargin}" />
                 <Label Style="{StaticResource DialogText}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left">
-                    <TextBlock Text="{Binding Header}" TextWrapping="Wrap" />
+                    <TextBlock Text="{Binding Header}" TextWrapping="Wrap" Width="460" />
                 </Label>
             </StackPanel>
         </cd:DialogHost.Content>
