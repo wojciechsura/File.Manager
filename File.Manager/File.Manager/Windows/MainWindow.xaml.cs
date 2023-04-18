@@ -62,6 +62,9 @@ namespace File.Manager.Windows
 
         private void HandleWindowLoaded(object sender, RoutedEventArgs e)
         {
+            Uri iconUri = new Uri("pack://application:,,,/Resources/Images/icon.ico", UriKind.RelativeOrAbsolute);
+            this.Icon = BitmapFrame.Create(iconUri, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.OnLoad);
+
             Dispatcher.BeginInvoke(() =>
             {
                 pLeft.Focus();
