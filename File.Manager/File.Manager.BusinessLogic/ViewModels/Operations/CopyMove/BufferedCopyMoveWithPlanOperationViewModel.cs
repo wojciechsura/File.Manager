@@ -85,7 +85,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
                     // Elapsed
 
                     TimeSpan elapsed = DateTime.Now - startTime;
-                    string elapsedString = elapsed.Days > 0 ? elapsed.ToString("d'd'\\, hh\\:mm\\:ss") : elapsed.ToString("hh\\:mm\\:ss");
+                    string elapsedString = GetTimeSpanString(elapsed);
 
                     // Estimated left
 

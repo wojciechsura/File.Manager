@@ -1086,7 +1086,7 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.CopyMove
                     return resolution;
 
                 LocalizedDescriptionAttribute localizedDescription = problemKind.GetAttribute<LocalizedDescriptionAttribute>();
-                string header = string.Format(localizedDescription.Description, sourceAddress, destinationAddress, name);
+                string header = string.Format(localizedDescription.Description, name, sourceAddress, destinationAddress);
 
                 AvailableCopyMoveResolutionsAttribute availableResolutions = problemKind.GetAttribute<AvailableCopyMoveResolutionsAttribute>();
 

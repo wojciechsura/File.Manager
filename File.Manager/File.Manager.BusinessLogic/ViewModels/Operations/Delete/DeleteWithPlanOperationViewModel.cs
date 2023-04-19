@@ -13,6 +13,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using File.Manager.API.Filesystem.Models.Items.Plan;
+using File.Manager.API.Tools;
 
 namespace File.Manager.BusinessLogic.ViewModels.Operations.Delete
 {
@@ -76,8 +77,8 @@ namespace File.Manager.BusinessLogic.ViewModels.Operations.Delete
                 var totalDescription = string.Format(Strings.Delete_Info_TotalDescription, 
                     context.DeletedFiles,
                     context.TotalFiles,
-                    context.DeletedSize,
-                    context.TotalSize,
+                    SizeTools.BytesToHumanReadable(context.DeletedSize),
+                    SizeTools.BytesToHumanReadable(context.TotalSize),
                     elapsedString,
                     leftString,
                     deletedFilesPerSecond);

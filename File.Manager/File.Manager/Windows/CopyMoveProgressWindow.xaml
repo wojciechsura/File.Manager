@@ -12,7 +12,7 @@
         xmlns:pc="clr-namespace:System.Windows;assembly=PresentationCore" xmlns:cd="clr-namespace:File.Manager.Controls.Dialogs"
         d:DataContext="{d:DesignInstance Type=vm:CopyMoveProgressWindowViewModel}"
         mc:Ignorable="d"
-        Title="{Binding Operation.Title}" SizeToContent="Height" Width="600"        
+        Title="{Binding Operation.Title}" SizeToContent="Height" Width="700"        
         Loaded="HandleWindowLoaded" Closing="Window_Closing"
         WindowStartupLocation="CenterOwner" ResizeMode="NoResize"
         FocusManager.FocusedElement="{Binding ElementName=bCancel}">

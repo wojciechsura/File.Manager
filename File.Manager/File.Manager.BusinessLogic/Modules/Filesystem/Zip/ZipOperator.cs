@@ -10,7 +10,9 @@ using System.IO;
 using System.Linq;
 using System.Speech.Synthesis.TtsEngine;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using System.Windows.Shapes;
 
 namespace File.Manager.BusinessLogic.Modules.Filesystem.Zip
@@ -28,7 +30,172 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Zip
                 this.stream = stream;
             }
 
-            public Stream GetSource() => stream;            
+            public Stream GetSource() => stream;
+        }
+
+        // Plan item sources - used while building operation plan
+
+        private abstract class BasePlanItemSource
+        {
+            public abstract BasePlanItem ToPlanItem();
+
+            public abstract string Name { get; }
+        }
+
+        private class PlanFileSource : BasePlanItemSource
+        {
+            private PlanFile planFile;
+
+            public override BasePlanItem ToPlanItem() => planFile;
+
+            public PlanFileSource(PlanFile planFile)
+            {
+                if (string.IsNullOrEmpty(planFile.Name))
+                    throw new ArgumentException(nameof(planFile));
+
+                this.planFile = planFile;
+            }
+
+            public override string Name => planFile.Name;
+        }
+
+        private abstract class BasePlanFolderSource : BasePlanItemSource
+        {
+            public List<BasePlanItemSource> Items { get; } = new();
+        }
+
+        private class PlanFolderSource : BasePlanFolderSource
+        {
+            private string name;
+
+            public override BasePlanItem ToPlanItem()
+            {
+                return new PlanFolder(name, Items.Select(i => i.ToPlanItem()).ToList());
+            }
+
+            public PlanFolderSource(string name)
+            {
+                if (string.IsNullOrEmpty(name))
+                    throw new ArgumentException(nameof(name));
+
+                this.name = name;
+            }
+
+            public override string Name => name;            
+        }
+
+        private class RootSource : BasePlanFolderSource
+        {
+            private string rootPath;
+            private string name;
+
+            public RootSource(string rootPath)
+            {
+                this.rootPath = rootPath == string.Empty || rootPath.EndsWith('/') ? rootPath : rootPath + '/';
+                this.name = rootPath == string.Empty ? rootPath : rootPath[..^1];
+            }
+
+            public override BasePlanItem ToPlanItem()
+            {
+                throw new InvalidOperationException("Do not call ToPlanItem on root!");
+            }
+
+            public override string Name => name;
+            public string RootPath => rootPath;
+        }
+
+        private class LocationStack
+        {
+            private RootSource root;
+            private readonly List<BasePlanFolderSource> stack = new();
+            private string currentLocationCache = null;
+
+            private void BuildCurrentLocation()
+            {
+                currentLocationCache = root.RootPath + string.Join('/', stack
+                    .Select(s => s.Name)
+                    .Where(x => !string.IsNullOrEmpty(x)));
+
+                if (currentLocationCache != string.Empty && !currentLocationCache.EndsWith('/'))
+                    currentLocationCache += "/";
+            }
+
+            public LocationStack(string rootPath)
+            {
+                root = new RootSource(rootPath);
+                stack.Add(root);
+                currentLocationCache = null;
+            }
+
+            public void ReachLocation(string location)
+            {
+                // Check if root location matches
+                if (!location.StartsWith(root.RootPath))
+                    throw new ArgumentException("Location is not rooted in the same root path as the location stack!");
+
+                // Normalize the location to be reached
+                if (location != string.Empty && !location.EndsWith('/'))
+                    location += '/';
+
+                // Exit upwards until current location
+                // becomes prefix to the required location
+                while (!location.StartsWith(CurrentLocation))
+                {
+                    // If we're trying to exit root folder,
+                    // there's something wrong with the algorithm.
+                    // Throw an exception to prevent any damage
+                    if (stack.Last() is RootSource)
+                        throw new InvalidOperationException("Trying to exit root folder - error in algorithm!");
+                    
+                    stack.RemoveAt(stack.Count - 1);
+                    currentLocationCache = null;
+                }
+
+                // Do we need to go deeper?
+                if (location.Length > CurrentLocation.Length)
+                {
+                    // Go downwards to reach requested location
+                    string[] folders = location[CurrentLocation.Length..^1].Split('/');
+
+                    foreach (var folder in folders)
+                    {
+                        var existingFolder = CurrentItem.Items.FirstOrDefault(i => i.Name == folder);
+                        if (existingFolder != null)
+                        {
+                            if (existingFolder is BasePlanFolderSource planFolder)
+                            {
+                                stack.Add(planFolder);
+                                currentLocationCache = null;
+                                continue;
+                            }
+                            else if (existingFolder is PlanFileSource)
+                            {
+                                throw new InvalidOperationException("Cannot reach location: one of its parts is an existing file!");
+                            }
+                        }
+
+                        var newFolder = new PlanFolderSource(folder);
+                        CurrentItem.Items.Add(newFolder);
+                        stack.Add(newFolder);
+                        currentLocationCache = null;
+                    }
+                }                
+            }
+
+            public string CurrentLocation
+            {
+                get
+                {
+                    if (currentLocationCache == null)
+                        BuildCurrentLocation();
+
+                    return currentLocationCache;
+                }
+            }
+
+            public BasePlanFolderSource CurrentItem => stack.Last();
+
+            public RootSource Root => root;
         }
 
         // Private fields -----------------------------------------------------
@@ -39,87 +206,76 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Zip
 
         // Private methods ----------------------------------------------------
 
-        private List<BasePlanItem> CreatePlanForFolderRecursive(string path, List<ZipEntry> zipEntries, string fileMaskOverride, IReadOnlyList<Item> selectedItems)
+        private List<BasePlanItem> InternalCreatePlanForFolder(string rootPath, 
+            List<ZipEntry> zipEntries, 
+            string fileMaskOverride, 
+            IReadOnlyList<Item> selectedItems)
         {
-            HashSet<string> foldersToProcess = new();
-            List<ZipEntry> subfolderItemsToProcess = new();
-
-            List<BasePlanItem> result = new();
-
+            var locationStack = new LocationStack(rootPath);
+            
             foreach (var entry in zipEntries)
             {
                 (string location, string name) = ZipPathTools.GetZipEntryLocation(entry.Name, true);
 
-                // Check if entry is in this folder
-                if (!location.StartsWith(path))
+                // Item is outside location we're processing
+                if (!location.StartsWith(locationStack.Root.RootPath))
                     continue;
 
-                // Check if entry is directly in this folder
-                if (location == path)
+                // If items were selected, current item is on the root level
+                // and it is not among selected ones, skip it
+                if (selectedItems != null && 
+                    location == locationStack.Root.RootPath && 
+                    !selectedItems.Any(si => si.Name == name))
+                    continue;
+
+                // If file mask override is in place and current item
+                // does not match the mask, skip it
+                if (entry.IsFile && !string.IsNullOrEmpty(fileMaskOverride) && !PatternMatcher.StrictMatchPattern(fileMaskOverride, name))
+                    continue;
+
+                // Reach item's location in the stack
+                locationStack.ReachLocation(location);
+
+                if (entry.IsFile)
                 {
-                    if (selectedItems != null && selectedItems.FirstOrDefault(si => si.Name == name) == null)
-                        continue;
+                    if (locationStack.CurrentItem.Items.Any(i => i.Name == name))
+                        throw new InvalidOperationException("There already is an item with given name in the folder!");
 
-                    // Entry directly in this folder
+                    // If it is a file, simply add it to the current location                  
 
-                    if (entry.IsFile)
-                    {
-                        if (!string.IsNullOrEmpty(fileMaskOverride) && !PatternMatcher.StrictMatchPattern(fileMaskOverride, name))
-                            continue;
-
-                        var planFile = new PlanFile(name,
-                            entry.Size,
-                            false,
-                            false,
-                            false);
-                        result.Add(planFile);
-                    }
-                    else
-                    {
-                        if (!foldersToProcess.Contains(entry.Name))
-                            foldersToProcess.Add(name);
-                    }
+                    var planFile = new PlanFile(name,
+                        entry.Size,
+                        false,
+                        false,
+                        false);
+                    locationStack.CurrentItem.Items.Add(new PlanFileSource(planFile));
                 }
                 else
                 {
-                    // Entry in subfolder
-                    // Extract the direct subfolder name
-
-                    int slashPos = location.IndexOf('/', path.Length);
-                    if (slashPos == -1)
-                        slashPos = location.Length;
-                    var subfolderName = location[path.Length..(slashPos)];
-
-                    if (selectedItems != null && selectedItems.FirstOrDefault(si => si.Name == subfolderName) == null)
-                        continue;
-
-                    if (!foldersToProcess.Contains(subfolderName))
+                    // If it is a folder, either create it or update its parameters
+                    var existingFolder = locationStack.CurrentItem.Items.FirstOrDefault(i => i.Name == name);
+                    if (existingFolder != null)
                     {
-                        foldersToProcess.Add(subfolderName);
+                        if (existingFolder is PlanFolderSource planFolderSource)
+                        {
+                            // TODO update information
+                        }
+                        else
+                        {
+                            throw new InvalidOperationException("There already is an item with given name in the folder!");
+                        }
                     }
-
-                    // Collect all items indirectly below
-                    // current location to speed up processing of
-                    // subfolders (there won't be need to process
-                    // all zip entries, which doesn't match the current
-                    // location or were already processed)
-                    subfolderItemsToProcess.Add(entry);
+                    else
+                    {
+                        var folder = new PlanFolderSource(name);
+                        locationStack.CurrentItem.Items.Add(folder);
+                    }
                 }
             }
 
-            // Now recursively process subfolders
-            foreach (var folder in foldersToProcess)
-            {
-                var planItems = CreatePlanForFolderRecursive($"{path}{folder}/",
-                    subfolderItemsToProcess,
-                    fileMaskOverride,
-                    null);
-
-                var planFolder = new PlanFolder(folder, planItems);
-                result.Add(planFolder);
-            }
-
-            return result;
+            return locationStack.Root.Items
+                .Select(i => i.ToPlanItem())
+                .ToList();
         }
 
         // Public methods -----------------------------------------------------
@@ -142,7 +298,7 @@ namespace File.Manager.BusinessLogic.Modules.Filesystem.Zip
 
             var zipEntries = zipFile.Cast<ZipEntry>().ToList();
 
-            var items = CreatePlanForFolderRecursive(rootPath, zipEntries, fileMaskOverride, selectedItems);
+            var items = InternalCreatePlanForFolder(rootPath, zipEntries, fileMaskOverride, selectedItems);
             return new OperationPlan(items);
         }
 
