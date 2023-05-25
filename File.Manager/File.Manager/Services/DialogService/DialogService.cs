@@ -107,18 +107,7 @@ namespace File.Manager.Services.DialogService
         public void ShowExceptionDialog(Exception e)
         {
             var dialog = new ExceptionWindow(e);
-            dialog.Owner = GetOwnerWindow();
-            dialogWindows.Push(dialog);
-
-            try
-            {
-                dialog.ShowDialog();
-            }
-            finally
-            {
-                PopDialog(dialog);
-                ActivateLastDialog();
-            }
+            dialog.ShowDialog();
         }
 
         public (bool result, T resolution) ShowUserDecisionDialog<T>(T[] availableResolutions, string header)
