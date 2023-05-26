@@ -24,9 +24,25 @@ namespace File.Manager.BusinessLogic.ViewModels.ExceptionWindow
 
             StringBuilder sb = new StringBuilder();
 
-            sb.AppendLine($"Type:        {exception.GetType().FullName}");
-            sb.AppendLine($"Message:     {exception.Message}");
-            sb.AppendLine($"Call stack:  {exception.StackTrace}");
+            bool cont = true;
+
+            while (cont)
+            {
+                sb.AppendLine($"Type:        {exception.GetType().FullName}");
+                sb.AppendLine($"Message:     {exception.Message}");
+                sb.AppendLine($"Call stack:  {exception.StackTrace}");
+
+                if (exception.InnerException != null && exception.InnerException != exception)
+                {
+                    exception = exception.InnerException;
+                    sb.AppendLine("");
+                    cont = true;
+                }
+                else
+                {
+                    cont = false;
+                }
+            }
 
             exceptionText = sb.ToString();
 

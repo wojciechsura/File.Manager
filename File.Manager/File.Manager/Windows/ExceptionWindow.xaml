@@ -13,11 +13,11 @@
         FocusManager.FocusedElement="{Binding ElementName=okButton}">
     <cd:DialogHost>
         <cd:DialogHost.Content>
-            <cd:ModernGroupBox HeaderText="{x:Static res:Strings.Header}">
+            <cd:ModernGroupBox HeaderText="{x:Static res:Strings.Header}" MaxHeight="1000">
                 <DockPanel>
                     <Label DockPanel.Dock="Top" Margin="4" Content="{x:Static res:Strings.ExceptionDetails}" />
                     <TextBox Margin="4" HorizontalAlignment="Stretch" Text="{Binding ExceptionText, Mode=OneWay}" IsReadOnly="True"
-                         FontFamily="Consolas" VerticalAlignment="Stretch"/>
+                         FontFamily="Consolas" VerticalAlignment="Stretch" VerticalScrollBarVisibility="Auto"/>
                 </DockPanel>
             </cd:ModernGroupBox>
         </cd:DialogHost.Content>

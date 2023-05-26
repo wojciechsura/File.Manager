@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -371,30 +372,48 @@ namespace File.Manager.OsInterop
             SHGetFileInfo(filename, 0, ref shinfo, (uint)Marshal.SizeOf(shinfo), (uint)(SHGFI.SHGFI_ICON | SHGFI.SHGFI_SMALLICON | SHGFI.SHGFI_USEFILEATTRIBUTES));
             Icon icon = Icon.FromHandle(shinfo.hIcon);
             ImageSource smallIcon = Imaging.CreateBitmapSourceFromHIcon(icon.Handle, Int32Rect.Empty, BitmapSizeOptions.FromWidthAndHeight(16, 16));
-            DestroyIcon(icon.Handle);
 
             shinfo = new SHFILEINFO();
             SHGetFileInfo(filename, 0, ref shinfo, (uint)Marshal.SizeOf(shinfo), (uint)(SHGFI.SHGFI_ICON | SHGFI.SHGFI_LARGEICON | SHGFI.SHGFI_USEFILEATTRIBUTES));
             icon = Icon.FromHandle(shinfo.hIcon);
             ImageSource largeIcon = Imaging.CreateBitmapSourceFromHIcon(icon.Handle, Int32Rect.Empty, BitmapSizeOptions.FromWidthAndHeight(32, 32));
-            DestroyIcon(icon.Handle);
 
             return (smallIcon, largeIcon);
         }
 
-        private static (ImageSource smallIcon, ImageSource largeIcon) GetKnownIcon(IntPtr pidList)
+        private static (ImageSource smallIcon, ImageSource largeIcon) GetKnownIcon(Guid knownFolder)
         {
-            SHFILEINFO shinfo = new SHFILEINFO();
-            SHGetFileInfo(pidList, 0, ref shinfo, (uint)Marshal.SizeOf(shinfo), (uint)(SHGFI.SHGFI_PIDL | SHGFI.SHGFI_ICON | SHGFI.SHGFI_SMALLICON | SHGFI.SHGFI_USEFILEATTRIBUTES));
-            Icon icon = Icon.FromHandle(shinfo.hIcon);
-            ImageSource smallIcon = Imaging.CreateBitmapSourceFromHIcon(icon.Handle, Int32Rect.Empty, BitmapSizeOptions.FromWidthAndHeight(16, 16));
-            DestroyIcon(icon.Handle);
+            IntPtr pidList = IntPtr.Zero;
 
-            shinfo = new SHFILEINFO();
-            SHGetFileInfo(pidList, 0, ref shinfo, (uint)Marshal.SizeOf(shinfo), (uint)(SHGFI.SHGFI_PIDL | SHGFI.SHGFI_ICON | SHGFI.SHGFI_LARGEICON | SHGFI.SHGFI_USEFILEATTRIBUTES));
-            icon = Icon.FromHandle(shinfo.hIcon);
-            ImageSource largeIcon = Imaging.CreateBitmapSourceFromHIcon(icon.Handle, Int32Rect.Empty, BitmapSizeOptions.FromWidthAndHeight(32, 32));
-            DestroyIcon(icon.Handle);
+            ImageSource smallIcon, largeIcon;
+
+            try
+            {
+                SHGetKnownFolderIDList(knownFolder, 0, IntPtr.Zero, out pidList);
+
+                SHFILEINFO shinfo = new SHFILEINFO();
+                SHGetFileInfo(pidList, 0, ref shinfo, (uint)Marshal.SizeOf(shinfo), (uint)(SHGFI.SHGFI_PIDL | SHGFI.SHGFI_ICON | SHGFI.SHGFI_SMALLICON | SHGFI.SHGFI_USEFILEATTRIBUTES));
+                Icon icon = Icon.FromHandle(shinfo.hIcon);
+                smallIcon = Imaging.CreateBitmapSourceFromHIcon(icon.Handle, Int32Rect.Empty, BitmapSizeOptions.FromWidthAndHeight(16, 16));
+            }
+            finally
+            {
+                ILFree(pidList);
+            }
+
+            try
+            {
+                SHGetKnownFolderIDList(knownFolder, 0, IntPtr.Zero, out pidList);
+
+                SHFILEINFO shinfo = new SHFILEINFO();
+                SHGetFileInfo(pidList, 0, ref shinfo, (uint)Marshal.SizeOf(shinfo), (uint)(SHGFI.SHGFI_PIDL | SHGFI.SHGFI_ICON | SHGFI.SHGFI_LARGEICON | SHGFI.SHGFI_USEFILEATTRIBUTES));
+                Icon icon = Icon.FromHandle(shinfo.hIcon);
+                largeIcon = Imaging.CreateBitmapSourceFromHIcon(icon.Handle, Int32Rect.Empty, BitmapSizeOptions.FromWidthAndHeight(32, 32));
+            }
+            finally
+            {
+                ILFree(pidList);
+            }
 
             return (smallIcon, largeIcon);
         }
@@ -407,58 +426,22 @@ namespace File.Manager.OsInterop
             SHGetStockIconInfo((uint)(SHSTOCKICONID.SIID_FOLDER), (uint)(SHGSI.SHGSI_ICON | SHGSI.SHGSI_SMALLICON), ref info);
             var icon = Icon.FromHandle(info.hIcon);
             ImageSource smallIcon = Imaging.CreateBitmapSourceFromHIcon(icon.Handle, Int32Rect.Empty, BitmapSizeOptions.FromWidthAndHeight(16, 16));
-            DestroyIcon(info.hIcon);
 
             SHGetStockIconInfo((uint)(SHSTOCKICONID.SIID_FOLDER), (uint)(SHGSI.SHGSI_ICON | SHGSI.SHGSI_LARGEICON), ref info);
             icon = Icon.FromHandle(info.hIcon);
             ImageSource largeIcon = Imaging.CreateBitmapSourceFromHIcon(icon.Handle, Int32Rect.Empty, BitmapSizeOptions.FromWidthAndHeight(32, 32));
-            DestroyIcon(info.hIcon);
 
             return (smallIcon, largeIcon);
 
         }
 
         public static (ImageSource smallIcon, ImageSource largeIcon) GetMyComputerIcon()
-        {
-            IntPtr pidList = IntPtr.Zero;
-            try
-            {
-                SHGetKnownFolderIDList(KnownFolderId.ComputerFolder, 0, IntPtr.Zero, out pidList);
-                return GetKnownIcon(pidList);
-            }
-            finally
-            {
-                ILFree(pidList);                
-            }
-        }
-
+            => GetKnownIcon(KnownFolderId.ComputerFolder);
+        
         public static (ImageSource smallIcon, ImageSource largeIcon) GetDesktopIcon()
-        {            
-            IntPtr pidList = IntPtr.Zero;
-            try
-            {
-                SHGetKnownFolderIDList(KnownFolderId.Desktop, 0, IntPtr.Zero, out pidList);
-                return GetKnownIcon(pidList);
-
-            }
-            finally
-            {
-                ILFree(pidList);
-            }
-        }
-
+            => GetKnownIcon(KnownFolderId.Desktop);
+        
         public static (ImageSource smallIcon, ImageSource largeIcon) GetDocumentsIcon()
-        {            
-            IntPtr pidList = IntPtr.Zero;
-            try
-            {
-                SHGetKnownFolderIDList(KnownFolderId.Documents, 0, IntPtr.Zero, out pidList);
-                return GetKnownIcon(pidList);
-            }
-            finally
-            {
-                ILFree(pidList);
-            }
-        }
+            => GetKnownIcon(KnownFolderId.Documents);
     }
 }
